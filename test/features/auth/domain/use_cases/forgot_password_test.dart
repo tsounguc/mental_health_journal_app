@@ -1,7 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mental_health_journal_app/core/errors/failures.dart';
-import 'package:mental_health_journal_app/features/auth/domain/entities/user.dart';
 import 'package:mental_health_journal_app/features/auth/domain/repositories/auth_repository.dart';
 import 'package:mental_health_journal_app/features/auth/domain/use_cases/forgot_password.dart';
 import 'package:mocktail/mocktail.dart';
@@ -11,7 +10,6 @@ import 'auth_repository.mock.dart';
 void main() {
   late AuthRepository repository;
   late ForgotPassword useCase;
-  final testUser = UserEntity.empty();
   final testFailure = ForgotPasswordFailure(message: 'message', statusCode: 500);
   const testEmail = 'testEmail@mail.com';
   setUp(() {
