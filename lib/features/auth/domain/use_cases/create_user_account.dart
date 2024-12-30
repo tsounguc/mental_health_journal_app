@@ -5,11 +5,11 @@ import 'package:mental_health_journal_app/features/auth/domain/entities/user.dar
 import 'package:mental_health_journal_app/features/auth/domain/repositories/auth_repository.dart';
 
 class CreateUserAccount implements UseCaseWithParams<UserEntity, CreateUserAccountParams> {
-  const CreateUserAccount(this.repository);
+  const CreateUserAccount(this._repository);
 
-  final AuthRepository repository;
+  final AuthRepository _repository;
   @override
-  ResultFuture<UserEntity> call(CreateUserAccountParams params) => repository.createUserAccount(
+  ResultFuture<UserEntity> call(CreateUserAccountParams params) => _repository.createUserAccount(
         name: params.name,
         email: params.email,
         password: params.password,

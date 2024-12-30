@@ -5,10 +5,10 @@ import 'package:mental_health_journal_app/features/auth/domain/entities/user.dar
 import 'package:mental_health_journal_app/features/auth/domain/repositories/auth_repository.dart';
 
 class SignIn implements UseCaseWithParams<UserEntity, SignInParams> {
-  SignIn(this.repository);
-  AuthRepository repository;
+  SignIn(this._repository);
+  AuthRepository _repository;
   @override
-  ResultFuture<UserEntity> call(SignInParams params) => repository.signIn(
+  ResultFuture<UserEntity> call(SignInParams params) => _repository.signIn(
         email: params.email,
         password: params.password,
       );

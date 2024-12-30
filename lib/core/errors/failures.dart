@@ -42,3 +42,16 @@ class CreateUserAccountFailure extends Failure {
           statusCode: exception.statusCode,
         );
 }
+
+class ForgotPasswordFailure extends Failure {
+  ForgotPasswordFailure({
+    required super.message,
+    required super.statusCode,
+  });
+
+  ForgotPasswordFailure.fromException(ForgotPasswordException exception)
+      : this(
+          message: exception.message,
+          statusCode: exception.statusCode,
+        );
+}
