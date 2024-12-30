@@ -9,7 +9,7 @@ import 'auth_repository.mock.dart';
 
 void main() {
   late AuthRepository repository;
-  late SignInWithEmailAndPassword useCase;
+  late SignIn useCase;
   final testUser = UserEntity.empty();
   final testFailure = SignInWithEmailAndPasswordFailure(
     message: 'message',
@@ -19,7 +19,7 @@ void main() {
   final testParams = SignInParams.empty();
 
   setUp(() {
-    useCase = SignInWithEmailAndPassword();
+    useCase = SignIn();
     repository = MockAuthRepository();
   });
 
@@ -31,7 +31,7 @@ void main() {
     () async {
       // Arrange
       when(
-        () => repository.signInWithEmailAndPassword(
+        () => repository.signIn(
           email: any(named: 'email'),
           password: any(named: 'password'),
         ),

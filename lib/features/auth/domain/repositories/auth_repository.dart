@@ -4,7 +4,7 @@ import 'package:mental_health_journal_app/features/auth/domain/entities/user.dar
 
 abstract class AuthRepository {
   const AuthRepository();
-  ResultFuture<UserEntity> signInWithEmailAndPassword({
+  ResultFuture<UserEntity> signIn({
     required String email,
     required String password,
   });
