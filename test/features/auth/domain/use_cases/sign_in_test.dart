@@ -16,17 +16,17 @@ void main() {
     statusCode: 500,
   );
 
-  final testParams = SignInParams.empty();
+  const testParams = SignInParams.empty();
 
   setUp(() {
-    useCase = SignIn(repository);
     repository = MockAuthRepository();
+    useCase = SignIn(repository);
   });
 
   test(
-    'given SignInWithEmailAndPassword '
+    'given SignIn '
     'when instantiated '
-    'then call [AuthRepository.signInWithEmailAndPassword] '
+    'then call [AuthRepository.signIn] '
     'and return [UserEntity]',
     () async {
       // Arrange
