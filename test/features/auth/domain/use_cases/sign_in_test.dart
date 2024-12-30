@@ -11,7 +11,7 @@ void main() {
   late AuthRepository repository;
   late SignIn useCase;
   final testUser = UserEntity.empty();
-  final testFailure = SignInWithEmailAndPasswordFailure(
+  final testFailure = SignInFailure(
     message: 'message',
     statusCode: 500,
   );
@@ -42,6 +42,33 @@ void main() {
 
       // Assert
       expect(result, Right<Failure, UserEntity>(testUser));
+      verify(
+        () => repository.signIn(
+          email: testParams.email,
+          password: testParams.password,
+        ),
+      ).called(1);
+      verifyNoMoreInteractions(repository);
+    },
+  );
+
+  test(
+    'given SignIn '
+    'when instantiated '
+    'and call [AuthRepository.signIn] is unsuccessful '
+    'then return [SignInFailure]',
+    () async {
+      // Arrange
+      when(
+        () => repository.signIn(
+          email: any(named: 'email'),
+          password: any(named: 'password'),
+        ),
+      ).thenAnswer((_) async => Left(testFailure));
+      // Act
+      final result = await useCase(testParams);
+      // Assert
+      expect(result, Left<Failure, UserEntity>(testFailure));
       verify(
         () => repository.signIn(
           email: testParams.email,

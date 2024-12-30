@@ -17,13 +17,13 @@ abstract class Failure extends Equatable {
   List<Object> get props => [message, statusCode];
 }
 
-class SignInWithEmailAndPasswordFailure extends Failure {
-  SignInWithEmailAndPasswordFailure({
+class SignInFailure extends Failure {
+  SignInFailure({
     required super.message,
     required super.statusCode,
   });
 
-  SignInWithEmailAndPasswordFailure.fromException(SignInWithEmailException exception)
+  SignInFailure.fromException(SignInWithEmailException exception)
       : this(
           message: exception.message,
           statusCode: exception.statusCode,
