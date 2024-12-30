@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mental_health_journal_app/core/errors/failures.dart';
 import 'package:mental_health_journal_app/features/auth/domain/entities/user.dart';
 import 'package:mental_health_journal_app/features/auth/domain/repositories/auth_repository.dart';
-import 'package:mental_health_journal_app/features/auth/domain/use_cases/sign_in_with_email_and_password.dart';
+import 'package:mental_health_journal_app/features/auth/domain/use_cases/sign_in.dart';
 import 'package:mocktail/mocktail.dart';
 import 'auth_repository.mock.dart';
 
@@ -19,7 +19,7 @@ void main() {
   final testParams = SignInParams.empty();
 
   setUp(() {
-    useCase = SignIn();
+    useCase = SignIn(repository);
     repository = MockAuthRepository();
   });
 
@@ -42,6 +42,13 @@ void main() {
 
       // Assert
       expect(result, Right<Failure, UserEntity>(testUser));
+      verify(
+        () => repository.signIn(
+          email: testParams.email,
+          password: testParams.password,
+        ),
+      ).called(1);
+      verifyNoMoreInteractions(repository);
     },
   );
 }
