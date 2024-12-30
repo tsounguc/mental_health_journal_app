@@ -29,3 +29,16 @@ class SignInFailure extends Failure {
           statusCode: exception.statusCode,
         );
 }
+
+class CreateUserAccountFailure extends Failure {
+  CreateUserAccountFailure({
+    required super.message,
+    required super.statusCode,
+  });
+
+  CreateUserAccountFailure.fromException(CreateUserAccountException exception)
+      : this(
+          message: exception.message,
+          statusCode: exception.statusCode,
+        );
+}
