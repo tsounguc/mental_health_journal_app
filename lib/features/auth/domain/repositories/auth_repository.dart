@@ -4,7 +4,10 @@ import 'package:mental_health_journal_app/features/auth/domain/entities/user.dar
 
 abstract class AuthRepository {
   const AuthRepository();
-  ResultFuture<UserEntity> signInWithEmailAndPassword();
+  ResultFuture<UserEntity> signInWithEmailAndPassword({
+    required String email,
+    required String password,
+  });
   ResultFuture<UserEntity> createUserAccount({
     required String name,
     required String email,
@@ -14,5 +17,7 @@ abstract class AuthRepository {
     required String email,
   });
 
-  ResultVoid updateUser({required UpdateUserAction action});
+  ResultVoid updateUser({
+    required UpdateUserAction action,
+  });
 }
