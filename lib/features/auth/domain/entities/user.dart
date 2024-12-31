@@ -10,12 +10,12 @@ class UserEntity extends Equatable {
     required this.isVerified,
   });
 
-  UserEntity.empty()
+  const UserEntity.empty()
       : this(
           uid: '',
           name: '',
           email: '',
-          dateCreated: DateTime.now(),
+          dateCreated: const DateCreated.empty(),
           profilePictureUrl: '',
           isVerified: false,
         );
@@ -23,7 +23,7 @@ class UserEntity extends Equatable {
   final String uid;
   final String name;
   final String email;
-  final DateTime dateCreated;
+  final DateCreated dateCreated;
   final String? profilePictureUrl;
   final bool isVerified;
 
@@ -32,7 +32,7 @@ class UserEntity extends Equatable {
         uid,
         name,
         email,
-        dateCreated,
+        // dateCreated,
         profilePictureUrl,
         isVerified,
       ];
@@ -41,5 +41,27 @@ class UserEntity extends Equatable {
   String toString() => 'UserEntity { \nuid: $uid, \nname: $name, '
       '\nemail: $email, \ndateCreated: $dateCreated, '
       '\nprofilePictureUrl: $profilePictureUrl \nisVerified: $isVerified, '
+      '\n}';
+}
+
+class DateCreated extends Equatable {
+  const DateCreated({
+    required this.seconds,
+    required this.nanoseconds,
+  });
+
+  const DateCreated.empty()
+      : this(
+          seconds: 0,
+          nanoseconds: 0,
+        );
+  final int seconds;
+  final int nanoseconds;
+
+  @override
+  List<Object?> get props => [seconds, nanoseconds];
+
+  @override
+  String toString() => '{ \nseconds: $seconds, \nnanoseconds: $nanoseconds, '
       '\n}';
 }
