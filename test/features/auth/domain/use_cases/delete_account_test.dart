@@ -58,6 +58,8 @@ void main() {
 
       // Assert
       expect(result, Left<Failure, void>(testFailure));
+      verify(() => repository.deleteAccount(email: testEmail)).called(1);
+      verifyNoMoreInteractions(repository);
     },
   );
 }
