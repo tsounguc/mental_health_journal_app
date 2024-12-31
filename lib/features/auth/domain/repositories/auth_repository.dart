@@ -22,6 +22,7 @@ abstract class AuthRepository {
 
   ResultVoid updateUser({
     required UpdateUserAction action,
+    required dynamic userData
   });
 
   ResultVoid deleteAccount({

@@ -55,3 +55,16 @@ class ForgotPasswordFailure extends Failure {
           statusCode: exception.statusCode,
         );
 }
+
+class UpdateUserFailure extends Failure {
+  UpdateUserFailure({
+    required super.message,
+    required super.statusCode,
+  });
+
+  UpdateUserFailure.fromException(UpdateUserException exception)
+      : this(
+          message: exception.message,
+          statusCode: exception.statusCode,
+        );
+}
