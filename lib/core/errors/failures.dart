@@ -68,3 +68,16 @@ class UpdateUserFailure extends Failure {
           statusCode: exception.statusCode,
         );
 }
+
+class DeleteAccountFailure extends Failure {
+  DeleteAccountFailure({
+    required super.message,
+    required super.statusCode,
+  });
+
+  DeleteAccountFailure.fromException(DeleteAccountException exception)
+      : this(
+          message: exception.message,
+          statusCode: exception.statusCode,
+        );
+}
