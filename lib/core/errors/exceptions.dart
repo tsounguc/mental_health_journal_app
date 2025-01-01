@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 
-class SignInWithEmailException extends Equatable implements Exception {
-  const SignInWithEmailException({
+class SignInException extends Equatable implements Exception {
+  const SignInException({
     required this.message,
     required this.statusCode,
   });

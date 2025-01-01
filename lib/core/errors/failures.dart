@@ -23,7 +23,7 @@ class SignInFailure extends Failure {
     required super.statusCode,
   });
 
-  SignInFailure.fromException(SignInWithEmailException exception)
+  SignInFailure.fromException(SignInException exception)
       : this(
           message: exception.message,
           statusCode: exception.statusCode,

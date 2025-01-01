@@ -1,8 +1,5 @@
-import 'dart:convert';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mental_health_journal_app/core/utils/typedefs.dart';
 import 'package:mental_health_journal_app/features/auth/data/models/user_model.dart';
 import 'package:mental_health_journal_app/features/auth/domain/entities/user.dart';
 
@@ -10,14 +7,8 @@ import '../../../../fixtures/fixture_reader.dart';
 
 void main() {
   final testJson = fixture('user.json');
-  print(testJson);
   final testUserModel = UserModel.fromJson(testJson);
-  print(testUserModel);
-  // final testMap = jsonDecode(testJson) as DataMap;
   final testMap = testUserModel.toMap();
-  print(testMap);
-
-  // testMap['dateCreated'] = timestamp;
 
   test(
     'given [UserModel], '
