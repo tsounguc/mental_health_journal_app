@@ -35,7 +35,9 @@ dependencies:
     sdk: flutter
   flutter_bloc: ^8.0.0
   get_it: ^7.2.0
-  cloud_firestore: ^4.15.5
+  cloud_firestore: ^5.6.0
+  firebase_auth: ^5.3.4 # For Firebase Authentication
+  firebase_storage: 12.3.7
 
 
 dev_dependencies:
@@ -44,6 +46,8 @@ dev_dependencies:
   very_good_analysis: ^5.1.0 # For lint rules for Dart and Flutter used at Very Good Ventures
   mocktail: ^1.0.0
   bloc_test: ^9.1.0
+  fake_cloud_firestore: ^3.1.0 # For mocking cloud firestore
+  firebase_storage_mocks: ^0.7.0 # For mocking firebase storage
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is

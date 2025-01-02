@@ -34,10 +34,10 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  ResultVoid deleteAccount({required String email}) async {
+  ResultVoid deleteAccount({required String password}) async {
     try {
       final result = await _remoteDataSource.deleteAccount(
-        email: email,
+        password: password,
       );
       return Right(result);
     } on DeleteAccountException catch (e) {

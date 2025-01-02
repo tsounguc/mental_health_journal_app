@@ -30,7 +30,7 @@ void main() {
       // Arrange
       when(
         () => repository.deleteAccount(
-          email: any(named: 'email'),
+          password: any(named: 'password'),
         ),
       ).thenAnswer((_) async => const Right(null));
       // Act
@@ -49,7 +49,7 @@ void main() {
       // Arrange
       when(
         () => repository.deleteAccount(
-          email: any(named: 'email'),
+          password: any(named: 'password'),
         ),
       ).thenAnswer((_) async => Left(testFailure));
 
@@ -58,7 +58,7 @@ void main() {
 
       // Assert
       expect(result, Left<Failure, void>(testFailure));
-      verify(() => repository.deleteAccount(email: testEmail)).called(1);
+      verify(() => repository.deleteAccount(password: testEmail)).called(1);
       verifyNoMoreInteractions(repository);
     },
   );

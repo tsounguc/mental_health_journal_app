@@ -9,8 +9,8 @@ class UserModel extends UserEntity {
     required super.name,
     required super.email,
     required super.dateCreated,
-    required super.profilePictureUrl,
     required super.isVerified,
+    super.profilePictureUrl,
   });
 
   UserModel.empty()
@@ -18,8 +18,8 @@ class UserModel extends UserEntity {
           uid: '_empty.uid',
           name: '_empty.name',
           email: '_empty.email',
-          dateCreated: const DateCreatedModel.empty(),
-          profilePictureUrl: '_empty.profilePictureUrl',
+          dateCreated: DateTime.now(),
+          profilePictureUrl: null,
           isVerified: false,
         );
 
@@ -31,29 +31,26 @@ class UserModel extends UserEntity {
         'uid': uid,
         'name': name,
         'email': email,
-        'dateCreated': (dateCreated as DateCreatedModel).toMap(),
+        'dateCreated': FieldValue.serverTimestamp(),
         'profilePictureUrl': profilePictureUrl,
         'isVerified': isVerified
       };
 
   UserModel.fromMap(DataMap map)
       : this(
-          uid: map['uid'] == null ? '' : map['uid'] as String,
-          name: map['name'] == null ? '' : map['name'] as String,
-          email: map['email'] == null ? '' : map['email'] as String,
-          dateCreated: map['dateCreated'] == null
-              ? const DateCreatedModel.empty()
-              : DateCreatedModel.fromMap(map['dateCreated'] as DataMap),
-          // dateCreated: (map['dateCreated'] as Timestamp).toDate(),
-          profilePictureUrl: map['profilePictureUrl'] == null ? '' : map['profilePictureUrl'] as String,
-          isVerified: map['isVerified'] as bool,
+          uid: map['uid'] as String? ?? '',
+          name: map['name'] as String? ?? '',
+          email: map['email'] as String? ?? '',
+          dateCreated: (map['dateCreated'] as Timestamp?)?.toDate() ?? DateTime.now(),
+          profilePictureUrl: map['profilePictureUrl'] as String?,
+          isVerified: map['isVerified'] as bool? ?? false,
         );
 
   UserModel copyWith({
     String? uid,
     String? name,
     String? email,
-    DateCreatedModel? dateCreated,
+    DateTime? dateCreated,
     String? profilePictureUrl,
     bool? isVerified,
   }) {
@@ -66,24 +63,4 @@ class UserModel extends UserEntity {
       isVerified: isVerified ?? this.isVerified,
     );
   }
-}
-
-class DateCreatedModel extends DateCreated {
-  const DateCreatedModel({
-    required super.seconds,
-    required super.nanoseconds,
-  });
-
-  const DateCreatedModel.empty()
-      : this(
-          seconds: 0,
-          nanoseconds: 0,
-        );
-
-  DateCreatedModel.fromMap(DataMap map)
-      : this(
-          seconds: map['_seconds'] as int,
-          nanoseconds: map['_nanoseconds'] as int,
-        );
-  DataMap toMap() => {"_seconds": seconds, "_nanoseconds": nanoseconds};
 }

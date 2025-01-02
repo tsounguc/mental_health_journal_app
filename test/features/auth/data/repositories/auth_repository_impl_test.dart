@@ -27,7 +27,7 @@ void main() {
   test(
     'given AuthRepositoryImpl '
     'when instantiated '
-    'then instance should be a subclass of [AuthRepositoryImpl]',
+    'then instance should be a subclass of [AuthRepository]',
     () async {
       // Arrange
       // Act
@@ -131,13 +131,13 @@ void main() {
         // Arrange
         when(
           () => remoteDataSource.deleteAccount(
-            email: any(named: 'email'),
+            password: any(named: 'password'),
           ),
         ).thenAnswer((_) async => Future.value());
 
         // Act
         final result = await repositoryImpl.deleteAccount(
-          email: testUserModel.email,
+          password: testUserModel.email,
         );
 
         // Assert
@@ -148,7 +148,7 @@ void main() {
 
         verify(
           () => remoteDataSource.deleteAccount(
-            email: testUserModel.email,
+            password: testUserModel.email,
           ),
         ).called(1);
         verifyNoMoreInteractions(remoteDataSource);
@@ -167,13 +167,13 @@ void main() {
         );
         when(
           () => remoteDataSource.deleteAccount(
-            email: any(named: 'email'),
+            password: any(named: 'password'),
           ),
         ).thenThrow(testDeleteAccountException);
 
         // Act
         final result = await repositoryImpl.deleteAccount(
-          email: testUserModel.email,
+          password: testUserModel.email,
         );
 
         // Assert
@@ -187,7 +187,7 @@ void main() {
         );
         verify(
           () => remoteDataSource.deleteAccount(
-            email: testUserModel.email,
+            password: testUserModel.email,
           ),
         ).called(1);
         verifyNoMoreInteractions(remoteDataSource);
