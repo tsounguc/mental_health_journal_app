@@ -15,8 +15,8 @@ part 'auth_state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   AuthBloc({
-    required SignIn signIn,
     required CreateUserAccount createUserAccount,
+    required SignIn signIn,
     required ForgotPassword forgotPassword,
     required DeleteAccount deleteAccount,
     required UpdateUser updateUser,
