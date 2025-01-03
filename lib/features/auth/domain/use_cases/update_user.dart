@@ -6,6 +6,7 @@ import 'package:mental_health_journal_app/features/auth/domain/repositories/auth
 
 class UpdateUser implements UseCaseWithParams<void, UpdateUserParams> {
   const UpdateUser(this._repository);
+
   final AuthRepository _repository;
 
   @override
@@ -20,6 +21,12 @@ class UpdateUserParams extends Equatable {
     required this.action,
     required this.userData,
   });
+
+  const UpdateUserParams.empty()
+      : this(
+          action: UpdateUserAction.name,
+          userData: '_empty.name',
+        );
 
   final UpdateUserAction action;
   final String userData;

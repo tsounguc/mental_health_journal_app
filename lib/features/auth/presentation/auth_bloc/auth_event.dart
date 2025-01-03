@@ -33,8 +33,8 @@ class DeleteAccountEvent extends AuthEvent {
   List<Object> get props => [password];
 }
 
-class ForgotPassword extends AuthEvent {
-  const ForgotPassword({
+class ForgotPasswordEvent extends AuthEvent {
+  const ForgotPasswordEvent({
     required this.email,
   });
 

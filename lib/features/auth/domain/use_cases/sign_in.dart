@@ -6,7 +6,7 @@ import 'package:mental_health_journal_app/features/auth/domain/repositories/auth
 
 class SignIn implements UseCaseWithParams<UserEntity, SignInParams> {
   SignIn(this._repository);
-  AuthRepository _repository;
+  final AuthRepository _repository;
   @override
   ResultFuture<UserEntity> call(SignInParams params) => _repository.signIn(
         email: params.email,
@@ -20,14 +20,13 @@ class SignInParams extends Equatable {
     required this.password,
   });
 
-  final String email;
-  final String password;
-
   const SignInParams.empty()
       : this(
           email: '_empty.email',
           password: '_empty.password',
         );
+  final String email;
+  final String password;
 
   @override
   List<Object?> get props => [email, password];
