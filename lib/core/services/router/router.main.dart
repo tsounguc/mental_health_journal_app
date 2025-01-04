@@ -10,7 +10,7 @@ Route<dynamic> onGenerateRoute(RouteSettings settings) {
       );
     default:
       return _pageBuilder(
-        (_) => const Scaffold(),
+        (_) => const PageUnderConstruction(),
         settings: settings,
       );
   }
