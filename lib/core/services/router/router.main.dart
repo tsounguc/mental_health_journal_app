@@ -5,7 +5,50 @@ Route<dynamic> onGenerateRoute(RouteSettings settings) {
   switch (settings.name) {
     case '/':
       return _pageBuilder(
-        (_) => const SignInScreen(),
+        (context) {
+          if (serviceLocator<FirebaseAuth>().currentUser != null) {
+            final user = serviceLocator<FirebaseAuth>().currentUser!;
+            final localUser = UserModel(
+              uid: user.uid,
+              name: user.displayName!,
+              email: user.email!,
+              dateCreated: DateTime.now(),
+              isVerified: false,
+            );
+
+            context.userProvider.initUser(localUser);
+            return const Dashboard();
+          }
+          return BlocProvider(
+            create: (_) => serviceLocator<AuthBloc>(),
+            child: const SignInScreen(),
+          );
+        },
+        settings: settings,
+      );
+
+    case SignInScreen.id:
+      return _pageBuilder(
+        (_) => BlocProvider(
+          create: (_) => serviceLocator<AuthBloc>(),
+          child: const SignInScreen(),
+        ),
+        settings: settings,
+      );
+    case SignUpScreen.id:
+      return _pageBuilder(
+        (_) => BlocProvider(
+          create: (_) => serviceLocator<AuthBloc>(),
+          child: const SignUpScreen(),
+        ),
+        settings: settings,
+      );
+    case Dashboard.id:
+      return _pageBuilder(
+        (_) => BlocProvider(
+          create: (_) => serviceLocator<AuthBloc>(),
+          child: const Dashboard(),
+        ),
         settings: settings,
       );
     default:

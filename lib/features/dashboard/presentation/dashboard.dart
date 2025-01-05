@@ -1,22 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:mental_health_journal_app/core/extensions/context_extension.dart';
 
-class SignInScreen extends StatefulWidget {
-  const SignInScreen({super.key});
-
-  static const id = '/sign-in';
+class Dashboard extends StatefulWidget {
+  const Dashboard({super.key});
+  static const id = '/dashboard';
 
   @override
-  State<SignInScreen> createState() => _SignInScreenState();
+  State<Dashboard> createState() => _DashboardState();
 }
 
-class _SignInScreenState extends State<SignInScreen> {
+class _DashboardState extends State<Dashboard> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
         child: Text(
-          'SIGN UP SCREEN',
+          'SIGN IN SCREEN',
           style: context.theme.textTheme.bodyLarge,
         ),
       ),

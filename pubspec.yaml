@@ -38,6 +38,7 @@ dependencies:
   cloud_firestore: ^5.6.0
   firebase_auth: ^5.3.4 # For Firebase Authentication
   firebase_storage: 12.3.7
+  provider: ^6.1.2
 
 
 dev_dependencies:
