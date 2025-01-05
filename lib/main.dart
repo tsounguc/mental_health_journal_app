@@ -27,7 +27,6 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           useMaterial3: true,
           visualDensity: VisualDensity.adaptivePlatformDensity,
-          fontFamily: Fonts.poppins,
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         ),
         onGenerateRoute: onGenerateRoute,
