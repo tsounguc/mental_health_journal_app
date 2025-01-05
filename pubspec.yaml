@@ -45,7 +45,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  very_good_analysis: ^5.1.0 # For lint rules for Dart and Flutter used at Very Good Ventures
+  very_good_analysis: ^7.0.0 # For lint rules for Dart and Flutter used at Very Good Ventures
   mocktail: ^1.0.0
   bloc_test: ^9.1.7
   fake_cloud_firestore: ^3.1.0 # For mocking cloud firestore
