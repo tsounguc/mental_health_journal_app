@@ -26,7 +26,10 @@ abstract class AuthRemoteDataSource {
     required String email,
   });
 
-  Future<void> updateUser({required UpdateUserAction action, required dynamic userData});
+  Future<void> updateUser({
+    required UpdateUserAction action,
+    required dynamic userData,
+  });
 
   Future<void> deleteAccount({
     required String password,
@@ -60,7 +63,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       final timestamp = Timestamp.now();
 
       await _setUserData(
-        _authClient.currentUser!,
+        _authClient.currentUser,
         email,
         timestamp: timestamp,
       );
@@ -154,7 +157,10 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   }
 
   @override
-  Future<UserModel> signIn({required String email, required String password}) async {
+  Future<UserModel> signIn({
+    required String email,
+    required String password,
+  }) async {
     try {
       final result = await _authClient.signInWithEmailAndPassword(
         email: email,
@@ -180,8 +186,10 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         // get user data from firestore with user uid
         userData = await _getUserData(user.uid);
         userModel = UserModel.fromMap(userData.data()!);
+      } else {
+        userModel = UserModel.fromMap(userData.data()!);
       }
-      userModel = UserModel.fromMap(userData.data()!);
+
       return userModel;
     } on FirebaseAuthException catch (e) {
       var errorMessage = e.message ?? 'An error occurred. Please try again';
@@ -208,7 +216,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   @override
   Future<void> updateUser({
     required UpdateUserAction action,
-    required userData,
+    required dynamic userData,
   }) async {
     try {
       switch (action) {
@@ -217,13 +225,11 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
             userData as String,
           );
           await _updateUserData({'name': userData});
-          break;
         case UpdateUserAction.email:
           await _authClient.currentUser?.verifyBeforeUpdateEmail(
             userData as String,
           );
           await _updateUserData({'email': userData});
-          break;
         case UpdateUserAction.password:
           // this case is when user is already logged in
           // and is trying to change password in user settings
@@ -243,7 +249,6 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
           await _authClient.currentUser?.updatePassword(
             newData['newPassword'] as String,
           );
-          break;
         case UpdateUserAction.profilePictureUrl:
           // Save new picture in firebase storage
           final ref = _storageClient.ref().child('profile_pics/${_authClient.currentUser?.uid}');
@@ -257,7 +262,6 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
 
           // Update document url in firestore
           await _updateUserData({'photoUrl': url});
-          break;
       }
     } on FirebaseException catch (e) {
       throw UpdateUserException(
@@ -298,7 +302,9 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         .update(data);
   }
 
-  CollectionReference<DataMap> get _users => _firestoreClient.collection('users');
+  CollectionReference<DataMap> get _users => _firestoreClient.collection(
+        'users',
+      );
 
   Future<DocumentSnapshot<DataMap>> _getUserData(String uid) async {
     return _users.doc(uid).get();

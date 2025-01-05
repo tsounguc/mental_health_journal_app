@@ -10,7 +10,10 @@ import 'auth_repository.mock.dart';
 void main() {
   late AuthRepository repository;
   late ForgotPassword useCase;
-  final testFailure = ForgotPasswordFailure(message: 'message', statusCode: 500);
+  final testFailure = ForgotPasswordFailure(
+    message: 'message',
+    statusCode: 500,
+  );
   const testEmail = 'testEmail@mail.com';
   setUp(() {
     repository = MockAuthRepository();

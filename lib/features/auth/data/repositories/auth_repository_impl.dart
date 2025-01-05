@@ -91,7 +91,7 @@ class AuthRepositoryImpl implements AuthRepository {
   @override
   ResultVoid updateUser({
     required UpdateUserAction action,
-    required userData,
+    required dynamic userData,
   }) async {
     try {
       final result = await _remoteDataSource.updateUser(

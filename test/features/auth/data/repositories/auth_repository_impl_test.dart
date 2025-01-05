@@ -250,7 +250,7 @@ void main() {
         // Assert
         expect(
           result,
-          Left(
+          Left<Failure, void>(
             ForgotPasswordFailure.fromException(
               testForgotPasswordException,
             ),
@@ -303,7 +303,7 @@ void main() {
 
     test(
       'given AuthRepositoryImpl, '
-      'when [AuthRemoteDataSource.signIn] called is unsuccessful'
+      'when [AuthRemoteDataSource.signIn] call is unsuccessful '
       'then return [SignInFailure]',
       () async {
         // Arrange
@@ -347,7 +347,7 @@ void main() {
   group('updateUser - ', () {
     test(
       'given AuthRepositoryImpl, '
-      'when [AuthRemoteDataSource.updateUser] is called'
+      'when [AuthRemoteDataSource.updateUser] is called '
       'then return [void]',
       () async {
         // Arrange
@@ -379,7 +379,7 @@ void main() {
     );
     test(
       'given AuthRepositoryImpl, '
-      'when [AuthRemoteDataSource.updateUser] called is unsuccessful'
+      'when [AuthRemoteDataSource.updateUser] called is unsuccessful '
       'then return [UpdateUserFailure]',
       () async {
         // Arrange

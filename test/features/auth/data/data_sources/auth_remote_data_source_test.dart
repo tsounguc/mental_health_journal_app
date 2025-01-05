@@ -65,11 +65,9 @@ void main() {
 
     documentReference = firestoreClient.collection('users').doc();
 
-    await documentReference.set(testUserModel
-        .copyWith(
-          uid: documentReference.id,
-        )
-        .toMap());
+    await documentReference.set(
+      testUserModel.copyWith(uid: documentReference.id).toMap(),
+    );
 
     mockUser = MockUser()..uid = documentReference.id;
 
@@ -250,7 +248,9 @@ void main() {
           () => authClient.sendPasswordResetEmail(email: any(named: 'email')),
         ).thenAnswer((invocation) async => Future.value());
 
-        final methodCall = remoteDataSource.forgotPassword(email: testUserModel.email);
+        final methodCall = remoteDataSource.forgotPassword(
+          email: testUserModel.email,
+        );
         expect(methodCall, completes);
         verify(
           () => authClient.sendPasswordResetEmail(
@@ -262,7 +262,8 @@ void main() {
 
     test(
       'given AuthRemoteDataSourceImpl '
-      'when [AuthRemoteDataSourceImpl.forgotPassword] call is unsuccessful'
+      'when [AuthRemoteDataSourceImpl.forgotPassword] '
+      'call is unsuccessful '
       'and [FirebaseAuthException] is thrown '
       'then throw [ForgotPasswordException] ',
       () async {
@@ -336,7 +337,7 @@ void main() {
 
         // Assert
         expect(
-          () async => await methodCall(
+          () async => methodCall(
             email: testUserModel.email,
             password: testPassword,
           ),

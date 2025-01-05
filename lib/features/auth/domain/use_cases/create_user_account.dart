@@ -9,7 +9,10 @@ class CreateUserAccount implements UseCaseWithParams<UserEntity, CreateUserAccou
 
   final AuthRepository _repository;
   @override
-  ResultFuture<UserEntity> call(CreateUserAccountParams params) => _repository.createUserAccount(
+  ResultFuture<UserEntity> call(
+    CreateUserAccountParams params,
+  ) =>
+      _repository.createUserAccount(
         name: params.name,
         email: params.email,
         password: params.password,

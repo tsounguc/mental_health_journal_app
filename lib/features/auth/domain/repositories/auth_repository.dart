@@ -20,7 +20,10 @@ abstract class AuthRepository {
     required String email,
   });
 
-  ResultVoid updateUser({required UpdateUserAction action, required dynamic userData});
+  ResultVoid updateUser({
+    required UpdateUserAction action,
+    required dynamic userData,
+  });
 
   ResultVoid deleteAccount({
     required String password,

@@ -7,5 +7,8 @@ class DeleteAccount implements UseCaseWithParams<void, String> {
   final AuthRepository _repository;
 
   @override
-  ResultFuture<void> call(String params) => _repository.deleteAccount(password: params);
+  ResultFuture<void> call(
+    String params,
+  ) =>
+      _repository.deleteAccount(password: params);
 }

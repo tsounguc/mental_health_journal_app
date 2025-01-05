@@ -29,7 +29,7 @@ class UpdateUserParams extends Equatable {
         );
 
   final UpdateUserAction action;
-  final String userData;
+  final dynamic userData;
 
   @override
   List<Object?> get props => [action, userData];

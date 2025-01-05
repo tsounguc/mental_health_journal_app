@@ -27,15 +27,6 @@ class UserModel extends UserEntity {
         jsonDecode(source) as DataMap,
       );
 
-  DataMap toMap() => {
-        'uid': uid,
-        'name': name,
-        'email': email,
-        'dateCreated': FieldValue.serverTimestamp(),
-        'profilePictureUrl': profilePictureUrl,
-        'isVerified': isVerified
-      };
-
   UserModel.fromMap(DataMap map)
       : this(
           uid: map['uid'] as String? ?? '',
@@ -45,6 +36,15 @@ class UserModel extends UserEntity {
           profilePictureUrl: map['profilePictureUrl'] as String?,
           isVerified: map['isVerified'] as bool? ?? false,
         );
+
+  DataMap toMap() => {
+        'uid': uid,
+        'name': name,
+        'email': email,
+        'dateCreated': FieldValue.serverTimestamp(),
+        'profilePictureUrl': profilePictureUrl,
+        'isVerified': isVerified,
+      };
 
   UserModel copyWith({
     String? uid,

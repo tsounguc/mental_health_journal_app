@@ -4,7 +4,7 @@ sealed class AuthEvent extends Equatable {
   const AuthEvent();
 
   @override
-  List<Object> get props => [];
+  List<Object?> get props => [];
 }
 
 class SignUpEvent extends AuthEvent {
@@ -71,5 +71,5 @@ class UpdateUserEvent extends AuthEvent {
   final dynamic userData;
 
   @override
-  List<Object> get props => [action, userData];
+  List<Object?> get props => [action, userData];
 }

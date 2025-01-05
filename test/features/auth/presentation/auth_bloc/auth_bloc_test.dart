@@ -40,11 +40,12 @@ void main() {
     updateUser = MockUpdateUser();
 
     bloc = AuthBloc(
-        createUserAccount: createUserAccount,
-        signIn: signIn,
-        deleteAccount: deleteAccount,
-        forgotPassword: forgotPassword,
-        updateUser: updateUser);
+      createUserAccount: createUserAccount,
+      signIn: signIn,
+      deleteAccount: deleteAccount,
+      forgotPassword: forgotPassword,
+      updateUser: updateUser,
+    );
   });
 
   late CreateUserAccountParams tCreateUserAccountParams;
@@ -79,7 +80,7 @@ void main() {
       message: 'message',
       statusCode: 500,
     );
-    blocTest(
+    blocTest<AuthBloc, AuthState>(
       'given AuthBloc '
       'when [CreateUserAccount] is called '
       'then emit [AuthLoading, SignedIn]',
@@ -110,7 +111,7 @@ void main() {
       },
     );
 
-    blocTest(
+    blocTest<AuthBloc, AuthState>(
       'given AuthBloc '
       'when [CreateUserAccount] call is unsuccessful '
       'then emit [AuthLoading, AuthError]',
@@ -148,8 +149,8 @@ void main() {
       statusCode: 500,
     );
     blocTest<AuthBloc, AuthState>(
-      'given AuthBloc'
-      'when [SignIn] is called'
+      'given AuthBloc '
+      'when [SignIn] is called '
       'then emit [AuthLoading, SignedIn]',
       build: () {
         when(

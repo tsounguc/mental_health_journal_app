@@ -1,7 +1,7 @@
 import 'dart:io';
 
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mental_health_journal_app/core/enums/update_user_action.dart';
 import 'package:mental_health_journal_app/features/auth/domain/entities/user.dart';
 import 'package:mental_health_journal_app/features/auth/domain/use_cases/create_user_account.dart';
@@ -39,7 +39,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final DeleteAccount _deleteAccount;
   final UpdateUser _updateUser;
 
-  Future<void> _signInHandler(SignInEvent event, Emitter<AuthState> emit) async {
+  Future<void> _signInHandler(
+    SignInEvent event,
+    Emitter<AuthState> emit,
+  ) async {
     emit(const AuthLoading());
 
     final result = await _signIn(
@@ -52,7 +55,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     );
   }
 
-  Future<void> _signUpHandler(SignUpEvent event, Emitter<AuthState> emit) async {
+  Future<void> _signUpHandler(
+    SignUpEvent event,
+    Emitter<AuthState> emit,
+  ) async {
     emit(const AuthLoading());
 
     final result = await _createUserAccount(
@@ -68,7 +74,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     );
   }
 
-  Future<void> _forgotPasswordHandler(ForgotPasswordEvent event, Emitter<AuthState> emit) async {
+  Future<void> _forgotPasswordHandler(
+    ForgotPasswordEvent event,
+    Emitter<AuthState> emit,
+  ) async {
     emit(const AuthLoading());
 
     final result = await _forgotPassword(event.email);
@@ -79,7 +88,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     );
   }
 
-  Future<void> _deleteAccountHandler(DeleteAccountEvent event, Emitter<AuthState> emit) async {
+  Future<void> _deleteAccountHandler(
+    DeleteAccountEvent event,
+    Emitter<AuthState> emit,
+  ) async {
     emit(const AuthLoading());
 
     final result = await _deleteAccount(event.password);
@@ -90,7 +102,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     );
   }
 
-  Future<void> _updateUserHandler(UpdateUserEvent event, Emitter<AuthState> emit) async {
+  Future<void> _updateUserHandler(
+    UpdateUserEvent event,
+    Emitter<AuthState> emit,
+  ) async {
     emit(const AuthLoading());
 
     final result = await _updateUser(

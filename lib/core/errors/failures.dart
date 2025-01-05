@@ -14,7 +14,7 @@ abstract class Failure extends Equatable {
   final dynamic statusCode;
 
   @override
-  List<Object> get props => [message, statusCode];
+  List<Object?> get props => [message, statusCode];
 }
 
 class SignInFailure extends Failure {
