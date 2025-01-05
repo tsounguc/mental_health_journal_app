@@ -167,12 +167,6 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         password: password,
       );
       final user = result.user;
-      // if (user == null) {
-      //   throw const SignInException(
-      //     message: 'message',
-      //     statusCode: 'Unknown Error',
-      //   );
-      // }
 
       // get user data from firestore with user uid
       var userData = await _getUserData(user!.uid);
