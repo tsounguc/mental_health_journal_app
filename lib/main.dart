@@ -4,9 +4,11 @@ import 'package:mental_health_journal_app/core/resources/fonts.dart';
 import 'package:mental_health_journal_app/core/services/router/router.dart';
 import 'package:mental_health_journal_app/core/services/service_locator.dart';
 import 'package:provider/provider.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 void main() async {
   await setUpServices();
+  await Firebase.initializeApp();
   runApp(const MyApp());
 }
 
