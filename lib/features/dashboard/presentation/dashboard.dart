@@ -15,7 +15,7 @@ class _DashboardState extends State<Dashboard> {
     return Scaffold(
       body: Center(
         child: Text(
-          'SIGN IN SCREEN',
+          'DASHBOARD SCREEN',
           style: context.theme.textTheme.bodyLarge,
         ),
       ),

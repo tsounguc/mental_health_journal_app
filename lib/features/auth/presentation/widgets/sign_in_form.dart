@@ -45,10 +45,12 @@ class _SignInFormState extends State<SignInForm> {
               onPressed: () => setState(() {
                 obscurePassword = !obscurePassword;
               }),
-              icon: Icon(obscurePassword ? Icons.visibility_outlined : Icons.visibility_off_outlined,
-                  color: Colours.softGreyColor),
+              icon: Icon(
+                obscurePassword ? Icons.visibility_outlined : Icons.visibility_off_outlined,
+                color: Colours.softGreyColor,
+              ),
             ),
-          )
+          ),
         ],
       ),
     );

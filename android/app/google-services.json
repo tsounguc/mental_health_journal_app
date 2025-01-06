@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "620107135844",
+    "project_id": "mentalhealthjournalapp",
+    "storage_bucket": "mentalhealthjournalapp.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:620107135844:android:96719d2473e70441bd1871",
+        "android_client_info": {
+          "package_name": "com.example.mental_health_journal_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCBXxKkiFIzf3YbrULU2DAvLxxnY6TZy7g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

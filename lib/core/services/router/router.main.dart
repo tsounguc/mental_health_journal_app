@@ -1,24 +1,23 @@
 part of 'router.dart';
 
 Route<dynamic> onGenerateRoute(RouteSettings settings) {
-  final arguments = settings.arguments;
   switch (settings.name) {
     case '/':
       return _pageBuilder(
         (context) {
-          // if (serviceLocator<FirebaseAuth>().currentUser != null) {
-          //   final user = serviceLocator<FirebaseAuth>().currentUser!;
-          //   final localUser = UserModel(
-          //     uid: user.uid,
-          //     name: user.displayName!,
-          //     email: user.email!,
-          //     dateCreated: DateTime.now(),
-          //     isVerified: false,
-          //   );
-          //
-          //   context.userProvider.initUser(localUser);
-          //   return const Dashboard();
-          // }
+          if (serviceLocator<FirebaseAuth>().currentUser != null) {
+            final user = serviceLocator<FirebaseAuth>().currentUser!;
+            final localUser = UserModel(
+              uid: user.uid,
+              name: user.displayName!,
+              email: user.email!,
+              dateCreated: DateTime.now(),
+              isVerified: false,
+            );
+
+            context.userProvider.initUser(localUser);
+            return const Dashboard();
+          }
           return BlocProvider(
             create: (_) => serviceLocator<AuthBloc>(),
             child: const SignInScreen(),
@@ -40,6 +39,14 @@ Route<dynamic> onGenerateRoute(RouteSettings settings) {
         (_) => BlocProvider(
           create: (_) => serviceLocator<AuthBloc>(),
           child: const SignUpScreen(),
+        ),
+        settings: settings,
+      );
+    case ForgotPasswordScreen.id:
+      return _pageBuilder(
+        (_) => BlocProvider(
+          create: (_) => serviceLocator<AuthBloc>(),
+          child: const ForgotPasswordScreen(),
         ),
         settings: settings,
       );

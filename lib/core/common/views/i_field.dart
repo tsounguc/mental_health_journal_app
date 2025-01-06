@@ -61,7 +61,7 @@ class IField extends StatelessWidget {
       validator: overrideValidator
           ? validator
           : (value) {
-              if (value == null || value.isNotEmpty) {
+              if (value == null || value.isEmpty) {
                 return 'This field is required';
               }
               return validator?.call(value);

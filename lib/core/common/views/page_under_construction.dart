@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:mental_health_journal_app/core/extensions/context_extension.dart';
+import 'package:mental_health_journal_app/core/resources/colours.dart';
 
 class PageUnderConstruction extends StatelessWidget {
   const PageUnderConstruction({super.key});
@@ -6,14 +8,12 @@ class PageUnderConstruction extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        constraints: const BoxConstraints.expand(),
-        child: const Column(
-          children: [
-            Center(
-              child: Text('Page not found'),
-            ),
-          ],
+      backgroundColor: Colours.backgroundColor,
+      appBar: AppBar(),
+      body: Center(
+        child: Text(
+          'PAGE NOT FOUND',
+          style: context.theme.textTheme.bodyLarge,
         ),
       ),
     );
