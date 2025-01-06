@@ -29,7 +29,7 @@ Future<void> _initAuth() async {
       () => AuthRepositoryImpl(serviceLocator()),
     )
     // Data Sources
-    ..registerLazySingleton(
+    ..registerLazySingleton<AuthRemoteDataSource>(
       () => AuthRemoteDataSourceImpl(
         authClient: serviceLocator(),
         firestoreClient: serviceLocator(),

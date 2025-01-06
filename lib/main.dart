@@ -1,13 +1,14 @@
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:mental_health_journal_app/core/common/app/providers/user_provider.dart';
+import 'package:mental_health_journal_app/core/resources/colours.dart';
 import 'package:mental_health_journal_app/core/services/router/router.dart';
 import 'package:mental_health_journal_app/core/services/service_locator.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   await setUpServices();
-  await Firebase.initializeApp();
+  // await Firebase.initializeApp();
   runApp(const MyApp());
 }
 
@@ -26,7 +27,7 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           useMaterial3: true,
           visualDensity: VisualDensity.adaptivePlatformDensity,
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+          colorScheme: ColorScheme.fromSeed(seedColor: Colours.primaryColor),
         ),
         onGenerateRoute: onGenerateRoute,
       ),
