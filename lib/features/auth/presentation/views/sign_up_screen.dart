@@ -5,6 +5,7 @@ import 'package:mental_health_journal_app/core/extensions/context_extension.dart
 import 'package:mental_health_journal_app/core/utils/core_utils.dart';
 import 'package:mental_health_journal_app/features/auth/data/models/user_model.dart';
 import 'package:mental_health_journal_app/features/auth/presentation/auth_bloc/auth_bloc.dart';
+import 'package:mental_health_journal_app/features/auth/presentation/views/sign_in_screen.dart';
 import 'package:mental_health_journal_app/features/auth/presentation/widgets/sign_up_form.dart';
 import 'package:provider/provider.dart';
 
@@ -119,7 +120,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
               ),
               const SizedBox(height: 30),
               TextButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.pushReplacementNamed(
+                    context,
+                    SignInScreen.id,
+                  );
+                },
                 child: RichText(
                   text: TextSpan(
                     text: 'Already have an account? ',
