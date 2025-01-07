@@ -213,6 +213,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   Future<void> signOut() async {
     try {
       await _authClient.signOut();
+      await _authClient.currentUser!.reload();
     } on FirebaseException catch (e) {
       throw SignOutException(
         message: e.message ?? 'Error Occurred',

@@ -16,7 +16,10 @@ Route<dynamic> onGenerateRoute(RouteSettings settings) {
             );
 
             context.userProvider.initUser(localUser);
-            return const Dashboard();
+            return BlocProvider(
+              create: (_) => serviceLocator<AuthBloc>(),
+              child: const Dashboard(),
+            );
           }
           return BlocProvider(
             create: (_) => serviceLocator<AuthBloc>(),
