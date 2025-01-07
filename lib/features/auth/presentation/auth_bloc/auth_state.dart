@@ -36,6 +36,10 @@ final class SignedIn extends AuthState {
   List<Object> get props => [user];
 }
 
+final class SignedOut extends AuthState {
+  const SignedOut();
+}
+
 final class SignedUp extends AuthState {
   const SignedUp({required this.user});
 

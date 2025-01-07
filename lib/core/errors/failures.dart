@@ -56,6 +56,19 @@ class ForgotPasswordFailure extends Failure {
         );
 }
 
+class SignOutFailure extends Failure {
+  SignOutFailure({
+    required super.message,
+    required super.statusCode,
+  });
+
+  SignOutFailure.fromException(SignOutException exception)
+      : this(
+    message: exception.message,
+    statusCode: exception.statusCode,
+  );
+}
+
 class UpdateUserFailure extends Failure {
   UpdateUserFailure({
     required super.message,

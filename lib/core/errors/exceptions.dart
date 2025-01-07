@@ -36,6 +36,18 @@ class ForgotPasswordException extends Equatable implements Exception {
   List<Object> get props => [message, statusCode];
 }
 
+class SignOutException extends Equatable implements Exception {
+  const SignOutException({
+    required this.message,
+    required this.statusCode,
+  });
+  final String message;
+  final String statusCode;
+
+  @override
+  List<Object> get props => [message, statusCode];
+}
+
 class UpdateUserException extends Equatable implements Exception {
   const UpdateUserException({
     required this.message,

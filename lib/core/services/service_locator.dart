@@ -9,6 +9,7 @@ import 'package:mental_health_journal_app/features/auth/domain/use_cases/create_
 import 'package:mental_health_journal_app/features/auth/domain/use_cases/delete_account.dart';
 import 'package:mental_health_journal_app/features/auth/domain/use_cases/forgot_password.dart';
 import 'package:mental_health_journal_app/features/auth/domain/use_cases/sign_in.dart';
+import 'package:mental_health_journal_app/features/auth/domain/use_cases/sign_out.dart';
 import 'package:mental_health_journal_app/features/auth/domain/use_cases/update_user.dart';
 import 'package:mental_health_journal_app/features/auth/presentation/auth_bloc/auth_bloc.dart';
 

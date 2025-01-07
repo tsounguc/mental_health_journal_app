@@ -14,9 +14,21 @@ class _DashboardState extends State<Dashboard> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: Text(
-          'DASHBOARD SCREEN',
-          style: context.theme.textTheme.bodyLarge,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              'DASHBOARD SCREEN',
+              style: context.theme.textTheme.bodyLarge,
+            ),
+            const SizedBox(height: 25),
+            TextButton(
+              onPressed: () {
+
+              },
+              child: Text('Sign Out'),
+            ),
+          ],
         ),
       ),
     );

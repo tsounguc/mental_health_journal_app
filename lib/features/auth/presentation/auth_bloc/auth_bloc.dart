@@ -8,6 +8,7 @@ import 'package:mental_health_journal_app/features/auth/domain/use_cases/create_
 import 'package:mental_health_journal_app/features/auth/domain/use_cases/delete_account.dart';
 import 'package:mental_health_journal_app/features/auth/domain/use_cases/forgot_password.dart';
 import 'package:mental_health_journal_app/features/auth/domain/use_cases/sign_in.dart';
+import 'package:mental_health_journal_app/features/auth/domain/use_cases/sign_out.dart';
 import 'package:mental_health_journal_app/features/auth/domain/use_cases/update_user.dart';
 
 part 'auth_event.dart';
@@ -17,6 +18,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   AuthBloc({
     required CreateUserAccount createUserAccount,
     required SignIn signIn,
+    required SignOut signOut,
     required ForgotPassword forgotPassword,
     required DeleteAccount deleteAccount,
     required UpdateUser updateUser,
@@ -24,6 +26,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         _deleteAccount = deleteAccount,
         _forgotPassword = forgotPassword,
         _signIn = signIn,
+        _signOut = signOut,
         _updateUser = updateUser,
         super(const AuthInitial()) {
     on<SignInEvent>(_signInHandler);
@@ -31,9 +34,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<ForgotPasswordEvent>(_forgotPasswordHandler);
     on<DeleteAccountEvent>(_deleteAccountHandler);
     on<UpdateUserEvent>(_updateUserHandler);
+    on<SignOutEvent>(_signOutHandler);
   }
 
   final SignIn _signIn;
+  final SignOut _signOut;
   final CreateUserAccount _createUserAccount;
   final ForgotPassword _forgotPassword;
   final DeleteAccount _deleteAccount;
@@ -52,6 +57,19 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     result.fold(
       (failure) => emit(AuthError(message: failure.message)),
       (user) => emit(SignedIn(user: user)),
+    );
+  }
+
+  Future<void> _signOutHandler(
+    SignOutEvent event,
+    Emitter<AuthState> emit,
+  ) async {
+    emit(const AuthLoading());
+    final result = await _signOut();
+
+    result.fold(
+      (failure) => emit(AuthError(message: failure.message)),
+      (result) => emit(const SignedOut()),
     );
   }
 

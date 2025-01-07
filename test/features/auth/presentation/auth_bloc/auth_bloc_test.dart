@@ -7,6 +7,7 @@ import 'package:mental_health_journal_app/features/auth/domain/use_cases/create_
 import 'package:mental_health_journal_app/features/auth/domain/use_cases/delete_account.dart';
 import 'package:mental_health_journal_app/features/auth/domain/use_cases/forgot_password.dart';
 import 'package:mental_health_journal_app/features/auth/domain/use_cases/sign_in.dart';
+import 'package:mental_health_journal_app/features/auth/domain/use_cases/sign_out.dart';
 import 'package:mental_health_journal_app/features/auth/domain/use_cases/update_user.dart';
 import 'package:mental_health_journal_app/features/auth/presentation/auth_bloc/auth_bloc.dart';
 import 'package:mocktail/mocktail.dart';
@@ -14,6 +15,8 @@ import 'package:mocktail/mocktail.dart';
 class MockCreateUserAccount extends Mock implements CreateUserAccount {}
 
 class MockSignIn extends Mock implements SignIn {}
+
+class MockSignOut extends Mock implements SignOut {}
 
 class MockDeleteAccount extends Mock implements DeleteAccount {}
 
@@ -26,6 +29,7 @@ void main() {
   late SignIn signIn;
   late DeleteAccount deleteAccount;
   late ForgotPassword forgotPassword;
+  late SignOut signOut;
   late UpdateUser updateUser;
 
   late AuthBloc bloc;
@@ -35,6 +39,7 @@ void main() {
   setUp(() {
     createUserAccount = MockCreateUserAccount();
     signIn = MockSignIn();
+    signOut = MockSignOut();
     deleteAccount = MockDeleteAccount();
     forgotPassword = MockForgotPassword();
     updateUser = MockUpdateUser();
@@ -42,6 +47,7 @@ void main() {
     bloc = AuthBloc(
       createUserAccount: createUserAccount,
       signIn: signIn,
+      signOut: signOut,
       deleteAccount: deleteAccount,
       forgotPassword: forgotPassword,
       updateUser: updateUser,
@@ -197,6 +203,53 @@ void main() {
       verify: (bloc) {
         verify(() => signIn(tSignInParams)).called(1);
         verifyNoMoreInteractions(signIn);
+      },
+    );
+  });
+
+  group('SignOut - ', () {
+    final tSignOutFailure = SignOutFailure(
+      message: 'message',
+      statusCode: 500,
+    );
+    blocTest<AuthBloc, AuthState>(
+      'given AuthBloc '
+      'when [SignOut] is called '
+      'then emit [AuthLoading, SignedOut]',
+      build: () {
+        when(
+          () => signOut(),
+        ).thenAnswer((_) async => const Right(null));
+        return bloc;
+      },
+      act: (bloc) => bloc.add(const SignOutEvent()),
+      expect: () => [const AuthLoading(), const SignedOut()],
+      verify: (bloc) {
+        verify(
+          () => signOut(),
+        ).called(1);
+        verifyNoMoreInteractions(signOut);
+      },
+    );
+
+    blocTest<AuthBloc, AuthState>(
+      'given AuthBloc '
+      'when [SignOut] call is unsuccessful '
+      'then emit [AuthLoading, AuthError] ',
+      build: () {
+        when(
+          () => signOut(),
+        ).thenAnswer((_) async => Left(tSignOutFailure));
+        return bloc;
+      },
+      act: (bloc) => bloc.add(const SignOutEvent()),
+      expect: () => [
+        const AuthLoading(),
+        AuthError(message: tSignOutFailure.message),
+      ],
+      verify: (bloc) {
+        verify(() => signOut()).called(1);
+        verifyNoMoreInteractions(signOut);
       },
     );
   });

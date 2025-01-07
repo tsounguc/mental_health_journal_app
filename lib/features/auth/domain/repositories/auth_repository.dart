@@ -16,6 +16,8 @@ abstract class AuthRepository {
     required String password,
   });
 
+  ResultVoid signOut();
+
   ResultVoid forgotPassword({
     required String email,
   });

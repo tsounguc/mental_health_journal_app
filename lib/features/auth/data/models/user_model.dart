@@ -23,10 +23,6 @@ class UserModel extends UserEntity {
           isVerified: false,
         );
 
-  factory UserModel.fromJson(String source) => UserModel.fromMap(
-        jsonDecode(source) as DataMap,
-      );
-
   UserModel.fromMap(DataMap map)
       : this(
           uid: map['uid'] as String? ?? '',
@@ -41,7 +37,7 @@ class UserModel extends UserEntity {
         'uid': uid,
         'name': name,
         'email': email,
-        'dateCreated': FieldValue.serverTimestamp(),
+        'dateCreated': Timestamp.fromDate(dateCreated),
         'profilePictureUrl': profilePictureUrl,
         'isVerified': isVerified,
       };

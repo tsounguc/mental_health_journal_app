@@ -1,15 +1,31 @@
+import 'dart:convert';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mental_health_journal_app/core/utils/typedefs.dart';
 import 'package:mental_health_journal_app/features/auth/data/models/user_model.dart';
 import 'package:mental_health_journal_app/features/auth/domain/entities/user.dart';
 
 import '../../../../fixtures/fixture_reader.dart';
 
 void main() {
-  final testJson = fixture('user.json');
-  final testUserModel = UserModel.fromJson(testJson);
-  final testMap = testUserModel.toMap();
+  final timestampData = {
+    '_seconds': 1677483548,
+    '_nanoseconds': 123456000,
+  };
 
+  final date = DateTime.fromMillisecondsSinceEpoch(
+    timestampData['_seconds']!,
+  ).add(
+    Duration(microseconds: timestampData['_nanoseconds']!),
+  );
+
+  final timestamp = Timestamp.fromDate(date);
+
+  final testJson = fixture('user.json');
+  final testMap = jsonDecode(testJson) as DataMap;
+  testMap['dateCreated'] = timestamp;
+  final testUserModel = UserModel.fromMap(testMap);
   test(
     'given [UserModel], '
     'when instantiated '
@@ -22,22 +38,6 @@ void main() {
     },
   );
 
-  group('fromJson - ', () {
-    test(
-      'given [UserModel], '
-      'when fromJson is called, '
-      'then return [UserModel] with correct data ',
-      () {
-        // Arrange
-        // Act
-        final result = UserModel.fromJson(testJson);
-        // Assert
-        expect(result, isA<UserModel>());
-        expect(result, equals(testUserModel));
-      },
-    );
-  });
-
   group('fromMap - ', () {
     test(
       'given [UserModel] '
@@ -47,6 +47,7 @@ void main() {
         // Arrange
         // Act
         final result = UserModel.fromMap(testMap);
+
         // Assert
         expect(result, isA<UserModel>());
         expect(result, equals(testUserModel));

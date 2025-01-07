@@ -22,6 +22,8 @@ abstract class AuthRemoteDataSource {
     required String password,
   });
 
+  Future<void> signOut();
+
   Future<void> forgotPassword({
     required String email,
   });
@@ -201,6 +203,24 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     } catch (e, s) {
       debugPrintStack(stackTrace: s);
       throw SignInException(
+        message: e.toString(),
+        statusCode: '505',
+      );
+    }
+  }
+
+  @override
+  Future<void> signOut() async {
+    try {
+      await _authClient.signOut();
+    } on FirebaseException catch (e) {
+      throw SignOutException(
+        message: e.message ?? 'Error Occurred',
+        statusCode: e.code,
+      );
+    } catch (e, s) {
+      debugPrintStack(stackTrace: s);
+      throw SignOutException(
         message: e.toString(),
         statusCode: '505',
       );

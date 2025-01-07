@@ -89,6 +89,21 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
+  ResultVoid signOut() async {
+    try {
+      final result = await _remoteDataSource.signOut();
+
+      return Right(result);
+    } on SignOutException catch (e) {
+      return Left(
+        SignOutFailure.fromException(
+          e,
+        ),
+      );
+    }
+  }
+
+  @override
   ResultVoid updateUser({
     required UpdateUserAction action,
     required dynamic userData,

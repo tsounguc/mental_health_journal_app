@@ -237,6 +237,43 @@ void main() {
     );
   });
 
+  group('signOut - ', () {
+    test(
+        'given AuthRemoteDataSourceImpl '
+        'when [AuthRemoteDataSourceImpl.signOut] is called '
+        'and no [Exception] is thrown '
+        'then complete successfully', () async {
+      when(() => authClient.signOut()).thenAnswer((_) async => Future.value());
+
+      final methodCall = remoteDataSource.signOut();
+
+      expect(methodCall, completes);
+      verify(() => authClient.signOut()).called(1);
+    });
+
+    test(
+      'given AuthRemoteDataSourceImpl '
+      'when [AuthRemoteDataSourceImpl.signOut] '
+      'call is unsuccessful '
+      'and [FirebaseAuthException] is thrown '
+      'then throw [SignOutException] ',
+      () async {
+        when(
+          () => authClient.signOut(),
+        ).thenThrow(testFirebaseAuthException);
+
+        final methodCall = remoteDataSource.signOut;
+        expect(
+          () async => methodCall(),
+          throwsA(isA<SignOutException>()),
+        );
+        verify(
+          () => authClient.signOut(),
+        ).called(1);
+      },
+    );
+  });
+
   group('forgotPassword - ', () {
     test(
       'given AuthRemoteDataSourceImpl '

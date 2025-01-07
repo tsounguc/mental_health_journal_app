@@ -13,6 +13,7 @@ Future<void> _initAuth() async {
       () => AuthBloc(
         createUserAccount: serviceLocator(),
         signIn: serviceLocator(),
+        signOut: serviceLocator(),
         forgotPassword: serviceLocator(),
         deleteAccount: serviceLocator(),
         updateUser: serviceLocator(),
@@ -21,9 +22,11 @@ Future<void> _initAuth() async {
     // Use cases
     ..registerLazySingleton(() => CreateUserAccount(serviceLocator()))
     ..registerLazySingleton(() => SignIn(serviceLocator()))
+    ..registerLazySingleton(() => SignOut(serviceLocator()))
     ..registerLazySingleton(() => ForgotPassword(serviceLocator()))
     ..registerLazySingleton(() => DeleteAccount(serviceLocator()))
     ..registerLazySingleton(() => UpdateUser(serviceLocator()))
+
     // Repositories
     ..registerLazySingleton<AuthRepository>(
       () => AuthRepositoryImpl(serviceLocator()),

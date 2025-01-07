@@ -266,6 +266,65 @@ void main() {
     );
   });
 
+  group('signOut - ', () {
+    test(
+      'given AuthRepositoryImpl, '
+      'when [AuthRemoteDataSource.signOut] is called '
+      'then return [void]',
+      () async {
+        // Arrange
+        when(
+          () => remoteDataSource.signOut(),
+        ).thenAnswer((_) async => Future.value());
+
+        // Act
+        final result = await repositoryImpl.signOut();
+
+        // Assert
+        expect(
+          result,
+          const Right<Failure, void>(null),
+        );
+        verify(
+          () => remoteDataSource.signOut(),
+        ).called(1);
+        verifyNoMoreInteractions(remoteDataSource);
+      },
+    );
+
+    test(
+      'given AuthRepositoryImpl, '
+      'when [AuthRemoteDataSource.signOut] call is unsuccessful '
+      'then return [SignOutFailure] ',
+      () async {
+        // Arrange
+        const testSignOutException = SignOutException(
+          message: 'message',
+          statusCode: '500',
+        );
+        when(
+          () => remoteDataSource.signOut(),
+        ).thenThrow(testSignOutException);
+        // Act
+        final result = await repositoryImpl.signOut();
+
+        // Assert
+        expect(
+          result,
+          Left<Failure, void>(
+            SignOutFailure.fromException(
+              testSignOutException,
+            ),
+          ),
+        );
+        verify(
+          () => remoteDataSource.signOut(),
+        ).called(1);
+        verifyNoMoreInteractions(remoteDataSource);
+      },
+    );
+  });
+
   group('signIn - ', () {
     test(
       'given AuthRepositoryImpl, '
