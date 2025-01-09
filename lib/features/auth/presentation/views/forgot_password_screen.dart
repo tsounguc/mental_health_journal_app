@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mental_health_journal_app/core/common/views/i_field.dart';
 import 'package:mental_health_journal_app/core/common/views/long_button.dart';
+import 'package:mental_health_journal_app/core/common/widgets/logo_widget.dart';
 import 'package:mental_health_journal_app/core/extensions/context_extension.dart';
 import 'package:mental_health_journal_app/core/resources/colours.dart';
+import 'package:mental_health_journal_app/core/resources/strings.dart';
 import 'package:mental_health_journal_app/core/utils/core_utils.dart';
 import 'package:mental_health_journal_app/features/auth/presentation/auth_bloc/auth_bloc.dart';
 import 'package:mental_health_journal_app/features/auth/presentation/views/sign_in_screen.dart';
@@ -37,7 +39,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
           if (state is AuthError) {
             CoreUtils.showSnackBar(context, state.message);
           } else if (state is ForgotPasswordSent) {
-            CoreUtils.showSnackBar(context, 'A link was sent to your email');
+            CoreUtils.showSnackBar(context, Strings.forgotPasswordSnackBarMessage);
             Navigator.pushReplacementNamed(context, SignInScreen.id);
           }
         },
@@ -53,12 +55,15 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                   top: 0,
                 ),
                 children: [
-                  // TODO(Logo): Create Logo and Add Here
+                  LogoWidget(
+                    size: 75,
+                    color: context.theme.primaryColor,
+                  ),
                   const SizedBox(height: 100),
                   Padding(
                     padding: const EdgeInsets.only(left: 10),
                     child: Text(
-                      'Forgot password',
+                      Strings.forgotPasswordText,
                       style: TextStyle(
                         fontWeight: FontWeight.w700,
                         fontSize: 32,
@@ -74,11 +79,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                       children: [
                         Flexible(
                           child: Text(
-                            state is ForgotPasswordSent
-                                ? "We've sent you an email with a link to reset"
-                                    ' your password. Please check your email.'
-                                : 'Provide your email and we will send you '
-                                    'a link to reset your password',
+                            state is ForgotPasswordSent ? Strings.passwordSentText : Strings.passwordNotSentText,
                             style: const TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.normal,
@@ -95,7 +96,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                       key: formKey,
                       child: IField(
                         controller: emailController,
-                        hintText: 'Email',
+                        hintText: Strings.emailHintText,
                         keyboardType: TextInputType.emailAddress,
                       ),
                     ),
@@ -118,7 +119,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                               );
                         }
                       },
-                      label: 'Reset Password',
+                      label: Strings.resetPasswordButtonText,
                     ),
                   const SizedBox(height: 30),
                   Center(
@@ -127,7 +128,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                         Navigator.of(context).pop();
                       },
                       child: const Text(
-                        'Go back',
+                        Strings.goBackTextButtonText,
                         style: TextStyle(fontSize: 14),
                       ),
                     ),

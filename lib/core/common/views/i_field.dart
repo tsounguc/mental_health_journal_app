@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mental_health_journal_app/core/resources/strings.dart';
 
 class IField extends StatelessWidget {
   const IField({
@@ -62,7 +63,7 @@ class IField extends StatelessWidget {
           ? validator
           : (value) {
               if (value == null || value.isEmpty) {
-                return 'This field is required';
+                return Strings.fieldRequiredText;
               }
               return validator?.call(value);
             },

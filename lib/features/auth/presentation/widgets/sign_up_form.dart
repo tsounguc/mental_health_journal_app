@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mental_health_journal_app/core/common/views/i_field.dart';
+import 'package:mental_health_journal_app/core/resources/strings.dart';
 
 class SignUpForm extends StatefulWidget {
   const SignUpForm({
@@ -35,24 +36,25 @@ class _SignUpFormState extends State<SignUpForm> {
         children: [
           IField(
             controller: widget.nameController,
-            hintText: 'Name',
+            hintText: Strings.nameHintText,
             keyboardType: TextInputType.text,
           ),
           const SizedBox(height: 25),
           IField(
             controller: widget.emailController,
-            hintText: 'Email',
+            hintText: Strings.emailHintText,
             keyboardType: TextInputType.emailAddress,
           ),
           const SizedBox(height: 25),
           IField(
             controller: widget.passwordController,
-            hintText: 'Password',
+            hintText: Strings.passwordHintText,
             obscureText: obscurePassword,
             keyboardType: TextInputType.visiblePassword,
             suffixIcon: IconButton(
               icon: Icon(
                 obscurePassword ? Icons.visibility_outlined : Icons.visibility_off_outlined,
+                color: Colors.grey,
               ),
               onPressed: () => setState(() {
                 obscurePassword = !obscurePassword;
@@ -62,7 +64,7 @@ class _SignUpFormState extends State<SignUpForm> {
           const SizedBox(height: 25),
           IField(
             controller: widget.confirmPasswordController,
-            hintText: 'Confirm Password',
+            hintText: Strings.confirmPasswordHintText,
             obscureText: obscureConfirmPassword,
             keyboardType: TextInputType.visiblePassword,
             textInputAction: TextInputAction.send,
@@ -79,7 +81,7 @@ class _SignUpFormState extends State<SignUpForm> {
             overrideValidator: true,
             validator: (value) {
               if (value != widget.passwordController.text) {
-                return 'Passwords do not match';
+                return Strings.passwordValidatorText;
               }
               return null;
             },

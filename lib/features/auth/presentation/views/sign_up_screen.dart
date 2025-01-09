@@ -2,8 +2,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mental_health_journal_app/core/common/views/long_button.dart';
+import 'package:mental_health_journal_app/core/common/widgets/logo_widget.dart';
 import 'package:mental_health_journal_app/core/extensions/context_extension.dart';
 import 'package:mental_health_journal_app/core/resources/colours.dart';
+import 'package:mental_health_journal_app/core/resources/strings.dart';
 import 'package:mental_health_journal_app/core/utils/core_utils.dart';
 import 'package:mental_health_journal_app/features/auth/data/models/user_model.dart';
 import 'package:mental_health_journal_app/features/auth/presentation/auth_bloc/auth_bloc.dart';
@@ -81,30 +83,26 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 ).copyWith(top: 15),
                 children: [
                   const SizedBox(height: 35),
-                  // TODO(Logo): Create Logo and Add Here
+                  LogoWidget(
+                    size: 75,
+                    color: context.theme.primaryColor,
+                  ),
                   const SizedBox(height: 50),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 10),
-                    child: Text(
-                      'Sign Up',
-                      style: TextStyle(
-                        fontWeight: FontWeight.w700,
-                        fontSize: 32,
-                        color: context.theme.primaryColor,
-                      ),
+                  Text(
+                    Strings.signUpText,
+                    style: TextStyle(
+                      fontWeight: FontWeight.w700,
+                      fontSize: 32,
+                      color: context.theme.primaryColor,
                     ),
                   ),
                   const SizedBox(height: 10),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 10),
-                    child: Text(
-                      'Create an account',
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: context.theme.textTheme.bodyMedium?.color,
-                        // color: Colors.grey.shade800,
-                        fontWeight: FontWeight.normal,
-                      ),
+                  Text(
+                    Strings.signUpSubtext,
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: context.theme.textTheme.bodyMedium?.color,
+                      fontWeight: FontWeight.normal,
                     ),
                   ),
                   const SizedBox(height: 20),
@@ -124,7 +122,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   else
                     LongButton(
                       onPressed: () => signUp(context),
-                      label: 'Sign Up',
+                      label: Strings.signUpButtonText,
                     ),
                   const SizedBox(height: 30),
                   TextButton(
@@ -136,14 +134,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     },
                     child: RichText(
                       text: TextSpan(
-                        text: 'Already have an account? ',
+                        text: Strings.alreadyHaveAccountText,
                         style: TextStyle(
                           fontSize: 14,
                           color: context.theme.textTheme.bodyMedium?.color,
                         ),
                         children: [
                           TextSpan(
-                            text: 'Login',
+                            text: Strings.loginTextButtonText,
                             style: TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.w600,

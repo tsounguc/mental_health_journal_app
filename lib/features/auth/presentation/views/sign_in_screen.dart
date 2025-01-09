@@ -2,8 +2,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mental_health_journal_app/core/common/views/long_button.dart';
+import 'package:mental_health_journal_app/core/common/widgets/logo_widget.dart';
 import 'package:mental_health_journal_app/core/extensions/context_extension.dart';
 import 'package:mental_health_journal_app/core/resources/colours.dart';
+import 'package:mental_health_journal_app/core/resources/strings.dart';
 import 'package:mental_health_journal_app/core/utils/core_utils.dart';
 import 'package:mental_health_journal_app/features/auth/data/models/user_model.dart';
 import 'package:mental_health_journal_app/features/auth/presentation/auth_bloc/auth_bloc.dart';
@@ -67,10 +69,13 @@ class _SignInScreenState extends State<SignInScreen> {
                 shrinkWrap: true,
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 children: [
-                  // TODO(Logo): Create Logo and Add Here
-                  const SizedBox(height: 100),
+                  LogoWidget(
+                    size: 75,
+                    color: context.theme.primaryColor,
+                  ),
+                  const SizedBox(height: 75),
                   Text(
-                    'Login',
+                    Strings.loginText,
                     style: TextStyle(
                       fontWeight: FontWeight.w700,
                       fontSize: 32,
@@ -82,7 +87,7 @@ class _SignInScreenState extends State<SignInScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        'Sign in to your account',
+                        Strings.loginSubtext,
                         style: TextStyle(
                           fontSize: 14,
                         ),
@@ -107,7 +112,7 @@ class _SignInScreenState extends State<SignInScreen> {
                         );
                       },
                       child: Text(
-                        'Forgot Password?',
+                        Strings.forgotPasswordTextButtonText,
                         style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w600,
@@ -126,7 +131,7 @@ class _SignInScreenState extends State<SignInScreen> {
                   else
                     LongButton(
                       onPressed: () => signIn(context),
-                      label: 'Sign In',
+                      label: Strings.loginButtonText,
                     ),
                   const SizedBox(height: 30),
                   TextButton(
@@ -138,14 +143,14 @@ class _SignInScreenState extends State<SignInScreen> {
                     },
                     child: RichText(
                       text: TextSpan(
-                        text: "Don't have an account? ",
+                        text: Strings.dontHaveAccountText,
                         style: TextStyle(
                           fontSize: 14,
                           color: context.theme.textTheme.bodyMedium?.color,
                         ),
                         children: [
                           TextSpan(
-                            text: 'Register',
+                            text: Strings.registerTextButtonText,
                             style: TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.w600,

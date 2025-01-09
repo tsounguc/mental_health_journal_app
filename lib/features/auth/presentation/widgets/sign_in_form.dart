@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mental_health_journal_app/core/common/views/i_field.dart';
 import 'package:mental_health_journal_app/core/resources/colours.dart';
+import 'package:mental_health_journal_app/core/resources/strings.dart';
 
 class SignInForm extends StatefulWidget {
   const SignInForm({
@@ -30,13 +31,13 @@ class _SignInFormState extends State<SignInForm> {
         children: [
           IField(
             controller: widget.emailController,
-            hintText: 'Email',
+            hintText: Strings.emailHintText,
             keyboardType: TextInputType.emailAddress,
           ),
           const SizedBox(height: 25),
           IField(
             controller: widget.passwordController,
-            hintText: 'Password',
+            hintText: Strings.passwordHintText,
             obscureText: obscurePassword,
             keyboardType: TextInputType.visiblePassword,
             textInputAction: TextInputAction.send,
