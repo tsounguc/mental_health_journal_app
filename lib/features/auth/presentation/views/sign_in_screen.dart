@@ -12,7 +12,7 @@ import 'package:mental_health_journal_app/features/auth/presentation/auth_bloc/a
 import 'package:mental_health_journal_app/features/auth/presentation/views/forgot_password_screen.dart';
 import 'package:mental_health_journal_app/features/auth/presentation/views/sign_up_screen.dart';
 import 'package:mental_health_journal_app/features/auth/presentation/widgets/sign_in_form.dart';
-import 'package:mental_health_journal_app/features/dashboard/presentation/dashboard.dart';
+import 'package:mental_health_journal_app/features/journal/presentation/dashboard.dart';
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});
