@@ -5,6 +5,7 @@ Route<dynamic> onGenerateRoute(RouteSettings settings) {
     case '/':
       return _pageBuilder(
         (context) {
+          serviceLocator<FirebaseAuth>().currentUser?.reload();
           if (serviceLocator<FirebaseAuth>().currentUser != null) {
             final user = serviceLocator<FirebaseAuth>().currentUser!;
             final localUser = UserModel(

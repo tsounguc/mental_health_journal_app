@@ -404,14 +404,15 @@ void main() {
   });
 
   group('updateUser - ', () {
+    const testUserData = 'newEmail@mail.com';
+    const testAction = UpdateUserAction.email;
     test(
       'given AuthRepositoryImpl, '
       'when [AuthRemoteDataSource.updateUser] is called '
       'then return [void]',
       () async {
         // Arrange
-        const testUserData = 'newEmail@mail.com';
-        const testAction = UpdateUserAction.email;
+
         when(
           () => remoteDataSource.updateUser(
             action: any(named: 'action'),
@@ -442,8 +443,6 @@ void main() {
       'then return [UpdateUserFailure]',
       () async {
         // Arrange
-        const testUserData = 'newEmail@mail.com';
-        const testAction = UpdateUserAction.email;
         const testUpdateUserException = UpdateUserException(
           message: 'message',
           statusCode: '500',

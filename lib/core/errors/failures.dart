@@ -64,9 +64,9 @@ class SignOutFailure extends Failure {
 
   SignOutFailure.fromException(SignOutException exception)
       : this(
-    message: exception.message,
-    statusCode: exception.statusCode,
-  );
+          message: exception.message,
+          statusCode: exception.statusCode,
+        );
 }
 
 class UpdateUserFailure extends Failure {
@@ -89,6 +89,45 @@ class DeleteAccountFailure extends Failure {
   });
 
   DeleteAccountFailure.fromException(DeleteAccountException exception)
+      : this(
+          message: exception.message,
+          statusCode: exception.statusCode,
+        );
+}
+
+class CreateEntryFailure extends Failure {
+  CreateEntryFailure({
+    required super.message,
+    required super.statusCode,
+  });
+
+  CreateEntryFailure.fromException(CreateEntryException exception)
+      : this(
+          message: exception.message,
+          statusCode: exception.statusCode,
+        );
+}
+
+class UpdateEntryFailure extends Failure {
+  UpdateEntryFailure({
+    required super.message,
+    required super.statusCode,
+  });
+
+  UpdateEntryFailure.fromException(UpdateEntryException exception)
+      : this(
+          message: exception.message,
+          statusCode: exception.statusCode,
+        );
+}
+
+class DeleteEntryFailure extends Failure {
+  DeleteEntryFailure({
+    required super.message,
+    required super.statusCode,
+  });
+
+  DeleteEntryFailure.fromException(DeleteEntryException exception)
       : this(
           message: exception.message,
           statusCode: exception.statusCode,

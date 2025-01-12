@@ -1,0 +1,12 @@
+{
+  "id": "_empty.id",
+  "userId": "_empty.userId",
+  "content": "_empty.content",
+  "dateCreated": {
+    "_seconds": 1677483548,
+    "_nanoseconds": 123456000
+  },
+  "tags":[],
+  "sentiment": "neutral",
+  "title": "_empty.title"
+}

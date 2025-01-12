@@ -37,6 +37,12 @@ void main() {
       final result = await useCase(testEmail);
       // Assert
       expect(result, const Right<Failure, void>(null));
+      verify(
+        () => repository.deleteAccount(
+          password: testEmail,
+        ),
+      ).called(1);
+      verifyNoMoreInteractions(repository);
     },
   );
 
@@ -58,7 +64,11 @@ void main() {
 
       // Assert
       expect(result, Left<Failure, void>(testFailure));
-      verify(() => repository.deleteAccount(password: testEmail)).called(1);
+      verify(
+        () => repository.deleteAccount(
+          password: testEmail,
+        ),
+      ).called(1);
       verifyNoMoreInteractions(repository);
     },
   );

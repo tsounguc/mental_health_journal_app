@@ -67,7 +67,9 @@ void main() {
     registerFallbackValue(tUpdateUserParams);
   });
 
-  tearDown(() {});
+  tearDown(() {
+    bloc.close();
+  });
 
   test(
     'given AuthBloc '

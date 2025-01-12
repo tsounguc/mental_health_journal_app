@@ -7,6 +7,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:mental_health_journal_app/core/enums/update_user_action.dart';
 import 'package:mental_health_journal_app/core/errors/exceptions.dart';
+import 'package:mental_health_journal_app/core/utils/firebase_constants.dart';
 import 'package:mental_health_journal_app/core/utils/typedefs.dart';
 import 'package:mental_health_journal_app/features/auth/data/models/user_model.dart';
 
@@ -212,8 +213,9 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   @override
   Future<void> signOut() async {
     try {
-      await _authClient.signOut();
-      await _authClient.currentUser!.reload();
+      final result = await _authClient.signOut();
+      // await _authClient.currentUser!.reload();
+      return result;
     } on FirebaseException catch (e) {
       throw SignOutException(
         message: e.message ?? 'Error Occurred',
@@ -318,7 +320,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   }
 
   CollectionReference<DataMap> get _users => _firestoreClient.collection(
-        'users',
+        FirebaseConstants.usersCollection,
       );
 
   Future<DocumentSnapshot<DataMap>> _getUserData(String uid) async {

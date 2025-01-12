@@ -8,6 +8,7 @@ import 'package:firebase_storage_mocks/firebase_storage_mocks.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mental_health_journal_app/core/enums/update_user_action.dart';
 import 'package:mental_health_journal_app/core/errors/exceptions.dart';
+import 'package:mental_health_journal_app/core/utils/firebase_constants.dart';
 import 'package:mental_health_journal_app/core/utils/typedefs.dart';
 import 'package:mental_health_journal_app/features/auth/data/data_sources/auth_remote_data_source.dart';
 import 'package:mental_health_journal_app/features/auth/data/models/user_model.dart';
@@ -44,7 +45,7 @@ void main() {
   late FirebaseAuth authClient;
   late FirebaseFirestore firestoreClient;
   late MockFirebaseStorage storageClient;
-  late DocumentReference<DataMap> documentReference;
+  late DocumentReference<DataMap> userDocRef;
   late MockUser mockUser;
   late UserCredential userCredential;
 
@@ -63,13 +64,13 @@ void main() {
     firestoreClient = FakeFirebaseFirestore();
     storageClient = MockFirebaseStorage();
 
-    documentReference = firestoreClient.collection('users').doc();
+    userDocRef = firestoreClient.collection(FirebaseConstants.usersCollection).doc();
 
-    await documentReference.set(
-      testUserModel.copyWith(uid: documentReference.id).toMap(),
+    await userDocRef.set(
+      testUserModel.copyWith(uid: userDocRef.id).toMap(),
     );
 
-    mockUser = MockUser()..uid = documentReference.id;
+    mockUser = MockUser()..uid = userDocRef.id;
 
     userCredential = MockUserCredential(mockUser);
 
@@ -183,7 +184,7 @@ void main() {
 
   group('deleteAccount - ', () {
     setUp(() {
-      mockUser = MockUser()..uid = documentReference.id;
+      mockUser = MockUser()..uid = userDocRef.id;
       registerFallbackValue(MockAuthCredential());
     });
     test(
@@ -245,9 +246,9 @@ void main() {
         'then complete successfully', () async {
       when(() => authClient.signOut()).thenAnswer((_) async => Future.value());
 
-      final methodCall = remoteDataSource.signOut();
+      final methodCall = remoteDataSource.signOut;
 
-      expect(methodCall, completes);
+      expect(methodCall(), completes);
       verify(() => authClient.signOut()).called(1);
     });
 
@@ -392,7 +393,7 @@ void main() {
 
   group('updateUser - ', () {
     setUp(() {
-      mockUser = MockUser()..uid = documentReference.id;
+      mockUser = MockUser()..uid = userDocRef.id;
       registerFallbackValue(MockAuthCredential());
     });
 
@@ -426,9 +427,9 @@ void main() {
         verifyNever(() => mockUser.updatePassword(any()));
 
         final userData = await firestoreClient
-            .collection('users')
+            .collection(FirebaseConstants.usersCollection)
             .doc(
-              documentReference.id,
+              userDocRef.id,
             )
             .get();
 
@@ -463,9 +464,9 @@ void main() {
         verifyNever(() => mockUser.updatePassword(any()));
 
         final userData = await firestoreClient
-            .collection('users')
+            .collection(FirebaseConstants.usersCollection)
             .doc(
-              documentReference.id,
+              userDocRef.id,
             )
             .get();
 
@@ -505,9 +506,9 @@ void main() {
 
         final userData = await firestoreClient
             .collection(
-              'users',
+              FirebaseConstants.usersCollection,
             )
-            .doc(documentReference.id)
+            .doc(userDocRef.id)
             .get();
 
         expect(userData.data()!['password'], null);
