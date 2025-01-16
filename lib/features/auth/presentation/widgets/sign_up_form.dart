@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mental_health_journal_app/core/common/views/i_field.dart';
+import 'package:mental_health_journal_app/core/common/widgets/i_field.dart';
 import 'package:mental_health_journal_app/core/resources/strings.dart';
 
 class SignUpForm extends StatefulWidget {

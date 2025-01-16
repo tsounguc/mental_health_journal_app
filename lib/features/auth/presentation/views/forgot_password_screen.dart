@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:mental_health_journal_app/core/common/views/i_field.dart';
+import 'package:mental_health_journal_app/core/common/widgets/i_field.dart';
 import 'package:mental_health_journal_app/core/common/views/long_button.dart';
 import 'package:mental_health_journal_app/core/common/widgets/logo_widget.dart';
 import 'package:mental_health_journal_app/core/extensions/context_extension.dart';
@@ -39,8 +39,14 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
           if (state is AuthError) {
             CoreUtils.showSnackBar(context, state.message);
           } else if (state is ForgotPasswordSent) {
-            CoreUtils.showSnackBar(context, Strings.forgotPasswordSnackBarMessage);
-            Navigator.pushReplacementNamed(context, SignInScreen.id);
+            CoreUtils.showSnackBar(
+              context,
+              Strings.forgotPasswordSnackBarMessage,
+            );
+            Navigator.pushReplacementNamed(
+              context,
+              SignInScreen.id,
+            );
           }
         },
         builder: (context, state) {

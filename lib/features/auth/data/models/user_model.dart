@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:mental_health_journal_app/core/utils/typedefs.dart';
 import 'package:mental_health_journal_app/features/auth/domain/entities/user.dart';
