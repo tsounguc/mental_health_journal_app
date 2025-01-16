@@ -105,7 +105,11 @@ void main() {
         await remoteDataSourceImpl.createEntry(entry: testEntry);
 
         // Assert
-        final entriesCollectionRef = await firestoreClient.collection(FirebaseConstants.entriesCollection).get();
+        final entriesCollectionRef = await firestoreClient
+            .collection(
+              FirebaseConstants.entriesCollection,
+            )
+            .get();
         expect(entriesCollectionRef.docs.length, 1);
 
         final entryDocRef = entriesCollectionRef.docs.first;
@@ -271,6 +275,49 @@ void main() {
             )
             .get();
         expect(entriesCollectionRef.docs.length, 0);
+      },
+    );
+  });
+
+  group('getEntries - ', () {
+    test(
+      'given JournalRemoteDataSourceImpl '
+      'when [JournalRemoteDataSourceImpl.getEntries] is called '
+      'then return [Stream<List<JournalEntry>>]',
+      () async {
+        // Arrange
+        final testEntries = [
+          JournalEntryModel.empty(),
+          JournalEntryModel.empty().copyWith(id: '1'),
+        ];
+
+        for (final entry in testEntries) {
+          await firestoreClient
+              .collection(
+                FirebaseConstants.entriesCollection,
+              )
+              .add(entry.toMap());
+        }
+
+        // Act
+        remoteDataSourceImpl.getEntries(
+          userId: testEntry.userId,
+          startAfterId: testEntry.id,
+          paginationSize: 10,
+        );
+
+        // Assert
+        final entriesCollectionRef = await firestoreClient
+            .collection(
+              FirebaseConstants.entriesCollection,
+            )
+            .get();
+
+        expect(entriesCollectionRef.docs.length, 2);
+        expect(
+          entriesCollectionRef.docs.first.data()['id'],
+          testEntries[0].id,
+        );
       },
     );
   });

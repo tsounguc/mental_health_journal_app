@@ -4,6 +4,7 @@ import 'package:mental_health_journal_app/core/enums/update_entry_action.dart';
 import 'package:mental_health_journal_app/core/errors/exceptions.dart';
 import 'package:mental_health_journal_app/core/errors/failures.dart';
 import 'package:mental_health_journal_app/features/journal/data/data_sources/journal_remote_data_source.dart';
+import 'package:mental_health_journal_app/features/journal/data/models/journal_entry_model.dart';
 import 'package:mental_health_journal_app/features/journal/data/repositories/journal_repository_impl.dart';
 import 'package:mental_health_journal_app/features/journal/domain/entities/journal_entry.dart';
 import 'package:mental_health_journal_app/features/journal/domain/repositories/journal_repository.dart';
@@ -16,12 +17,14 @@ void main() {
   late JournalRepositoryImpl repositoryImpl;
 
   final testEntry = JournalEntry.empty();
+  final testStreamResponse = [JournalEntryModel.empty()];
 
   setUp(() {
     remoteDataSource = MockJournalRemoteDataSource();
     repositoryImpl = JournalRepositoryImpl(remoteDataSource);
     registerFallbackValue(UpdateEntryAction.content);
     registerFallbackValue(testEntry);
+    registerFallbackValue(testStreamResponse);
   });
 
   test(
@@ -176,7 +179,7 @@ void main() {
     );
   });
 
-  group('updateEntry', () {
+  group('updateEntry - ', () {
     const testEntryData = 'Today was a great day';
     const testAction = UpdateEntryAction.content;
     test(
@@ -257,6 +260,49 @@ void main() {
           ),
         ).called(1);
 
+        verifyNoMoreInteractions(remoteDataSource);
+      },
+    );
+  });
+
+  group('getEntries - ', () {
+    test(
+      'given JournalRepositoryImpl, '
+      'when [JournalRemoteDataSource.getEntries] '
+      'then return a [List<JournalEntry>]',
+      () async {
+        // Arrange
+        when(
+          () => remoteDataSource.getEntries(
+            userId: any(named: 'userId'),
+            startAfterId: any(named: 'startAfterId'),
+            paginationSize: any(named: 'paginationSize'),
+          ),
+        ).thenAnswer((_) => Stream.value(testStreamResponse));
+
+        // Act
+        final result = repositoryImpl.getEntries(
+          userId: testEntry.userId,
+          startAfterId: testEntry.id,
+          paginationSize: 10,
+        );
+
+        // Assert
+        expect(
+          result,
+          emits(
+            Right<Failure, List<JournalEntry>>(
+              testStreamResponse,
+            ),
+          ),
+        );
+        verify(
+          () => remoteDataSource.getEntries(
+            userId: testEntry.userId,
+            startAfterId: testEntry.id,
+            paginationSize: 10,
+          ),
+        ).called(1);
         verifyNoMoreInteractions(remoteDataSource);
       },
     );

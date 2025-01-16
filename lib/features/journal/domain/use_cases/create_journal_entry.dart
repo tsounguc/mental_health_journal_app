@@ -9,5 +9,7 @@ class CreateJournalEntry implements UseCaseWithParams<void, JournalEntry> {
   final JournalRepository _repository;
 
   @override
-  ResultVoid call(JournalEntry params) => _repository.createEntry(entry: params);
+  ResultVoid call(JournalEntry params) => _repository.createEntry(
+        entry: params,
+      );
 }

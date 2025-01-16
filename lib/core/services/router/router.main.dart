@@ -17,10 +17,11 @@ Route<dynamic> onGenerateRoute(RouteSettings settings) {
             );
 
             context.userProvider.initUser(localUser);
-            return BlocProvider(
-              create: (_) => serviceLocator<AuthBloc>(),
-              child: const Dashboard(),
-            );
+            return const Dashboard();
+            // return BlocProvider(
+            //   create: (_) => serviceLocator<AuthBloc>(),
+            //   child: const Dashboard(),
+            // );
           }
           return BlocProvider(
             create: (_) => serviceLocator<AuthBloc>(),
@@ -62,6 +63,31 @@ Route<dynamic> onGenerateRoute(RouteSettings settings) {
         ),
         settings: settings,
       );
+
+    case NewJournalEntryScreen.id:
+      return _pageBuilder(
+        (_) => BlocProvider(
+          create: (_) => serviceLocator<JournalBloc>(),
+          child: const NewJournalEntryScreen(),
+        ),
+        settings: settings,
+      );
+
+    // case JournalHomeScreen.id:
+    //   return _pageBuilder(
+    //     (_) => MultiBlocProvider(
+    //       providers: [
+    //         BlocProvider(
+    //           create: (_) => serviceLocator<JournalBloc>(),
+    //         ),
+    //         BlocProvider(
+    //           create: (_) => serviceLocator<AuthBloc>(),
+    //         ),
+    //       ],
+    //       child: const JournalHomeScreen(),
+    //     ),
+    //     settings: settings,
+    //   );
     default:
       return _pageBuilder(
         (_) => const PageUnderConstruction(),

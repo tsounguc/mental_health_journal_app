@@ -36,3 +36,15 @@ class UpdateEntryEvent extends JournalEvent {
   final UpdateEntryAction action;
   final dynamic entryData;
 }
+
+class FetchEntriesEvent extends JournalEvent {
+  const FetchEntriesEvent({
+    required this.userId,
+    required this.startAfterId,
+    required this.paginationSize,
+  });
+
+  final String userId;
+  final String startAfterId;
+  final int paginationSize;
+}

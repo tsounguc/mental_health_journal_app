@@ -61,7 +61,7 @@ void main() {
       expect(result, Left<Failure, void>(testFailure));
       verify(
         () => repository.createEntry(
-         entry: testEntry
+          entry: testEntry,
         ),
       ).called(1);
       verifyNoMoreInteractions(repository);

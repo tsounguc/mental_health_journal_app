@@ -14,7 +14,7 @@ void main() {
     message: 'message',
     statusCode: 500,
   );
-  const testEmail = 'testEmail@mail.com';
+
   setUp(() {
     repository = MockAuthRepository();
     useCase = SignOut(repository);

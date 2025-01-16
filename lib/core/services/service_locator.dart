@@ -12,5 +12,13 @@ import 'package:mental_health_journal_app/features/auth/domain/use_cases/sign_in
 import 'package:mental_health_journal_app/features/auth/domain/use_cases/sign_out.dart';
 import 'package:mental_health_journal_app/features/auth/domain/use_cases/update_user.dart';
 import 'package:mental_health_journal_app/features/auth/presentation/auth_bloc/auth_bloc.dart';
+import 'package:mental_health_journal_app/features/journal/data/data_sources/journal_remote_data_source.dart';
+import 'package:mental_health_journal_app/features/journal/data/repositories/journal_repository_impl.dart';
+import 'package:mental_health_journal_app/features/journal/domain/repositories/journal_repository.dart';
+import 'package:mental_health_journal_app/features/journal/domain/use_cases/create_journal_entry.dart';
+import 'package:mental_health_journal_app/features/journal/domain/use_cases/delete_journal_entry.dart';
+import 'package:mental_health_journal_app/features/journal/domain/use_cases/get_journal_entries.dart';
+import 'package:mental_health_journal_app/features/journal/domain/use_cases/update_journal_entry.dart';
+import 'package:mental_health_journal_app/features/journal/presentation/journal_bloc/journal_bloc.dart';
 
 part 'service_locator.main.dart';

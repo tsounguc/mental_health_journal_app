@@ -64,7 +64,11 @@ void main() {
     firestoreClient = FakeFirebaseFirestore();
     storageClient = MockFirebaseStorage();
 
-    userDocRef = firestoreClient.collection(FirebaseConstants.usersCollection).doc();
+    userDocRef = firestoreClient
+        .collection(
+          FirebaseConstants.usersCollection,
+        )
+        .doc();
 
     await userDocRef.set(
       testUserModel.copyWith(uid: userDocRef.id).toMap(),

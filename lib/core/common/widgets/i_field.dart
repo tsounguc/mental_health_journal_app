@@ -7,7 +7,6 @@ class IField extends StatelessWidget {
     this.filled = false,
     this.obscureText = false,
     this.readOnly = false,
-    this.overrideValidator = false,
     this.validator,
     this.fillColor,
     this.focusColor,
@@ -19,6 +18,7 @@ class IField extends StatelessWidget {
     this.hintText,
     this.keyboardType,
     this.hintStyle,
+    this.overrideValidator = false,
     this.maxLines = 1,
     this.minLines,
     this.borderRadius,
@@ -67,31 +67,50 @@ class IField extends StatelessWidget {
               }
               return validator?.call(value);
             },
+      minLines: minLines,
+      maxLines: maxLines,
+      onTap: onTap,
       onTapOutside: (_) {
         FocusScope.of(context).unfocus();
       },
+      style: TextStyle(
+        fontWeight: FontWeight.normal,
+        fontSize: fontSize ?? 14,
+      ),
       keyboardType: keyboardType,
       obscureText: obscureText,
+      textInputAction: textInputAction,
       readOnly: readOnly,
+      onEditingComplete: onEditingComplete,
+      onFieldSubmitted: onFieldSubmitted,
       decoration: InputDecoration(
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(90),
+          borderRadius: borderRadius ?? BorderRadius.circular(90),
         ),
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(90),
+          borderRadius: borderRadius ?? BorderRadius.circular(90),
           borderSide: const BorderSide(color: Colors.grey),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(90),
+          borderRadius: borderRadius ?? BorderRadius.circular(90),
           borderSide: BorderSide(
-            color: Theme.of(context).primaryColor,
+            color: focusColor ?? Theme.of(context).primaryColor,
           ),
         ),
         // overriding the default padding helps with that puffy look
-        contentPadding: const EdgeInsets.symmetric(horizontal: 20),
+        contentPadding: contentPadding ??
+            const EdgeInsets.symmetric(
+              horizontal: 20,
+              vertical: 15,
+            ),
+
         filled: filled,
         fillColor: fillColor,
+        focusColor: focusColor,
+        prefixIcon: prefixIcon,
+        prefix: prefix,
         suffixIcon: suffixIcon,
+        suffix: suffix,
         hintText: hintText,
         hintStyle: hintStyle ??
             const TextStyle(

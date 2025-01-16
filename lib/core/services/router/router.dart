@@ -9,6 +9,9 @@ import 'package:mental_health_journal_app/features/auth/presentation/auth_bloc/a
 import 'package:mental_health_journal_app/features/auth/presentation/views/forgot_password_screen.dart';
 import 'package:mental_health_journal_app/features/auth/presentation/views/sign_in_screen.dart';
 import 'package:mental_health_journal_app/features/auth/presentation/views/sign_up_screen.dart';
-import 'package:mental_health_journal_app/features/journal/presentation/dashboard.dart';
+import 'package:mental_health_journal_app/features/journal/presentation/journal_bloc/journal_bloc.dart';
+import 'package:mental_health_journal_app/features/dashboard/presentation/views/dashboard.dart';
+import 'package:mental_health_journal_app/features/journal/presentation/views/journal_home_screen.dart';
+import 'package:mental_health_journal_app/features/journal/presentation/views/new_journal_entry_screen.dart';
 
 part 'router.main.dart';

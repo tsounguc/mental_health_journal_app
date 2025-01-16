@@ -9,7 +9,10 @@ class UpdateJournalEntry implements UseCaseWithParams<void, UpdateJournalEntryPa
   final JournalRepository _repository;
 
   @override
-  ResultVoid call(UpdateJournalEntryParams params) => _repository.updateEntry(
+  ResultVoid call(
+    UpdateJournalEntryParams params,
+  ) =>
+      _repository.updateEntry(
         entryId: params.entryId,
         action: params.action,
         entryData: params.entryData,

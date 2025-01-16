@@ -5,7 +5,7 @@ import 'package:mental_health_journal_app/features/auth/presentation/auth_bloc/a
 
 class Dashboard extends StatefulWidget {
   const Dashboard({super.key});
-  static const id = '/journal';
+  static const id = '/dashboard';
 
   @override
   State<Dashboard> createState() => _DashboardState();

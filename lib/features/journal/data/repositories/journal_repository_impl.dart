@@ -1,9 +1,13 @@
+import 'dart:async';
+
 import 'package:dartz/dartz.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:mental_health_journal_app/core/enums/update_entry_action.dart';
 import 'package:mental_health_journal_app/core/errors/exceptions.dart';
 import 'package:mental_health_journal_app/core/errors/failures.dart';
 import 'package:mental_health_journal_app/core/utils/typedefs.dart';
 import 'package:mental_health_journal_app/features/journal/data/data_sources/journal_remote_data_source.dart';
+import 'package:mental_health_journal_app/features/journal/data/models/journal_entry_model.dart';
 import 'package:mental_health_journal_app/features/journal/domain/entities/journal_entry.dart';
 import 'package:mental_health_journal_app/features/journal/domain/repositories/journal_repository.dart';
 
@@ -58,5 +62,41 @@ class JournalRepositoryImpl implements JournalRepository {
         UpdateEntryFailure.fromException(e),
       );
     }
+  }
+
+  @override
+  ResultStream<List<JournalEntry>> getEntries({
+    required String userId,
+    required String startAfterId,
+    required int paginationSize,
+  }) {
+    return _remoteDataSource
+        .getEntries(
+          userId: userId,
+          startAfterId: startAfterId,
+          paginationSize: paginationSize,
+        )
+        .transform(
+          StreamTransformer<List<JournalEntryModel>, Either<Failure, List<JournalEntry>>>.fromHandlers(
+            handleData: (entries, sink) {
+              sink.add(Right(entries));
+            },
+            handleError: (error, stackTrace, sink) {
+              debugPrintStack(stackTrace: stackTrace);
+              if (error is GetEntriesException) {
+                sink.add(Left(GetEntriesFailure.fromException(error)));
+              } else {
+                sink.add(
+                  Left(
+                    GetEntriesFailure(
+                      message: error.toString(),
+                      statusCode: 505,
+                    ),
+                  ),
+                );
+              }
+            },
+          ),
+        );
   }
 }

@@ -15,4 +15,10 @@ abstract class JournalRepository {
   });
 
   ResultVoid deleteEntry({required String id});
+
+  ResultStream<List<JournalEntry>> getEntries({
+    required String userId,
+    required String startAfterId,
+    required int paginationSize,
+  });
 }

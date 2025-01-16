@@ -19,6 +19,12 @@ abstract class JournalRemoteDataSource {
   });
 
   Future<void> deleteEntry({required String entryId});
+
+  Stream<List<JournalEntryModel>> getEntries({
+    required String userId,
+    required String startAfterId,
+    required int paginationSize,
+  });
 }
 
 class JournalRemoteDataSourceImpl implements JournalRemoteDataSource {
@@ -36,7 +42,7 @@ class JournalRemoteDataSourceImpl implements JournalRemoteDataSource {
     try {
       final entryDocRef = _entries.doc();
 
-      var entryModel = (entry as JournalEntryModel).copyWith(
+      final entryModel = (entry as JournalEntryModel).copyWith(
         id: entryDocRef.id,
         userId: _authClient.currentUser?.uid,
       );
@@ -66,6 +72,59 @@ class JournalRemoteDataSourceImpl implements JournalRemoteDataSource {
   @override
   Future<void> deleteEntry({required String entryId}) async {
     return _entries.doc(entryId).delete();
+  }
+
+  @override
+  Stream<List<JournalEntryModel>> getEntries({
+    required String userId,
+    required String startAfterId,
+    required int paginationSize,
+  }) {
+    try {
+      var entriesQuery = _entries.where('userId', isEqualTo: userId).orderBy('dateCreaed').limit(paginationSize);
+
+      if (startAfterId.isNotEmpty) {
+        entriesQuery = entriesQuery.startAfter([startAfterId]);
+      }
+
+      final entriesStream = entriesQuery.snapshots().map(
+            (snapshot) => snapshot.docs
+                .map(
+                  (doc) => JournalEntryModel.fromMap(
+                    doc.data(),
+                  ),
+                )
+                .toList(),
+          );
+
+      return entriesStream.handleError((dynamic error) {
+        if (error is FirebaseException) {
+          debugPrintStack(stackTrace: error.stackTrace);
+          throw GetEntriesException(
+            message: error.message ?? 'Unknown error occurred',
+            statusCode: error.code,
+          );
+        }
+        throw GetEntriesException(
+          message: error.toString(),
+          statusCode: '505',
+        );
+      });
+    } on FirebaseException catch (e, s) {
+      debugPrintStack(stackTrace: s);
+      throw GetEntriesException(
+        message: e.message ?? 'Unknown error occurred',
+        statusCode: '501',
+      );
+    } on GetEntriesException {
+      rethrow;
+    } catch (e, s) {
+      debugPrintStack(stackTrace: s);
+      throw GetEntriesException(
+        message: e.toString(),
+        statusCode: '505',
+      );
+    }
   }
 
   @override
@@ -113,5 +172,7 @@ class JournalRemoteDataSourceImpl implements JournalRemoteDataSource {
     await _entries.doc(id).update(data);
   }
 
-  CollectionReference<DataMap> get _entries => _firestoreClient.collection(FirebaseConstants.entriesCollection);
+  CollectionReference<DataMap> get _entries => _firestoreClient.collection(
+        FirebaseConstants.entriesCollection,
+      );
 }

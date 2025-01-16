@@ -5,6 +5,7 @@ import 'package:mental_health_journal_app/core/errors/failures.dart';
 import 'package:mental_health_journal_app/features/journal/domain/entities/journal_entry.dart';
 import 'package:mental_health_journal_app/features/journal/domain/use_cases/create_journal_entry.dart';
 import 'package:mental_health_journal_app/features/journal/domain/use_cases/delete_journal_entry.dart';
+import 'package:mental_health_journal_app/features/journal/domain/use_cases/get_journal_entries.dart';
 import 'package:mental_health_journal_app/features/journal/domain/use_cases/update_journal_entry.dart';
 import 'package:mental_health_journal_app/features/journal/presentation/journal_bloc/journal_bloc.dart';
 import 'package:mocktail/mocktail.dart';
@@ -15,10 +16,13 @@ class MockDeleteJournalEntry extends Mock implements DeleteJournalEntry {}
 
 class MockUpdateJournalEntry extends Mock implements UpdateJournalEntry {}
 
+class MockGetJournalEntries extends Mock implements GetJournalEntries {}
+
 void main() {
   late CreateJournalEntry createJournalEntry;
   late DeleteJournalEntry deleteJournalEntry;
   late UpdateJournalEntry updateJournalEntry;
+  late GetJournalEntries getJournalEntries;
 
   late JournalBloc bloc;
 
@@ -28,19 +32,23 @@ void main() {
     createJournalEntry = MockCreateJournalEntry();
     deleteJournalEntry = MockDeleteJournalEntry();
     updateJournalEntry = MockUpdateJournalEntry();
+    getJournalEntries = MockGetJournalEntries();
 
     bloc = JournalBloc(
-      createJournalEntry: createJournalEntry,
-      deleteJournalEntry: deleteJournalEntry,
-      updateJournalEntry: updateJournalEntry,
-    );
+        createJournalEntry: createJournalEntry,
+        deleteJournalEntry: deleteJournalEntry,
+        updateJournalEntry: updateJournalEntry,
+        getJournalEntries: getJournalEntries);
   });
 
   late UpdateJournalEntryParams tUpdateJournalEntryParams;
+  late GetJournalEntriesParams tGetJournalEntriesParams;
 
   setUpAll(() {
     tUpdateJournalEntryParams = const UpdateJournalEntryParams.empty();
+    tGetJournalEntriesParams = GetJournalEntriesParams.empty();
     registerFallbackValue(tUpdateJournalEntryParams);
+    registerFallbackValue(tGetJournalEntriesParams);
     registerFallbackValue(testEntry);
   });
 
@@ -240,6 +248,77 @@ void main() {
           () => updateJournalEntry(tUpdateJournalEntryParams),
         ).called(1);
         verifyNoMoreInteractions(updateJournalEntry);
+      },
+    );
+  });
+
+  group('GetJournalEntries - ', () {
+    final testEntries = <JournalEntry>[];
+    final testGetEntriesFailure = GetEntriesFailure(
+      message: 'message',
+      statusCode: 500,
+    );
+
+    blocTest<JournalBloc, JournalState>(
+      'given JournalBloc '
+      'when [GetJournalEntries] is called '
+      'then emit [JournalLoading, EntriesFetched] ',
+      build: () {
+        when(() => getJournalEntries(any())).thenAnswer(
+          (_) => Stream.value(Right(testEntries)),
+        );
+        return bloc;
+      },
+      act: (bloc) => bloc.add(
+        FetchEntriesEvent(
+          userId: tGetJournalEntriesParams.userId,
+          startAfterId: tGetJournalEntriesParams.startAfterId,
+          paginationSize: tGetJournalEntriesParams.paginationSize,
+        ),
+      ),
+      expect: () => [
+        const JournalLoading(),
+        EntriesFetched(
+          entries: testEntries,
+          hasReachedEnd: true,
+        ),
+      ],
+      verify: (bloc) {
+        verify(
+          () => getJournalEntries(tGetJournalEntriesParams),
+        ).called(1);
+        verifyNoMoreInteractions(getJournalEntries);
+      },
+    );
+
+    blocTest<JournalBloc, JournalState>(
+      'given JournalBloc '
+      'when [GetJournalEntries] call is unsuccessful '
+      'then emit [JournalLoading, JournalError] ',
+      build: () {
+        when(() => getJournalEntries(any())).thenAnswer(
+          (_) => Stream.value(Left(testGetEntriesFailure)),
+        );
+        return bloc;
+      },
+      act: (bloc) => bloc.add(
+        FetchEntriesEvent(
+          userId: tGetJournalEntriesParams.userId,
+          startAfterId: tGetJournalEntriesParams.startAfterId,
+          paginationSize: tGetJournalEntriesParams.paginationSize,
+        ),
+      ),
+      expect: () => [
+        const JournalLoading(),
+        JournalError(
+          message: testGetEntriesFailure.message,
+        ),
+      ],
+      verify: (bloc) {
+        verify(
+          () => getJournalEntries(tGetJournalEntriesParams),
+        ).called(1);
+        verifyNoMoreInteractions(getJournalEntries);
       },
     );
   });

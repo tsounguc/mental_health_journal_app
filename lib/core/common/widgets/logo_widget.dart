@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:iconly/iconly.dart';
-import 'package:mental_health_journal_app/core/resources/colours.dart';
 import 'package:mental_health_journal_app/core/resources/strings.dart';
 
 class LogoWidget extends StatelessWidget {

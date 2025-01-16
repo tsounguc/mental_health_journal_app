@@ -37,3 +37,16 @@ final class EntryDeleted extends JournalState {
 final class EntryUpdated extends JournalState {
   const EntryUpdated();
 }
+
+final class EntriesFetched extends JournalState {
+  const EntriesFetched({
+    required this.entries,
+    required this.hasReachedEnd,
+  });
+
+  final List<JournalEntry> entries;
+  final bool hasReachedEnd;
+
+  @override
+  List<Object> get props => [entries];
+}

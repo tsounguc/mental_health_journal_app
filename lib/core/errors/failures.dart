@@ -133,3 +133,16 @@ class DeleteEntryFailure extends Failure {
           statusCode: exception.statusCode,
         );
 }
+
+class GetEntriesFailure extends Failure {
+  GetEntriesFailure({
+    required super.message,
+    required super.statusCode,
+  });
+
+  GetEntriesFailure.fromException(GetEntriesException exception)
+      : this(
+          message: exception.message,
+          statusCode: exception.statusCode,
+        );
+}

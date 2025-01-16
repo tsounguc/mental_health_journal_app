@@ -4,6 +4,38 @@ final serviceLocator = GetIt.instance;
 
 Future<void> setUpServices() async {
   await _initAuth();
+  await _initJournal();
+}
+
+Future<void> _initJournal() async {
+  serviceLocator
+    // App Logic
+    ..registerFactory(
+      () => JournalBloc(
+        createJournalEntry: serviceLocator(),
+        deleteJournalEntry: serviceLocator(),
+        updateJournalEntry: serviceLocator(),
+        getJournalEntries: serviceLocator(),
+      ),
+    )
+    // Use cases
+    ..registerLazySingleton(() => CreateJournalEntry(serviceLocator()))
+    ..registerLazySingleton(() => DeleteJournalEntry(serviceLocator()))
+    ..registerLazySingleton(() => UpdateJournalEntry(serviceLocator()))
+    ..registerLazySingleton(() => GetJournalEntries(serviceLocator()))
+
+    // Repository
+    ..registerLazySingleton<JournalRepository>(
+      () => JournalRepositoryImpl(serviceLocator()),
+    )
+
+    // Data Sources
+    ..registerLazySingleton<JournalRemoteDataSource>(
+      () => JournalRemoteDataSourceImpl(
+        authClient: serviceLocator(),
+        firestoreClient: serviceLocator(),
+      ),
+    );
 }
 
 Future<void> _initAuth() async {
