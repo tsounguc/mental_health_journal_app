@@ -34,7 +34,7 @@ void main() {
       when(
         () => repository.getEntries(
           userId: any(named: 'userId'),
-          startAfterId: any(named: 'startAfterId'),
+          lastEntry: any(named: 'lastEntry'),
           paginationSize: any(named: 'paginationSize'),
         ),
       ).thenAnswer((_) => Stream.value(Right(testResponse)));
@@ -50,7 +50,7 @@ void main() {
       verify(
         () => repository.getEntries(
           userId: testParams.userId,
-          startAfterId: testParams.startAfterId,
+          lastEntry: testParams.lastEntry,
           paginationSize: testParams.paginationSize,
         ),
       ).called(1);
@@ -68,7 +68,7 @@ void main() {
       when(
         () => repository.getEntries(
           userId: any(named: 'userId'),
-          startAfterId: any(named: 'startAfterId'),
+          lastEntry: any(named: 'lastEntry'),
           paginationSize: any(named: 'paginationSize'),
         ),
       ).thenAnswer((_) => Stream.value(Left(testGetEntriesFailure)));
@@ -84,7 +84,7 @@ void main() {
       verify(
         () => repository.getEntries(
           userId: testParams.userId,
-          startAfterId: testParams.startAfterId,
+          lastEntry: testParams.lastEntry,
           paginationSize: testParams.paginationSize,
         ),
       ).called(1);

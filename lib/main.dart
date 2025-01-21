@@ -4,12 +4,16 @@ import 'package:mental_health_journal_app/core/common/app/providers/user_provide
 import 'package:mental_health_journal_app/core/resources/colours.dart';
 import 'package:mental_health_journal_app/core/services/router/router.dart';
 import 'package:mental_health_journal_app/core/services/service_locator.dart';
+import 'package:mental_health_journal_app/features/dashboard/providers/dashboard_controller.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await setUpServices();
-  await Firebase.initializeApp();
+  await Firebase.initializeApp(
+      // options: DefaultFirebaseOptions.currentPlatform,
+      );
+  // await FirebaseAppCheck.instance.setTokenAutoRefreshEnabled(false);
   runApp(const MyApp());
 }
 
@@ -21,6 +25,9 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(
           create: (_) => UserProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => DashBoardController(),
         ),
       ],
       child: MaterialApp(

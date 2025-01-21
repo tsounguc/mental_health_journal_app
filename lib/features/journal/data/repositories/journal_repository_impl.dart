@@ -45,6 +45,18 @@ class JournalRepositoryImpl implements JournalRepository {
   }
 
   @override
+  ResultFuture<List<JournalEntry>> searchEntries(String query) async {
+    try {
+      final result = await _remoteDataSource.searchEntries(query);
+      return Right(result);
+    } on SearchEntriesException catch (e) {
+      return Left(
+        SearchEntriesFailure.fromException(e),
+      );
+    }
+  }
+
+  @override
   ResultVoid updateEntry({
     required String entryId,
     required UpdateEntryAction action,
@@ -67,13 +79,13 @@ class JournalRepositoryImpl implements JournalRepository {
   @override
   ResultStream<List<JournalEntry>> getEntries({
     required String userId,
-    required String startAfterId,
+    required JournalEntry? lastEntry,
     required int paginationSize,
   }) {
     return _remoteDataSource
         .getEntries(
           userId: userId,
-          startAfterId: startAfterId,
+          lastEntry: lastEntry,
           paginationSize: paginationSize,
         )
         .transform(
@@ -82,7 +94,7 @@ class JournalRepositoryImpl implements JournalRepository {
               sink.add(Right(entries));
             },
             handleError: (error, stackTrace, sink) {
-              debugPrintStack(stackTrace: stackTrace);
+              debugPrintStack(stackTrace: stackTrace, label: error.toString());
               if (error is GetEntriesException) {
                 sink.add(Left(GetEntriesFailure.fromException(error)));
               } else {

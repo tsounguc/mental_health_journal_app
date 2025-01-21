@@ -20,9 +20,11 @@ abstract class JournalRemoteDataSource {
 
   Future<void> deleteEntry({required String entryId});
 
+  Future<List<JournalEntry>> searchEntries(String query);
+
   Stream<List<JournalEntryModel>> getEntries({
     required String userId,
-    required String startAfterId,
+    required JournalEntry? lastEntry,
     required int paginationSize,
   });
 }
@@ -75,41 +77,64 @@ class JournalRemoteDataSourceImpl implements JournalRemoteDataSource {
   }
 
   @override
+  Future<List<JournalEntry>> searchEntries(String query) async {
+    try {
+      final lowerCaseQuery = query.toLowerCase();
+      return await _entries
+          .where('userId', isEqualTo: _authClient.currentUser!.uid)
+          .where('title_lowercase', isGreaterThanOrEqualTo: lowerCaseQuery)
+          .where('title_lowercase', isLessThanOrEqualTo: '$lowerCaseQuery\uf8ff') // Ensures a partial match
+          .limit(25)
+          .get()
+          .then(
+            (value) => value.docs
+                .map(
+                  (doc) => JournalEntryModel.fromMap(doc.data()),
+                )
+                .toList(),
+          );
+    } on FirebaseException catch (e, s) {
+      debugPrintStack(stackTrace: s);
+      throw SearchEntriesException(
+        message: e.message ?? 'Unknown error occurred',
+        statusCode: '500',
+      );
+    } on SearchEntriesException {
+      rethrow;
+    } catch (e, s) {
+      debugPrintStack(stackTrace: s);
+      throw SearchEntriesException(message: e.toString(), statusCode: '500');
+    }
+  }
+
+  @override
   Stream<List<JournalEntryModel>> getEntries({
     required String userId,
-    required String startAfterId,
+    required JournalEntry? lastEntry,
     required int paginationSize,
   }) {
     try {
-      var entriesQuery = _entries.where('userId', isEqualTo: userId).orderBy('dateCreaed').limit(paginationSize);
+      var entriesQuery = _entries
+          .where('userId', isEqualTo: userId)
+          .orderBy(
+            'dateCreated',
+            descending: true,
+          )
+          .limit(paginationSize);
 
-      if (startAfterId.isNotEmpty) {
-        entriesQuery = entriesQuery.startAfter([startAfterId]);
+      if (lastEntry != null) {
+        entriesQuery = entriesQuery.startAfter([lastEntry.dateCreated]);
       }
 
       final entriesStream = entriesQuery.snapshots().map(
             (snapshot) => snapshot.docs
                 .map(
-                  (doc) => JournalEntryModel.fromMap(
-                    doc.data(),
-                  ),
+                  (doc) => JournalEntryModel.fromMap(doc.data()),
                 )
                 .toList(),
           );
 
-      return entriesStream.handleError((dynamic error) {
-        if (error is FirebaseException) {
-          debugPrintStack(stackTrace: error.stackTrace);
-          throw GetEntriesException(
-            message: error.message ?? 'Unknown error occurred',
-            statusCode: error.code,
-          );
-        }
-        throw GetEntriesException(
-          message: error.toString(),
-          statusCode: '505',
-        );
-      });
+      return entriesStream.handleError(_handleStreamError);
     } on FirebaseException catch (e, s) {
       debugPrintStack(stackTrace: s);
       throw GetEntriesException(
@@ -127,6 +152,18 @@ class JournalRemoteDataSourceImpl implements JournalRemoteDataSource {
     }
   }
 
+  void _handleStreamError(dynamic error) {
+    if (error is FirebaseException) {
+      debugPrintStack(stackTrace: error.stackTrace, label: error.code);
+    } else {
+      debugPrint(error.toString());
+      throw GetEntriesException(
+        message: error.toString(),
+        statusCode: '505',
+      );
+    }
+  }
+
   @override
   Future<void> updateEntry({
     required String entryId,
@@ -139,6 +176,7 @@ class JournalRemoteDataSourceImpl implements JournalRemoteDataSource {
           id: entryId,
           data: {
             'title': entryData,
+            'title_lowercase': entryData.toString().toLowerCase(),
           },
         );
       case UpdateEntryAction.content:

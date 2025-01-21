@@ -6,7 +6,6 @@ class Strings {
   static const pageNotFoundText = 'PAGE NOT FOUND';
   static const fieldRequiredText = 'This field is required';
 
-
   // Sign in screen
   static const loginText = 'Login';
   static const loginSubtext = 'Sign in to your account';
@@ -37,4 +36,8 @@ class Strings {
 
   static const resetPasswordButtonText = 'Reset Password';
   static const goBackTextButtonText = 'Go back';
+
+  static const searchHintText = 'Search journal entries';
+
+  static const searchBodyInitialText = 'Search entries';
 }

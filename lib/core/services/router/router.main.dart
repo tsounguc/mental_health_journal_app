@@ -18,10 +18,6 @@ Route<dynamic> onGenerateRoute(RouteSettings settings) {
 
             context.userProvider.initUser(localUser);
             return const Dashboard();
-            // return BlocProvider(
-            //   create: (_) => serviceLocator<AuthBloc>(),
-            //   child: const Dashboard(),
-            // );
           }
           return BlocProvider(
             create: (_) => serviceLocator<AuthBloc>(),
@@ -55,39 +51,46 @@ Route<dynamic> onGenerateRoute(RouteSettings settings) {
         ),
         settings: settings,
       );
-    case Dashboard.id:
+
+    case EditProfileScreen.id:
       return _pageBuilder(
         (_) => BlocProvider(
           create: (_) => serviceLocator<AuthBloc>(),
-          child: const Dashboard(),
+          child: const EditProfileScreen(),
         ),
         settings: settings,
       );
 
-    case NewJournalEntryScreen.id:
+    case ChangePasswordScreen.id:
       return _pageBuilder(
         (_) => BlocProvider(
-          create: (_) => serviceLocator<JournalBloc>(),
-          child: const NewJournalEntryScreen(),
+          create: (_) => serviceLocator<AuthBloc>(),
+          child: const ChangePasswordScreen(),
+        ),
+        settings: settings,
+      );
+    case JournalEditorScreen.id:
+      final args = settings.arguments as JournalEntry?;
+      return _pageBuilder(
+        (_) => BlocProvider(
+          create: (_) => serviceLocator<JournalCubit>(),
+          child: JournalEditorScreen(
+            entry: args,
+          ),
         ),
         settings: settings,
       );
 
-    // case JournalHomeScreen.id:
-    //   return _pageBuilder(
-    //     (_) => MultiBlocProvider(
-    //       providers: [
-    //         BlocProvider(
-    //           create: (_) => serviceLocator<JournalBloc>(),
-    //         ),
-    //         BlocProvider(
-    //           create: (_) => serviceLocator<AuthBloc>(),
-    //         ),
-    //       ],
-    //       child: const JournalHomeScreen(),
-    //     ),
-    //     settings: settings,
-    //   );
+    case JournalEntryDetailScreen.id:
+      final args = settings.arguments! as JournalEntry;
+      return _pageBuilder(
+        (_) => BlocProvider(
+          create: (_) => serviceLocator<JournalCubit>(),
+          child: JournalEntryDetailScreen(entry: args),
+        ),
+        settings: settings,
+      );
+
     default:
       return _pageBuilder(
         (_) => const PageUnderConstruction(),

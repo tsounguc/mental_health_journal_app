@@ -9,6 +9,7 @@ class JournalFormField extends StatelessWidget {
     this.fieldTitle,
     this.textInputAction = TextInputAction.next,
     this.hintText,
+    this.hintStyle,
     this.borderRadius,
     this.readOnly = false,
     this.maxLines = 1,
@@ -22,6 +23,7 @@ class JournalFormField extends StatelessWidget {
   final String? fieldTitle;
   final TextEditingController? controller;
   final String? hintText;
+  final TextStyle? hintStyle;
   final bool readOnly;
   final BorderRadius? borderRadius;
   final int? maxLines;
@@ -51,6 +53,7 @@ class JournalFormField extends StatelessWidget {
           prefix: prefix,
           prefixIcon: prefixIcon,
           hintText: hintText,
+          hintStyle: hintStyle,
           readOnly: readOnly,
           borderRadius: borderRadius,
           maxLines: maxLines,

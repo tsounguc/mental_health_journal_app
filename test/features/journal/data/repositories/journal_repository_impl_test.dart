@@ -275,7 +275,7 @@ void main() {
         when(
           () => remoteDataSource.getEntries(
             userId: any(named: 'userId'),
-            startAfterId: any(named: 'startAfterId'),
+            lastEntry: any(named: 'lastEntry'),
             paginationSize: any(named: 'paginationSize'),
           ),
         ).thenAnswer((_) => Stream.value(testStreamResponse));
@@ -283,7 +283,7 @@ void main() {
         // Act
         final result = repositoryImpl.getEntries(
           userId: testEntry.userId,
-          startAfterId: testEntry.id,
+          lastEntry: testEntry,
           paginationSize: 10,
         );
 
@@ -299,7 +299,7 @@ void main() {
         verify(
           () => remoteDataSource.getEntries(
             userId: testEntry.userId,
-            startAfterId: testEntry.id,
+            lastEntry: testEntry,
             paginationSize: 10,
           ),
         ).called(1);

@@ -16,9 +16,11 @@ abstract class JournalRepository {
 
   ResultVoid deleteEntry({required String id});
 
+  ResultFuture<List<JournalEntry>> searchEntries(String query);
+
   ResultStream<List<JournalEntry>> getEntries({
     required String userId,
-    required String startAfterId,
+    required JournalEntry? lastEntry,
     required int paginationSize,
   });
 }

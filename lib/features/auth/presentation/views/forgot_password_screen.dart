@@ -1,8 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:mental_health_journal_app/core/common/widgets/i_field.dart';
 import 'package:mental_health_journal_app/core/common/views/long_button.dart';
+import 'package:mental_health_journal_app/core/common/widgets/i_field.dart';
 import 'package:mental_health_journal_app/core/common/widgets/logo_widget.dart';
 import 'package:mental_health_journal_app/core/extensions/context_extension.dart';
 import 'package:mental_health_journal_app/core/resources/colours.dart';

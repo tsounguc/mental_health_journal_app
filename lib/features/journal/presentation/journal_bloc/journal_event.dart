@@ -40,11 +40,11 @@ class UpdateEntryEvent extends JournalEvent {
 class FetchEntriesEvent extends JournalEvent {
   const FetchEntriesEvent({
     required this.userId,
-    required this.startAfterId,
+    required this.lastEntry,
     required this.paginationSize,
   });
 
   final String userId;
-  final String startAfterId;
+  final JournalEntry? lastEntry;
   final int paginationSize;
 }

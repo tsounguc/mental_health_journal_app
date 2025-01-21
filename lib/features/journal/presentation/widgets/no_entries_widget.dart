@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mental_health_journal_app/core/resources/colours.dart';
 
 class NoEntriesWidget extends StatelessWidget {
   const NoEntriesWidget({super.key});
@@ -7,12 +8,12 @@ class NoEntriesWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return const Center(
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
-            'No Journal Entries',
-            style: TextStyle(
-              fontSize: 18,
-            ),
+            'No entries yet.'
+            '\nCreate an entry and start writing',
+            style: TextStyle(fontSize: 16, color: Colours.softGreyColor),
           ),
         ],
       ),

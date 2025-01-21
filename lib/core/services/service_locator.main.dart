@@ -9,13 +9,17 @@ Future<void> setUpServices() async {
 
 Future<void> _initJournal() async {
   serviceLocator
-    // App Logic
     ..registerFactory(
-      () => JournalBloc(
+      () => JournalCubit(
         createJournalEntry: serviceLocator(),
         deleteJournalEntry: serviceLocator(),
         updateJournalEntry: serviceLocator(),
         getJournalEntries: serviceLocator(),
+      ),
+    )
+    ..registerFactory(
+      () => SearchCubit(
+        searchJournalEntries: serviceLocator(),
       ),
     )
     // Use cases
@@ -23,6 +27,7 @@ Future<void> _initJournal() async {
     ..registerLazySingleton(() => DeleteJournalEntry(serviceLocator()))
     ..registerLazySingleton(() => UpdateJournalEntry(serviceLocator()))
     ..registerLazySingleton(() => GetJournalEntries(serviceLocator()))
+    ..registerLazySingleton(() => SearchJournalEntries(serviceLocator()))
 
     // Repository
     ..registerLazySingleton<JournalRepository>(

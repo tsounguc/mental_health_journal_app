@@ -104,20 +104,20 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     try {
       await _authClient.currentUser?.reauthenticateWithCredential(
         EmailAuthProvider.credential(
-          email: _authClient.currentUser!.email ?? '',
+          email: _authClient.currentUser?.email ?? '',
           password: password,
         ),
       );
 
-      await _users.doc(_authClient.currentUser!.uid).delete();
+      await _users.doc(_authClient.currentUser?.uid).delete();
 
       final ref = _storageClient.ref().child('profile_pics/${_authClient.currentUser?.uid}');
       await ref.getDownloadURL().then((response) {
         ref.delete();
       }).catchError((error) async {});
 
-      await _authClient.currentUser!.delete();
-      await _authClient.currentUser!.reload();
+      await _authClient.currentUser?.delete();
+      await _authClient.currentUser?.reload();
     } on FirebaseException catch (e) {
       var errorMessage = e.message ?? 'An error occurred. Please try again';
       if (e.code == 'user-mismatch' || e.code == 'invalid-credential' || e.code == 'wrong-password') {
@@ -127,7 +127,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       } else {
         errorMessage = 'An error occurred. Please try again';
       }
-      debugPrint(e.code);
+      debugPrintStack(stackTrace: e.stackTrace, label: e.code);
       throw DeleteAccountException(
         message: errorMessage,
         statusCode: e.code,
@@ -278,7 +278,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
           await _authClient.currentUser?.updatePhotoURL(url);
 
           // Update document url in firestore
-          await _updateUserData({'photoUrl': url});
+          await _updateUserData({'profilePictureUrl': url});
       }
     } on FirebaseException catch (e) {
       throw UpdateUserException(

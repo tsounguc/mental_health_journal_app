@@ -7,7 +7,7 @@ import 'package:mental_health_journal_app/features/journal/domain/use_cases/crea
 import 'package:mental_health_journal_app/features/journal/domain/use_cases/delete_journal_entry.dart';
 import 'package:mental_health_journal_app/features/journal/domain/use_cases/get_journal_entries.dart';
 import 'package:mental_health_journal_app/features/journal/domain/use_cases/update_journal_entry.dart';
-import 'package:mental_health_journal_app/features/journal/presentation/journal_bloc/journal_bloc.dart';
+import 'package:mental_health_journal_app/features/journal/presentation/journal_cubit/journal_cubit.dart';
 import 'package:mocktail/mocktail.dart';
 
 class MockCreateJournalEntry extends Mock implements CreateJournalEntry {}
@@ -24,7 +24,7 @@ void main() {
   late UpdateJournalEntry updateJournalEntry;
   late GetJournalEntries getJournalEntries;
 
-  late JournalBloc bloc;
+  late JournalCubit cubit;
 
   final testEntry = JournalEntry.empty();
 
@@ -34,11 +34,12 @@ void main() {
     updateJournalEntry = MockUpdateJournalEntry();
     getJournalEntries = MockGetJournalEntries();
 
-    bloc = JournalBloc(
-        createJournalEntry: createJournalEntry,
-        deleteJournalEntry: deleteJournalEntry,
-        updateJournalEntry: updateJournalEntry,
-        getJournalEntries: getJournalEntries);
+    cubit = JournalCubit(
+      createJournalEntry: createJournalEntry,
+      deleteJournalEntry: deleteJournalEntry,
+      updateJournalEntry: updateJournalEntry,
+      getJournalEntries: getJournalEntries,
+    );
   });
 
   late UpdateJournalEntryParams tUpdateJournalEntryParams;
@@ -46,25 +47,25 @@ void main() {
 
   setUpAll(() {
     tUpdateJournalEntryParams = const UpdateJournalEntryParams.empty();
-    tGetJournalEntriesParams = GetJournalEntriesParams.empty();
+    tGetJournalEntriesParams = const GetJournalEntriesParams.empty();
     registerFallbackValue(tUpdateJournalEntryParams);
     registerFallbackValue(tGetJournalEntriesParams);
     registerFallbackValue(testEntry);
   });
 
   tearDown(() {
-    bloc.close();
+    cubit.close();
   });
 
   test(
-    'given JournalBloc '
+    'given JournalCubit '
     'when bloc is instantiated '
     'then initial state should be [JournalInitial]',
     () async {
       // Arrange
       // Act
       // Assert
-      expect(bloc.state, const JournalInitial());
+      expect(cubit.state, JournalInitial());
     },
   );
 
@@ -73,26 +74,24 @@ void main() {
       message: 'message',
       statusCode: 500,
     );
-    blocTest<JournalBloc, JournalState>(
-      'given JournalBloc '
+    blocTest<JournalCubit, JournalState>(
+      'given JournalCubit '
       'when [CreateJournalEntry] is called '
       'then emit [JournalLoading, EntryCreated]',
       build: () {
         when(
           () => createJournalEntry(any()),
         ).thenAnswer((_) async => const Right(null));
-        return bloc;
+        return cubit;
       },
-      act: (bloc) => bloc.add(
-        CreateEntryEvent(
-          entry: testEntry,
-        ),
+      act: (cubit) => cubit.createEntry(
+        entry: testEntry,
       ),
       expect: () => [
         const JournalLoading(),
         const EntryCreated(),
       ],
-      verify: (bloc) {
+      verify: (cubit) {
         verify(
           () => createJournalEntry(testEntry),
         ).called(1);
@@ -100,20 +99,18 @@ void main() {
       },
     );
 
-    blocTest<JournalBloc, JournalState>(
-      'given JournalBloc '
+    blocTest<JournalCubit, JournalState>(
+      'given JournalCubit '
       'when [CreateJournalEntry] call is unsuccessful '
       'then emit [JournalLoading, JournalError]',
       build: () {
         when(
           () => createJournalEntry(any()),
         ).thenAnswer((_) async => Left(tCreateEntryFailure));
-        return bloc;
+        return cubit;
       },
-      act: (bloc) => bloc.add(
-        CreateEntryEvent(
-          entry: testEntry,
-        ),
+      act: (cubit) => cubit.createEntry(
+        entry: testEntry,
       ),
       expect: () => [
         const JournalLoading(),
@@ -133,20 +130,18 @@ void main() {
       message: 'message',
       statusCode: 500,
     );
-    blocTest<JournalBloc, JournalState>(
-      'given JournalBloc '
+    blocTest<JournalCubit, JournalState>(
+      'given JournalCubit '
       'when [DeleteJournalEntry] is called '
       'then emit [JournalLoading, EntryDeleted]',
       build: () {
         when(
           () => deleteJournalEntry(any()),
         ).thenAnswer((_) async => const Right(null));
-        return bloc;
+        return cubit;
       },
-      act: (bloc) => bloc.add(
-        DeleteEntryEvent(
-          entryId: testEntry.id,
-        ),
+      act: (cubit) => cubit.deleteEntry(
+        entryId: testEntry.id,
       ),
       expect: () => [
         const JournalLoading(),
@@ -160,26 +155,24 @@ void main() {
       },
     );
 
-    blocTest<JournalBloc, JournalState>(
-      'given JournalBloc '
+    blocTest<JournalCubit, JournalState>(
+      'given JournalCubit '
       'when [DeleteJournalEntry] call is unsuccessful '
       'then emit [JournalLoading, JournalError]',
       build: () {
         when(
           () => deleteJournalEntry(any()),
         ).thenAnswer((_) async => Left(tDeleteEntryFailure));
-        return bloc;
+        return cubit;
       },
-      act: (bloc) => bloc.add(
-        DeleteEntryEvent(
-          entryId: testEntry.id,
-        ),
+      act: (cubit) => cubit.deleteEntry(
+        entryId: testEntry.id,
       ),
       expect: () => [
         const JournalLoading(),
         JournalError(message: tDeleteEntryFailure.message),
       ],
-      verify: (bloc) {
+      verify: (cubit) {
         verify(
           () => deleteJournalEntry(testEntry.id),
         ).called(1);
@@ -193,7 +186,7 @@ void main() {
       message: 'message',
       statusCode: 500,
     );
-    blocTest<JournalBloc, JournalState>(
+    blocTest<JournalCubit, JournalState>(
       'given JournalBloc '
       'when [UpdateJournalEntry] is called '
       'then emit [JournalLoading, EntryUpdated]',
@@ -201,20 +194,18 @@ void main() {
         when(
           () => updateJournalEntry(any()),
         ).thenAnswer((_) async => const Right(null));
-        return bloc;
+        return cubit;
       },
-      act: (bloc) => bloc.add(
-        UpdateEntryEvent(
-          entryId: tUpdateJournalEntryParams.entryId,
-          action: tUpdateJournalEntryParams.action,
-          entryData: tUpdateJournalEntryParams.entryData,
-        ),
+      act: (cubit) => cubit.updateEntry(
+        entryId: tUpdateJournalEntryParams.entryId,
+        action: tUpdateJournalEntryParams.action,
+        entryData: tUpdateJournalEntryParams.entryData,
       ),
       expect: () => [
         const JournalLoading(),
         const EntryUpdated(),
       ],
-      verify: (bloc) {
+      verify: (cubit) {
         verify(
           () => updateJournalEntry(tUpdateJournalEntryParams),
         ).called(1);
@@ -222,28 +213,26 @@ void main() {
       },
     );
 
-    blocTest<JournalBloc, JournalState>(
-      'given JournalBloc '
+    blocTest<JournalCubit, JournalState>(
+      'given JournalCubit '
       'when [UpdateJournalEntry] call is unsuccessful '
       'then emit [JournalLoading, JournalError]',
       build: () {
         when(
           () => updateJournalEntry(any()),
         ).thenAnswer((_) async => Left(tUpdateEntryFailure));
-        return bloc;
+        return cubit;
       },
-      act: (bloc) => bloc.add(
-        UpdateEntryEvent(
-          entryId: tUpdateJournalEntryParams.entryId,
-          action: tUpdateJournalEntryParams.action,
-          entryData: tUpdateJournalEntryParams.entryData,
-        ),
+      act: (cubit) => cubit.updateEntry(
+        entryId: tUpdateJournalEntryParams.entryId,
+        action: tUpdateJournalEntryParams.action,
+        entryData: tUpdateJournalEntryParams.entryData,
       ),
       expect: () => [
         const JournalLoading(),
         JournalError(message: tUpdateEntryFailure.message),
       ],
-      verify: (bloc) {
+      verify: (cubit) {
         verify(
           () => updateJournalEntry(tUpdateJournalEntryParams),
         ).called(1);
@@ -259,22 +248,18 @@ void main() {
       statusCode: 500,
     );
 
-    blocTest<JournalBloc, JournalState>(
-      'given JournalBloc '
+    blocTest<JournalCubit, JournalState>(
+      'given JournalCubit '
       'when [GetJournalEntries] is called '
       'then emit [JournalLoading, EntriesFetched] ',
       build: () {
         when(() => getJournalEntries(any())).thenAnswer(
           (_) => Stream.value(Right(testEntries)),
         );
-        return bloc;
+        return cubit;
       },
-      act: (bloc) => bloc.add(
-        FetchEntriesEvent(
-          userId: tGetJournalEntriesParams.userId,
-          startAfterId: tGetJournalEntriesParams.startAfterId,
-          paginationSize: tGetJournalEntriesParams.paginationSize,
-        ),
+      act: (cubit) => cubit.getEntries(
+        userId: tGetJournalEntriesParams.userId,
       ),
       expect: () => [
         const JournalLoading(),
@@ -283,7 +268,7 @@ void main() {
           hasReachedEnd: true,
         ),
       ],
-      verify: (bloc) {
+      verify: (cubit) {
         verify(
           () => getJournalEntries(tGetJournalEntriesParams),
         ).called(1);
@@ -291,22 +276,18 @@ void main() {
       },
     );
 
-    blocTest<JournalBloc, JournalState>(
-      'given JournalBloc '
+    blocTest<JournalCubit, JournalState>(
+      'given JournalCubit '
       'when [GetJournalEntries] call is unsuccessful '
       'then emit [JournalLoading, JournalError] ',
       build: () {
         when(() => getJournalEntries(any())).thenAnswer(
           (_) => Stream.value(Left(testGetEntriesFailure)),
         );
-        return bloc;
+        return cubit;
       },
-      act: (bloc) => bloc.add(
-        FetchEntriesEvent(
-          userId: tGetJournalEntriesParams.userId,
-          startAfterId: tGetJournalEntriesParams.startAfterId,
-          paginationSize: tGetJournalEntriesParams.paginationSize,
-        ),
+      act: (cubit) => cubit.getEntries(
+        userId: tGetJournalEntriesParams.userId,
       ),
       expect: () => [
         const JournalLoading(),
@@ -314,7 +295,7 @@ void main() {
           message: testGetEntriesFailure.message,
         ),
       ],
-      verify: (bloc) {
+      verify: (cubit) {
         verify(
           () => getJournalEntries(tGetJournalEntriesParams),
         ).called(1);

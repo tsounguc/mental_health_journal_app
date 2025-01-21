@@ -302,7 +302,7 @@ void main() {
         // Act
         remoteDataSourceImpl.getEntries(
           userId: testEntry.userId,
-          startAfterId: testEntry.id,
+          lastEntry: testEntry,
           paginationSize: 10,
         );
 

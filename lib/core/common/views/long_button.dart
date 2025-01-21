@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mental_health_journal_app/core/resources/colours.dart';
 
 class LongButton extends StatelessWidget {
   const LongButton({
@@ -20,7 +21,7 @@ class LongButton extends StatelessWidget {
       minWidth: double.infinity,
       height: 50,
       color: backgroundColor ?? Theme.of(context).primaryColor,
-      disabledColor: Colors.grey,
+      disabledColor: Colours.softGreyColor,
       disabledTextColor: Colors.white,
       disabledElevation: 0,
       onPressed: onPressed,

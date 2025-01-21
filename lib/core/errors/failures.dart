@@ -146,3 +146,16 @@ class GetEntriesFailure extends Failure {
           statusCode: exception.statusCode,
         );
 }
+
+class SearchEntriesFailure extends Failure {
+  SearchEntriesFailure({
+    required super.message,
+    required super.statusCode,
+  });
+
+  SearchEntriesFailure.fromException(SearchEntriesException exception)
+      : this(
+          message: exception.message,
+          statusCode: exception.statusCode,
+        );
+}

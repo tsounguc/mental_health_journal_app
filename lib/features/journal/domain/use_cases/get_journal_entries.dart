@@ -15,7 +15,7 @@ class GetJournalEntries extends StreamUseCaseWithParams<List<JournalEntry>, GetJ
   ) =>
       _repository.getEntries(
         userId: params.userId,
-        startAfterId: params.startAfterId,
+        lastEntry: params.lastEntry,
         paginationSize: params.paginationSize,
       );
 }
@@ -23,20 +23,20 @@ class GetJournalEntries extends StreamUseCaseWithParams<List<JournalEntry>, GetJ
 class GetJournalEntriesParams extends Equatable {
   const GetJournalEntriesParams({
     required this.userId,
-    required this.startAfterId,
+    required this.lastEntry,
     required this.paginationSize,
   });
 
   const GetJournalEntriesParams.empty()
       : this(
           userId: '_empty.userId',
-          startAfterId: '_empty.startAfterId',
+          lastEntry: null,
           paginationSize: 10,
         );
   final String userId;
-  final String startAfterId;
+  final JournalEntry? lastEntry;
   final int paginationSize;
 
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [userId, lastEntry, paginationSize];
 }

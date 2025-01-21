@@ -86,76 +86,85 @@ class JournalBloc extends Bloc<JournalEvent, JournalState> {
     );
   }
 
-  StreamSubscription<Either<Failure, List<JournalEntry>>>? subscription;
-
   Future<void> _getEntriesHandler(
     FetchEntriesEvent event,
     Emitter<JournalState> emit,
   ) async {
-    await subscription?.cancel();
-
     emit(const JournalLoading());
-
-    subscription = _getJournalEntries(
-      GetJournalEntriesParams(
-        userId: event.userId,
-        startAfterId: event.startAfterId,
-        paginationSize: event.paginationSize,
-      ),
-    ).listen(
-      (result) {
-        print('Stream emitted: $result');
-
-        result.fold(
-          (failure) async {
-            debugPrint(failure.message);
-            if (!emit.isDone) {
-              print('emitting failure: ${failure.message}');
-              emit(JournalError(message: failure.message));
-            }
+    StreamSubscription<Either<Failure, List<JournalEntry>>>? subscription;
+    try {
+      subscription = _getJournalEntries(
+        GetJournalEntriesParams(
+          userId: event.userId,
+          lastEntry: event.lastEntry,
+          paginationSize: event.paginationSize,
+        ),
+      ).listen(
+        (result) async {
+          if (emit.isDone) {
             await subscription?.cancel();
-          },
-          (entries) async {
-            if (entries.isEmpty) {
+            return;
+          }
+
+          await result.fold(
+            (failure) async {
+              debugPrint(failure.message);
               if (!emit.isDone) {
-                print('emitting entries empty: $entries');
+                emit(JournalError(message: failure.message));
+              }
+              await subscription?.cancel();
+            },
+            (entries) async {
+              if (emit.isDone) {
+                return;
+              }
+
+              if (entries.isEmpty) {
                 emit(
                   EntriesFetched(
                     entries: entries,
                     hasReachedEnd: true,
                   ),
                 );
-              }
-            } else if (entries.isNotEmpty) {
-              final hasReachedEnd = entries.length < 10;
+              } else if (entries.isNotEmpty) {
+                final hasReachedEnd = entries.length < 10;
 
-              _entriesList = state is EntriesFetched ? (state as EntriesFetched).entries + entries : entries;
+                _entriesList = state is EntriesFetched ? (state as EntriesFetched).entries + entries : entries;
 
-              print('emitting entries not empty: $entries');
-              if (!emit.isDone) {
-                emit(
-                  EntriesFetched(
-                    entries: _entriesList,
-                    hasReachedEnd: hasReachedEnd,
-                  ),
-                );
+                if (!emit.isDone) {
+                  emit(
+                    EntriesFetched(
+                      entries: _entriesList,
+                      hasReachedEnd: hasReachedEnd,
+                    ),
+                  );
+                }
               }
-            }
-          },
-        );
-      },
-      onError: (dynamic error) async {
-        if (!emit.isDone) {
-          emit(
-            const JournalError(
-              message: 'Failed to fetch entries',
-            ),
+            },
           );
-        }
-      },
-      onDone: () async {
-        await subscription?.cancel();
-      },
-    );
+        },
+        onError: (dynamic error) async {
+          if (!emit.isDone) {
+            emit(
+              const JournalError(
+                message: 'Failed to fetch entries',
+              ),
+            );
+          }
+        },
+        onDone: () async {
+          await subscription?.cancel();
+        },
+      );
+      // await subscription.asFuture<Either<Failure, List<JournalEntry>>>();
+    } on Exception catch (error) {
+      if (!emit.isDone) {
+        emit(
+          JournalError(
+            message: error.toString(),
+          ),
+        );
+      }
+    }
   }
 }

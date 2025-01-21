@@ -18,7 +18,9 @@ import 'package:mental_health_journal_app/features/journal/domain/repositories/j
 import 'package:mental_health_journal_app/features/journal/domain/use_cases/create_journal_entry.dart';
 import 'package:mental_health_journal_app/features/journal/domain/use_cases/delete_journal_entry.dart';
 import 'package:mental_health_journal_app/features/journal/domain/use_cases/get_journal_entries.dart';
+import 'package:mental_health_journal_app/features/journal/domain/use_cases/search_journal_entries.dart';
 import 'package:mental_health_journal_app/features/journal/domain/use_cases/update_journal_entry.dart';
-import 'package:mental_health_journal_app/features/journal/presentation/journal_bloc/journal_bloc.dart';
+import 'package:mental_health_journal_app/features/journal/presentation/journal_cubit/journal_cubit.dart';
+import 'package:mental_health_journal_app/features/journal/presentation/search_cubit/search_cubit.dart';
 
 part 'service_locator.main.dart';

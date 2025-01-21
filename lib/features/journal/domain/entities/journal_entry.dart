@@ -9,6 +9,7 @@ class JournalEntry extends Equatable {
     required this.tags,
     required this.sentiment,
     this.title,
+    this.titleLowercase,
   });
   JournalEntry.empty()
       : this(
@@ -23,6 +24,7 @@ class JournalEntry extends Equatable {
   final String id;
   final String userId;
   final String? title;
+  final String? titleLowercase;
   final String content;
   final DateTime dateCreated;
   final List<String> tags;
@@ -33,6 +35,7 @@ class JournalEntry extends Equatable {
         id,
         userId,
         title,
+        titleLowercase,
         content,
         dateCreated,
         tags,
@@ -45,6 +48,7 @@ class JournalEntry extends Equatable {
           id: $id,
           userId: $userId,
           title: $title,
+          title_lowercase: $titleLowercase
           content: $content,
           dateCreated: $dateCreated,
           tags: $tags,
