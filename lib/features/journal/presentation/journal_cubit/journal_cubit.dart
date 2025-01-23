@@ -9,7 +9,6 @@ import 'package:mental_health_journal_app/features/journal/domain/entities/journ
 import 'package:mental_health_journal_app/features/journal/domain/use_cases/create_journal_entry.dart';
 import 'package:mental_health_journal_app/features/journal/domain/use_cases/delete_journal_entry.dart';
 import 'package:mental_health_journal_app/features/journal/domain/use_cases/get_journal_entries.dart';
-import 'package:mental_health_journal_app/features/journal/domain/use_cases/search_journal_entries.dart';
 import 'package:mental_health_journal_app/features/journal/domain/use_cases/update_journal_entry.dart';
 
 part 'journal_state.dart';
