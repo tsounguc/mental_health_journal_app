@@ -135,8 +135,8 @@ class CoreUtils {
     return null;
   }
 
-  static Color getSentimentColor(String sentiment) {
-    switch (sentiment) {
+  static Color getMoodColor(String mood) {
+    switch (mood) {
       case 'Happy':
         return Colours.positiveMoodColor;
       case 'Neutral':
@@ -148,5 +148,42 @@ class CoreUtils {
       default:
         return Colours.softGreyColor;
     }
+  }
+
+  static String getEmoji(String mood) {
+    switch (mood) {
+      case 'Happy':
+        return '😊';
+      case 'Neutral':
+        return '😐';
+      case 'Angry':
+        return '😠';
+      case 'Sad':
+        return '😢';
+      default:
+        return '';
+    }
+  }
+
+  static Color getSentimentColor(double sentimentScore) {
+    if (sentimentScore > 0.1) {
+      return Colours.positiveMoodColor;
+    } else if (sentimentScore < -0.1) {
+      return Colours.negativeMoodColor;
+    } else {
+      return Colours.neutralMoodColor;
+    }
+    //   switch (sentimentScore) {
+    //     case sentimentScore > 0.6:
+    //       return Colours.positiveMoodColor;
+    //     case 'Neutral':
+    //       return Colours.neutralMoodColor;
+    //     case 'Angry':
+    //       return Colours.negativeMoodColor;
+    //     case 'Sad':
+    //       return Colours.secondaryColor;
+    //     default:
+    //       return Colours.softGreyColor;
+    //   }
   }
 }

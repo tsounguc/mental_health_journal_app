@@ -27,6 +27,11 @@ abstract class JournalRemoteDataSource {
     required JournalEntry? lastEntry,
     required int paginationSize,
   });
+
+  Stream<List<JournalEntryModel>> getDashboardData({
+    required String userId,
+    required DateTime today,
+  });
 }
 
 class JournalRemoteDataSourceImpl implements JournalRemoteDataSource {
@@ -152,6 +157,53 @@ class JournalRemoteDataSourceImpl implements JournalRemoteDataSource {
     }
   }
 
+  @override
+  Stream<List<JournalEntryModel>> getDashboardData({
+    required String userId,
+    required DateTime today,
+  }) {
+    try {
+      var entriesQuery = _entries
+          .where('userId', isEqualTo: userId)
+          .where(
+            'dateCreated',
+            isGreaterThan: Timestamp.fromDate(
+              today.copyWith(day: today.day - 7),
+            ),
+          )
+          // .where('dateCreated', isLessThanOrEqualTo: today)
+          .orderBy(
+            'dateCreated',
+            descending: false,
+          )
+          .limit(50);
+
+      final entriesStream = entriesQuery.snapshots().map(
+            (snapshot) => snapshot.docs.map((doc) {
+              final entry = JournalEntryModel.fromMap(doc.data());
+              print(entry);
+              return entry;
+            }).toList(),
+          );
+
+      return entriesStream.handleError(_handleStreamError);
+    } on FirebaseException catch (e, s) {
+      debugPrintStack(stackTrace: s);
+      throw GetDashboardDataException(
+        message: e.message ?? 'Unknown error occurred',
+        statusCode: '501',
+      );
+    } on GetEntriesException {
+      rethrow;
+    } catch (e, s) {
+      debugPrintStack(stackTrace: s);
+      throw GetDashboardDataException(
+        message: e.toString(),
+        statusCode: '505',
+      );
+    }
+  }
+
   void _handleStreamError(dynamic error) {
     if (error is FirebaseException) {
       debugPrintStack(stackTrace: error.stackTrace, label: error.code);
@@ -183,7 +235,8 @@ class JournalRemoteDataSourceImpl implements JournalRemoteDataSource {
         await _updateEntryData(
           id: entryId,
           data: {
-            'content': entryData,
+            'content': (entryData as Map<String, dynamic>)['content'],
+            'sentimentScore': entryData['sentimentScore'],
           },
         );
       case UpdateEntryAction.tags:
@@ -197,7 +250,7 @@ class JournalRemoteDataSourceImpl implements JournalRemoteDataSource {
         await _updateEntryData(
           id: entryId,
           data: {
-            'sentiment': entryData,
+            'selectedMood': entryData,
           },
         );
     }

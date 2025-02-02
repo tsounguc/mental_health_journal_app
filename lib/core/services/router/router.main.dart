@@ -8,10 +8,10 @@ Route<dynamic> onGenerateRoute(RouteSettings settings) {
           serviceLocator<FirebaseAuth>().currentUser?.reload();
           if (serviceLocator<FirebaseAuth>().currentUser != null) {
             final user = serviceLocator<FirebaseAuth>().currentUser!;
-            final localUser = UserModel(
+            final localUser = UserModel.empty().copyWith(
               uid: user.uid,
-              name: user.displayName!,
-              email: user.email!,
+              name: user.displayName,
+              email: user.email,
               dateCreated: DateTime.now(),
               isVerified: false,
             );
@@ -61,6 +61,15 @@ Route<dynamic> onGenerateRoute(RouteSettings settings) {
         settings: settings,
       );
 
+    case ProfilePictureScreen.id:
+      return _pageBuilder(
+        (_) => BlocProvider(
+          create: (_) => serviceLocator<AuthBloc>(),
+          child: const ProfilePictureScreen(),
+        ),
+        settings: settings,
+      );
+
     case ChangePasswordScreen.id:
       return _pageBuilder(
         (_) => BlocProvider(
@@ -72,8 +81,15 @@ Route<dynamic> onGenerateRoute(RouteSettings settings) {
     case JournalEditorScreen.id:
       final args = settings.arguments as JournalEntry?;
       return _pageBuilder(
-        (_) => BlocProvider(
-          create: (_) => serviceLocator<JournalCubit>(),
+        (_) => MultiBlocProvider(
+          providers: [
+            BlocProvider(
+              create: (_) => serviceLocator<JournalCubit>(),
+            ),
+            BlocProvider(
+              create: (_) => serviceLocator<AuthBloc>(),
+            ),
+          ],
           child: JournalEditorScreen(
             entry: args,
           ),

@@ -71,7 +71,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         timestamp: timestamp,
       );
 
-      final user = UserModel(
+      final user = UserModel.empty().copyWith(
         uid: userCredential.user?.uid ?? '',
         name: userCredential.user?.displayName ?? '',
         email: userCredential.user?.email ?? '',
@@ -79,7 +79,6 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
           timestamp.microsecondsSinceEpoch,
         ),
         profilePictureUrl: userCredential.user?.photoURL,
-        isVerified: false,
       );
 
       return user;
@@ -279,6 +278,20 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
 
           // Update document url in firestore
           await _updateUserData({'profilePictureUrl': url});
+        case UpdateUserAction.totalEntries:
+          await _updateUserData({'totalEntries': userData});
+        case UpdateUserAction.sentimentSummary:
+          await _updateUserData({
+            'sentimentSummary': (userData as SentimentSummaryModel).toMap(),
+          });
+        case UpdateUserAction.moodSummary:
+          await _updateUserData({
+            'moodSummary': (userData as MoodSummaryModel).toMap(),
+          });
+        case UpdateUserAction.topTags:
+          await _updateUserData({
+            'topTags': userData,
+          });
       }
     } on FirebaseException catch (e) {
       throw UpdateUserException(
@@ -300,14 +313,16 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     Timestamp? timestamp,
   }) async {
     await _users.doc(user?.uid).set(
-          UserModel(
-            uid: user?.uid ?? '',
-            name: user?.displayName ?? '',
-            email: user?.email ?? fallbackEmail,
-            dateCreated: timestamp?.toDate() ?? DateTime.now(),
-            profilePictureUrl: user?.photoURL,
-            isVerified: false,
-          ).toMap(),
+          UserModel.empty()
+              .copyWith(
+                uid: user?.uid ?? '',
+                name: user?.displayName ?? '',
+                email: user?.email ?? fallbackEmail,
+                dateCreated: timestamp?.toDate() ?? DateTime.now(),
+                profilePictureUrl: user?.photoURL,
+                isVerified: false,
+              )
+              .toMap(),
         );
   }
 

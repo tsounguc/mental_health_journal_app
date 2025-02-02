@@ -65,11 +65,13 @@ class UpdateUserEvent extends AuthEvent {
   UpdateUserEvent({
     required this.action,
     required this.userData,
-  }) : assert(
-          userData is String || userData is File,
-          '[userData] must be either a String or File, '
-          'but was ${userData.runtimeType}',
-        );
+  })
+  // : assert(
+  //     userData is String || userData is File,
+  //     '[userData] must be either a String or File, '
+  //     'but was ${userData.runtimeType}',
+  //   )
+  ;
 
   final UpdateUserAction action;
   final dynamic userData;

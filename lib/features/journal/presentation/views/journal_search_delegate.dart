@@ -11,6 +11,7 @@ import 'package:mental_health_journal_app/core/resources/strings.dart';
 import 'package:mental_health_journal_app/core/utils/core_utils.dart';
 import 'package:mental_health_journal_app/features/journal/presentation/search_cubit/search_cubit.dart';
 import 'package:mental_health_journal_app/features/journal/presentation/views/journal_entry_detail_screen.dart';
+import 'package:mental_health_journal_app/features/journal/presentation/widgets/entry_card.dart';
 
 class JournalSearchDelegate extends SearchDelegate<List<Widget>?> {
   JournalSearchDelegate(this.searchCubit);
@@ -82,52 +83,20 @@ class JournalSearchDelegate extends SearchDelegate<List<Widget>?> {
           ));
         } else if (state is EntriesSearched && state.entries.isNotEmpty) {
           return ListView.builder(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             itemCount: state.entries.length,
             itemBuilder: (context, index) {
               final entry = state.entries[index];
-              final date = DateFormat('MMM d, yyyy').format(
-                entry.dateCreated,
-              );
 
-              Document? document;
-              try {
-                final deltaJson = jsonDecode(entry.content);
-
-                document = Document.fromJson(deltaJson as List);
-              } on Exception catch (e) {
-                debugPrint(e.toString());
-                document = Document()..insert(0, entry.content);
-              }
-
-              final content = document.toPlainText();
-
-              return Card(
-                margin: const EdgeInsets.symmetric(vertical: 8),
-                child: ListTile(
-                  leading: Icon(
-                    Icons.circle,
-                    color: CoreUtils.getSentimentColor(
-                      entry.sentiment.capitalizeFirstLetter(),
-                    ),
-                  ),
-                  title: Text(
-                    entry.title?.capitalizeFirstLetter() ?? 'Untitled',
-                  ),
-                  subtitle: Text(
-                    content,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(color: Colors.grey),
-                  ),
-                  trailing: Text(date),
-                  onTap: () {
-                    Navigator.pushNamed(
-                      context,
-                      JournalEntryDetailScreen.id,
-                      arguments: entry,
-                    );
-                  },
-                ),
+              return EntryCard(
+                entry: entry,
+                onTap: () {
+                  Navigator.pushNamed(
+                    context,
+                    JournalEntryDetailScreen.id,
+                    arguments: entry,
+                  );
+                },
               );
             },
           );
@@ -166,52 +135,19 @@ class JournalSearchDelegate extends SearchDelegate<List<Widget>?> {
             );
           } else if (state is EntriesSearched) {
             return ListView.builder(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               itemCount: state.entries.length,
               itemBuilder: (context, index) {
                 final entry = state.entries[index];
-                final date = DateFormat('MMM d, yyyy').format(
-                  entry.dateCreated,
-                );
-
-                Document? document;
-                try {
-                  final deltaJson = jsonDecode(entry.content);
-
-                  document = Document.fromJson(deltaJson as List);
-                } on Exception catch (e) {
-                  debugPrint(e.toString());
-                  document = Document()..insert(0, entry.content);
-                }
-
-                final content = document.toPlainText();
-
-                return Card(
-                  margin: const EdgeInsets.symmetric(vertical: 8),
-                  child: ListTile(
-                    leading: Icon(
-                      Icons.circle,
-                      color: CoreUtils.getSentimentColor(
-                        entry.sentiment.capitalizeFirstLetter(),
-                      ),
-                    ),
-                    title: Text(
-                      entry.title?.capitalizeFirstLetter() ?? 'Untitled',
-                    ),
-                    subtitle: Text(
-                      content,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(color: Colors.grey),
-                    ),
-                    trailing: Text(date),
-                    onTap: () {
-                      Navigator.pushNamed(
-                        context,
-                        JournalEntryDetailScreen.id,
-                        arguments: entry,
-                      );
-                    },
-                  ),
+                return EntryCard(
+                  entry: entry,
+                  onTap: () {
+                    Navigator.pushNamed(
+                      context,
+                      JournalEntryDetailScreen.id,
+                      arguments: entry,
+                    );
+                  },
                 );
               },
             );

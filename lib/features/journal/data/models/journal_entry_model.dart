@@ -9,7 +9,8 @@ class JournalEntryModel extends JournalEntry {
     required super.content,
     required super.dateCreated,
     required super.tags,
-    required super.sentiment,
+    required super.selectedMood,
+    required super.sentimentScore,
     super.title,
     super.titleLowercase,
   });
@@ -21,7 +22,8 @@ class JournalEntryModel extends JournalEntry {
           content: '{}',
           dateCreated: DateTime.now(),
           tags: const [],
-          sentiment: 'neutral',
+          selectedMood: 'Neutral',
+          sentimentScore: 0,
           title: null,
           titleLowercase: null,
         );
@@ -32,7 +34,8 @@ class JournalEntryModel extends JournalEntry {
           content: map['content'] as String? ?? '{}',
           dateCreated: (map['dateCreated'] as Timestamp?)?.toDate() ?? DateTime.now(),
           tags: map['tags'] != null ? List<String>.from(map['tags'] as List) : [],
-          sentiment: map['sentiment'] as String? ?? '',
+          selectedMood: map['selectedMood'] as String? ?? '',
+          sentimentScore: map['sentimentScore'] as double? ?? 0,
           title: map['title'] as String? ?? '',
           titleLowercase: map['title_lowercase'] as String? ?? '',
         );
@@ -43,7 +46,8 @@ class JournalEntryModel extends JournalEntry {
         'content': content,
         'dateCreated': Timestamp.fromDate(dateCreated),
         'tags': tags,
-        'sentiment': sentiment,
+        'selectedMood': selectedMood,
+        'sentimentScore': sentimentScore,
         'title': title,
         'title_lowercase': titleLowercase,
       };
@@ -54,7 +58,8 @@ class JournalEntryModel extends JournalEntry {
     String? content,
     DateTime? dateCreated,
     List<String>? tags,
-    String? sentiment,
+    String? selectedMood,
+    double? sentimentScore,
     String? title,
     String? titleLowercase,
   }) {
@@ -66,7 +71,8 @@ class JournalEntryModel extends JournalEntry {
       content: content ?? this.content,
       dateCreated: dateCreated ?? this.dateCreated,
       tags: tags ?? this.tags,
-      sentiment: sentiment ?? this.sentiment,
+      selectedMood: selectedMood ?? this.selectedMood,
+      sentimentScore: sentimentScore ?? this.sentimentScore,
     );
   }
 }

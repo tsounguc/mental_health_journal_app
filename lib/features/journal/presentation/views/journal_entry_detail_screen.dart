@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:mental_health_journal_app/core/extensions/context_extension.dart';
 import 'package:mental_health_journal_app/core/extensions/string_extensions.dart';
 import 'package:mental_health_journal_app/core/resources/colours.dart';
+import 'package:mental_health_journal_app/core/services/sentiment_analyser.dart';
 import 'package:mental_health_journal_app/core/utils/core_utils.dart';
 import 'package:mental_health_journal_app/features/journal/domain/entities/journal_entry.dart';
 import 'package:mental_health_journal_app/features/journal/presentation/journal_cubit/journal_cubit.dart';
@@ -45,12 +46,12 @@ class JournalEntryDetailScreen extends StatelessWidget {
         }
       },
       child: Scaffold(
+        backgroundColor: Colours.backgroundColor,
         appBar: AppBar(
-          // title: const Text('Journal Entry Detail'),
+          backgroundColor: Colours.backgroundColor,
           actions: [
             IconButton(
               onPressed: () {
-                // TODO(Edit-Screen): Navigate to Edit Screen
                 Navigator.pushNamed(
                   context,
                   JournalEditorScreen.id,
@@ -61,7 +62,6 @@ class JournalEntryDetailScreen extends StatelessWidget {
             ),
             IconButton(
               onPressed: () {
-                // TODO(Delete-Button): Implement delete entry
                 context.read<JournalCubit>().deleteEntry(entryId: entry.id);
               },
               icon: const Icon(Icons.delete),
@@ -74,22 +74,10 @@ class JournalEntryDetailScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Title Section
-                SizedBox(
-                  width: context.width * 0.70,
-                  child: Text(
-                    entry.title!.capitalizeFirstLetter(),
-                    style: const TextStyle(
-                      fontSize: 30,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 8),
-
                 // Date and Sentiment
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       DateFormat('MMM d, yyyy').format(
@@ -100,47 +88,106 @@ class JournalEntryDetailScreen extends StatelessWidget {
                         color: Colors.grey,
                       ),
                     ),
-                    Chip(
-                      label: Text(entry.sentiment.capitalizeFirstLetter()),
-                      backgroundColor: CoreUtils.getSentimentColor(entry.sentiment.capitalizeFirstLetter()),
+                  ],
+                ),
+
+                const SizedBox(height: 10),
+
+                // Title Section
+                SizedBox(
+                  width: context.width * 0.70,
+                  child: Text(
+                    entry.title!.capitalizeFirstLetter(),
+                    style: const TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+
+                const SizedBox(height: 8),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        const Text(
+                          'Mood: ',
+                          style: TextStyle(fontWeight: FontWeight.w500),
+                        ),
+                        Chip(
+                          label: Text(
+                            '${entry.selectedMood} '
+                            '${CoreUtils.getEmoji(entry.selectedMood)}',
+                          ),
+                        )
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        const Text(
+                          'Sentiment: ',
+                          style: TextStyle(fontWeight: FontWeight.w500),
+                        ),
+                        Chip(
+                          label: Text(
+                            SentimentAnalyzer().interpretResult(
+                              entry.sentimentScore,
+                            ),
+                          ),
+                        )
+                      ],
                     ),
                   ],
                 ),
-                const SizedBox(height: 16),
+
                 Container(
                   padding: const EdgeInsets.symmetric(
-                    vertical: 25,
+                    vertical: 20,
                     horizontal: 8,
                   ).copyWith(left: 0),
                   child: QuillEditor.basic(
                     controller: contentController..readOnly = true,
                     configurations: const QuillEditorConfigurations(
-                      minHeight: 200,
+                      minHeight: 300,
                       showCursor: false,
                     ),
                   ),
                 ),
+
                 const SizedBox(height: 16),
 
                 // Tags Section
-                if (entry.tags.isNotEmpty) ...[
-                  const Text(
-                    'Tags:',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                    ),
+                if (entry.tags.isNotEmpty)
+                  Row(
+                    children: [
+                      const Text(
+                        'Tags: ',
+                        style: TextStyle(fontWeight: FontWeight.w500),
+                      ),
+                      ...[
+                        Wrap(
+                          spacing: 8,
+                          children: [
+                            ...entry.tags.map(
+                              (tag) => Chip(
+                                color: const WidgetStatePropertyAll(Colours.backgroundColor),
+                                label: Text(tag),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                  side: BorderSide(
+                                    color: Colours.softGreyColor.withValues(
+                                      alpha: 0.3,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
+                      ],
+                    ],
                   ),
-                  Wrap(
-                    spacing: 8,
-                    children: entry.tags
-                        .map(
-                          (tag) => Chip(
-                            label: Text(tag),
-                          ),
-                        )
-                        .toList(),
-                  ),
-                ],
               ],
             ),
           ),

@@ -120,6 +120,18 @@ class GetEntriesException extends Equatable implements Exception {
   List<Object> get props => [message, statusCode];
 }
 
+class GetDashboardDataException extends Equatable implements Exception {
+  const GetDashboardDataException({
+    required this.message,
+    required this.statusCode,
+  });
+  final String message;
+  final String statusCode;
+
+  @override
+  List<Object> get props => [message, statusCode];
+}
+
 class SearchEntriesException extends Equatable implements Exception {
   const SearchEntriesException({
     required this.message,

@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:mental_health_journal_app/core/common/app/providers/user_provider.dart';
+import 'package:mental_health_journal_app/core/common/widgets/section_header.dart';
 import 'package:mental_health_journal_app/core/extensions/context_extension.dart';
 import 'package:mental_health_journal_app/core/resources/colours.dart';
 import 'package:mental_health_journal_app/core/services/service_locator.dart';
@@ -15,22 +17,34 @@ class ProfileBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer(
+    return Consumer<UserProvider>(
       builder: (context, provider, child) {
+        final user = context.currentUser;
+        final positive = user?.sentimentSummary.positive ?? 0;
+        final negative = user?.sentimentSummary.negative ?? 0;
+        final neutral = user?.sentimentSummary.neutral ?? 0;
+        final total = user?.totalEntries ?? 0;
+        final posPct = total == 0 ? 0 : (positive / total * 100).toStringAsFixed(0);
+        final negPct = total == 0 ? 0 : (negative / total * 100).toStringAsFixed(0);
+        final neutralPct = total == 0 ? 0 : (neutral / total * 100).toStringAsFixed(0);
+        var favTags = '';
+        for (final tag in user!.topTags) {
+          favTags = '$favTags#$tag, ';
+        }
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              'Your Stats',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-              ),
+            SectionHeader(
+              sectionTitle: 'Your Stats',
+              fontSize: 16,
+              seeAll: false,
+              onSeeAll: () {},
             ),
             const SizedBox(height: 16),
             Container(
+              margin: EdgeInsets.symmetric(horizontal: 6),
               decoration: BoxDecoration(
-                color: context.theme.scaffoldBackgroundColor,
+                color: Colors.white,
                 borderRadius: BorderRadius.circular(8),
                 boxShadow: const [
                   BoxShadow(
@@ -46,26 +60,29 @@ class ProfileBody extends StatelessWidget {
                   children: [
                     _statItem(
                       'Entries',
-                      '50',
+                      '${context.currentUser?.totalEntries ?? 0}',
                     ),
                     const Divider(),
                     _statItem(
                       'Mood Trends',
-                      'Positive: 60%, Neutral: 30%, Negative: 10%',
+                      'Positive: $posPct%, Neutral: $neutralPct%, '
+                          'Negative: $negPct%',
                     ),
                     const Divider(),
                     _statItem(
-                      'Favority Tags',
-                      '#gratitude #selfcare',
+                      'Favorite Tags',
+                      favTags,
                     ),
                   ],
                 ),
               ),
             ),
             const SizedBox(height: 32),
-            const Text(
-              'Settings',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            SectionHeader(
+              sectionTitle: 'Settings',
+              fontSize: 16,
+              seeAll: false,
+              onSeeAll: () {},
             ),
             const SizedBox(height: 16),
             _settingsItem(
@@ -144,7 +161,7 @@ class ProfileBody extends StatelessWidget {
                         item,
                         style: const TextStyle(
                           fontSize: 14,
-                          color: Colours.softGreyColor,
+                          // color: Colours.softGreyColor,
                         ),
                       ),
                     ),
@@ -168,7 +185,7 @@ class ProfileBody extends StatelessWidget {
                   value,
                   style: const TextStyle(
                     fontSize: 14,
-                    color: Colours.softGreyColor,
+                    // color: Colours.softGreyColor,
                   ),
                 ),
               ),
@@ -177,50 +194,52 @@ class ProfileBody extends StatelessWidget {
   }
 
   Widget _settingsItem(BuildContext context, String title, IconData icon) {
-    return ListTile(
-      leading: Icon(
-        icon,
-        color: title == 'Sign Out' ? null : Colours.primaryColor,
-      ),
-      title: Text(
-        title,
-        style: const TextStyle(
-          fontSize: 16,
+    return Card(
+      color: Colors.white,
+      child: ListTile(
+        leading: Icon(
+          icon,
+          color: title == 'Sign Out' ? null : Colours.primaryColor,
         ),
+        title: Text(
+          title,
+          style: const TextStyle(
+            fontSize: 16,
+          ),
+        ),
+        trailing: title == 'Sign Out' ? null : const Icon(Icons.keyboard_arrow_right),
+        onTap: () async {
+          // Handle settings item tap
+          // ScaffoldMessenger.of(context).showSnackBar(
+          //   SnackBar(content: Text('$title tapped')),
+          // );
+          final navigator = Navigator.of(context);
+
+          switch (title) {
+            case 'Change Password':
+              await navigator.pushNamed(
+                ChangePasswordScreen.id,
+                arguments: serviceLocator<AuthBloc>(),
+              );
+            case 'Notification Preferences':
+              break;
+            case 'Privacy Policy':
+              break;
+            case 'Sign Out':
+              // context.read<AuthBloc>().add(
+              //       const SignOutEvent(),
+              //     );
+
+              await serviceLocator<FirebaseAuth>().signOut();
+              unawaited(
+                navigator.pushNamedAndRemoveUntil(
+                  '/',
+                  (route) => false,
+                ),
+              );
+          }
+        },
       ),
-      trailing: title == 'Sign Out' ? null : const Icon(Icons.keyboard_arrow_right),
-      onTap: () async {
-        // Handle settings item tap
-        // ScaffoldMessenger.of(context).showSnackBar(
-        //   SnackBar(content: Text('$title tapped')),
-        // );
-        final navigator = Navigator.of(context);
-
-        switch (title) {
-          case 'Change Password':
-            await navigator.pushNamed(
-              ChangePasswordScreen.id,
-              arguments: serviceLocator<AuthBloc>(),
-            );
-          case 'Notification Preferences':
-            break;
-          case 'Privacy Policy':
-            break;
-          case 'Sign Out':
-
-            // context.read<AuthBloc>().add(
-            //       const SignOutEvent(),
-            //     );
-
-            await serviceLocator<FirebaseAuth>().signOut();
-            unawaited(
-              navigator.pushNamedAndRemoveUntil(
-                '/',
-                (route) => false,
-              ),
-            );
-        }
-      },
     );
   }
 }

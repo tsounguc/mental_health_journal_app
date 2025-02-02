@@ -201,6 +201,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "10.8.3"
+  dart_sentiment:
+    dependency: "direct main"
+    description:
+      name: dart_sentiment
+      sha256: "7c2a3478b92953df7721cf2720a74253377da4c56ca4c8380f78d82841064aa2"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.9"
   dartz:
     dependency: "direct main"
     description:
@@ -409,6 +417,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.1.1"
+  fl_chart:
+    dependency: "direct main"
+    description:
+      name: fl_chart
+      sha256: "5276944c6ffc975ae796569a826c38a62d2abcf264e26b88fa6f482e107f4237"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.70.2"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -925,6 +941,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.2.2"
+  remove_emoji:
+    dependency: transitive
+    description:
+      name: remove_emoji
+      sha256: ed9e8463e8c9ca05b86fcddd4c0dbd2c2605a50d267f4ffa05496607924809e3
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.10"
   rx:
     dependency: transitive
     description:
@@ -1066,6 +1090,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.6.5"
+  tflite_flutter:
+    dependency: "direct main"
+    description:
+      name: tflite_flutter
+      sha256: "48e6fde2ad97162bb66a16a142f4c4698add9e8cd397ce9d1cc7451b55537ac1"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.11.0"
   tuple:
     dependency: transitive
     description:

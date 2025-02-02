@@ -5,10 +5,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:mental_health_journal_app/core/common/views/long_button.dart';
 import 'package:mental_health_journal_app/core/enums/update_entry_action.dart';
+import 'package:mental_health_journal_app/core/enums/update_user_action.dart';
 import 'package:mental_health_journal_app/core/extensions/context_extension.dart';
 import 'package:mental_health_journal_app/core/extensions/string_extensions.dart';
 import 'package:mental_health_journal_app/core/resources/colours.dart';
+import 'package:mental_health_journal_app/core/services/sentiment_analyser.dart';
 import 'package:mental_health_journal_app/core/utils/core_utils.dart';
+import 'package:mental_health_journal_app/features/auth/data/models/user_model.dart';
+import 'package:mental_health_journal_app/features/auth/presentation/auth_bloc/auth_bloc.dart';
 import 'package:mental_health_journal_app/features/journal/data/models/journal_entry_model.dart';
 import 'package:mental_health_journal_app/features/journal/domain/entities/journal_entry.dart';
 import 'package:mental_health_journal_app/features/journal/presentation/journal_cubit/journal_cubit.dart';
@@ -28,6 +32,7 @@ class JournalEditorScreen extends StatefulWidget {
 class _JournalEditorScreenState extends State<JournalEditorScreen> {
   final _titleController = TextEditingController();
   final _contentController = QuillController.basic();
+  final sentimentAnalyzer = SentimentAnalyzer();
   final _tags = <String>[];
   String? _selectedMood;
 
@@ -44,7 +49,7 @@ class _JournalEditorScreenState extends State<JournalEditorScreen> {
   bool get tagsChanged => widget.entry!.tags.length != _tags.length;
 
   bool get selectedMoodChanged =>
-      widget.entry!.sentiment.capitalizeFirstLetter() != _selectedMood!.capitalizeFirstLetter();
+      widget.entry!.selectedMood.capitalizeFirstLetter() != _selectedMood!.capitalizeFirstLetter();
 
   bool get canSubmit => titleEntered && contentEntered;
 
@@ -64,32 +69,49 @@ class _JournalEditorScreenState extends State<JournalEditorScreen> {
     });
   }
 
-  void _submitEntry() {
+  void _submitEntry() async {
     final cubit = context.read<JournalCubit>();
+    final bloc = context.read<AuthBloc>();
+
+    final journalText = _contentController.document.toPlainText();
+
+    final sentimentScore = await sentimentAnalyzer.analyzeText(journalText);
+
     final entry = JournalEntryModel.empty().copyWith(
       userId: context.currentUser!.uid,
       title: _titleController.text.trim(),
       titleLowercase: _titleController.text.trim().toLowerCase(),
       content: jsonEncode(_contentController.document.toDelta().toJson()),
-      sentiment: _selectedMood?.capitalizeFirstLetter(),
+      selectedMood: _selectedMood?.capitalizeFirstLetter(),
+      sentimentScore: sentimentScore,
       tags: _tags,
     );
     if (context.currentUser == null) {
       CoreUtils.showSnackBar(context, 'User not logged in');
     } else {
-      cubit.createEntry(
+      await cubit.createEntry(
         entry: entry,
       );
+
+      bloc.add(
+        UpdateUserEvent(
+          action: UpdateUserAction.totalEntries,
+          userData: context.currentUser!.totalEntries + 1,
+        ),
+      );
+
+      updateSentimentSummary(sentimentScore, context, bloc);
+      updateMoodSummary(context, bloc);
     }
   }
 
-  void saveChanges(BuildContext context) {
+  Future<void> saveChanges(BuildContext context) async {
     if (nothingChanged) Navigator.pop(context);
 
     final cubit = context.read<JournalCubit>();
-
+    final bloc = context.read<AuthBloc>();
     if (titleChanged) {
-      cubit.updateEntry(
+      await cubit.updateEntry(
         entryId: widget.entry!.id,
         action: UpdateEntryAction.title,
         entryData: _titleController.text.trim(),
@@ -97,15 +119,22 @@ class _JournalEditorScreenState extends State<JournalEditorScreen> {
     }
 
     if (contentChanged) {
-      cubit.updateEntry(
+      final journalText = _contentController.document.toPlainText();
+      final sentimentScore = await sentimentAnalyzer.analyzeText(journalText);
+
+      await cubit.updateEntry(
         entryId: widget.entry!.id,
         action: UpdateEntryAction.content,
-        entryData: jsonEncode(_contentController.document.toDelta().toJson()),
+        entryData: {
+          'content': jsonEncode(_contentController.document.toDelta().toJson()),
+          'sentimentScore': sentimentScore,
+        },
       );
+      updateSentimentSummary(sentimentScore, context, bloc);
     }
 
     if (tagsChanged) {
-      cubit.updateEntry(
+      await cubit.updateEntry(
         entryId: widget.entry!.id,
         action: UpdateEntryAction.tags,
         entryData: _tags,
@@ -113,11 +142,13 @@ class _JournalEditorScreenState extends State<JournalEditorScreen> {
     }
 
     if (selectedMoodChanged) {
-      cubit.updateEntry(
+      await cubit.updateEntry(
         entryId: widget.entry!.id,
         action: UpdateEntryAction.sentiment,
         entryData: _selectedMood,
       );
+
+      updateMoodSummary(context, bloc);
     }
   }
 
@@ -129,7 +160,7 @@ class _JournalEditorScreenState extends State<JournalEditorScreen> {
         // Attempt to parse the content as Delta JSON
         final deltaJson = jsonDecode(widget.entry!.content);
         _contentController.document = Document.fromJson(deltaJson as List);
-        _selectedMood = widget.entry!.sentiment.capitalizeFirstLetter();
+        _selectedMood = widget.entry!.selectedMood.capitalizeFirstLetter();
         _tags.addAll(widget.entry!.tags);
       } on Exception catch (e) {
         // If parsing fails, treat the content as plain text
@@ -173,7 +204,9 @@ class _JournalEditorScreenState extends State<JournalEditorScreen> {
       },
       builder: (context, state) {
         return Scaffold(
+          backgroundColor: Colours.backgroundColor,
           appBar: AppBar(
+            backgroundColor: Colours.backgroundColor,
             title: Text(
               widget.entry == null ? 'New Journal Entry' : 'Edit Journal Entry',
             ),
@@ -192,7 +225,6 @@ class _JournalEditorScreenState extends State<JournalEditorScreen> {
                                 'Save',
                                 style: TextStyle(fontSize: 16),
                               ),
-                              // color: context.theme.primaryColor,
                               onPressed: nothingChanged ? null : () => saveChanges(context),
                             )
                           : TextButton.icon(
@@ -217,37 +249,44 @@ class _JournalEditorScreenState extends State<JournalEditorScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const SizedBox(height: 6),
                   JournalFormField(
                     hintText: 'Title',
                     hintStyle: const TextStyle(
                       color: Colours.softGreyColor,
                       fontSize: 16,
                     ),
+                    fillColor: Colours.backgroundColor,
                     controller: _titleController,
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(8),
                   ),
                   QuillSimpleToolbar(
                     controller: _contentController,
-                    configurations: const QuillSimpleToolbarConfigurations(
+                    configurations: QuillSimpleToolbarConfigurations(
+                      toolbarIconCrossAlignment: WrapCrossAlignment.start,
+                      decoration: BoxDecoration(
+                        color: Colours.softGreyColor.withValues(
+                          alpha: 0.09,
+                        ),
+                        borderRadius: BorderRadius.circular(6),
+                      ),
                       multiRowsDisplay: false,
                     ),
                   ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: 6),
                   Container(
                     padding: const EdgeInsets.symmetric(
-                      vertical: 18,
+                      vertical: 12,
                       horizontal: 10,
-                    ).copyWith(top: 12),
+                    ).copyWith(bottom: 6),
                     decoration: BoxDecoration(
                       border: Border.all(color: Colours.softGreyColor),
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius: BorderRadius.circular(8),
                     ),
                     child: QuillEditor.basic(
                       controller: _contentController,
                       configurations: QuillEditorConfigurations(
-                        minHeight: 250,
-                        maxHeight: 250,
+                        minHeight: 375,
+                        maxHeight: 375,
                         onTapOutside: (event, focusNode) {
                           focusNode.unfocus();
                         },
@@ -255,51 +294,53 @@ class _JournalEditorScreenState extends State<JournalEditorScreen> {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 25),
-                  const Text(
-                    'Mood Selector',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
+                  const SizedBox(height: 30),
+                  ButtonTheme(
+                    alignedDropdown: true,
+                    child: DropdownButtonFormField<String>(
+                      hint: const Text(
+                        'Select Mood',
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colours.softGreyColor,
+                        ),
+                      ),
+                      value: _selectedMood,
+                      items: ['Happy', 'Sad', 'Angry', 'Neutral']
+                          .map(
+                            (mood) => DropdownMenuItem(
+                              value: mood,
+                              child: Text(mood),
+                            ),
+                          )
+                          .toList(),
+                      onChanged: (value) {
+                        setState(() {
+                          _selectedMood = value;
+                        });
+                      },
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                          borderSide: const BorderSide(color: Colours.softGreyColor),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                          borderSide: const BorderSide(color: Colours.softGreyColor),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                          borderSide: const BorderSide(color: Colours.softGreyColor),
+                        ),
+                        // hintText: 'Select Mood',
+                        hintStyle: TextStyle(
+                          fontSize: 16,
+                          color: Colours.softGreyColor.withValues(alpha: 0.2),
+                        ),
+                      ),
                     ),
                   ),
                   const SizedBox(height: 8),
-                  DropdownButtonFormField<String>(
-                    value: _selectedMood,
-                    items: ['Happy', 'Sad', 'Angry', 'Neutral']
-                        .map(
-                          (mood) => DropdownMenuItem(
-                            value: mood,
-                            child: Text(mood),
-                          ),
-                        )
-                        .toList(),
-                    onChanged: (value) {
-                      setState(() {
-                        _selectedMood = value;
-                      });
-                    },
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide: const BorderSide(color: Colours.softGreyColor),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide: const BorderSide(color: Colours.softGreyColor),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide: const BorderSide(color: Colours.softGreyColor),
-                      ),
-                      hintText: 'Select Mood',
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  Text(
-                    'Tags',
-                    style: Theme.of(context).textTheme.titleMedium,
-                  ),
                   Wrap(
                     spacing: 8,
                     children: _tags
@@ -311,11 +352,10 @@ class _JournalEditorScreenState extends State<JournalEditorScreen> {
                         )
                         .toList(),
                   ),
-                  const SizedBox(height: 8),
                   JournalFormField(
-                    fieldTitle: 'Add Tag',
+                    hintText: 'Add Tag',
                     onFieldSubmitted: _addTag,
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(8),
                     textInputAction: TextInputAction.send,
                   ),
                   StatefulBuilder(
@@ -342,5 +382,136 @@ class _JournalEditorScreenState extends State<JournalEditorScreen> {
         );
       },
     );
+  }
+
+  void updateSentimentSummary(double sentimentScore, BuildContext context, AuthBloc bloc) {
+    final user = context.currentUser!;
+    final sentimentSummary = user.sentimentSummary as SentimentSummaryModel;
+    final previousInterpretation = widget.entry == null
+        ? ''
+        : sentimentAnalyzer.interpretResult(
+            widget.entry!.sentimentScore,
+          );
+    final interpretation = sentimentAnalyzer.interpretResult(
+      sentimentScore,
+    );
+    if (widget.entry == null) {
+      bloc.add(
+        UpdateUserEvent(
+          action: UpdateUserAction.sentimentSummary,
+          userData: sentimentSummary.copyWith(
+              negative: interpretation == 'Negative' ? sentimentSummary.negative + 1 : null,
+              positive: interpretation == 'Positive' ? sentimentSummary.positive + 1 : null,
+              neutral: interpretation == 'Neutral' ? sentimentSummary.neutral + 1 : null),
+        ),
+      );
+    }
+    if (previousInterpretation == 'Positive') {
+      bloc.add(
+        UpdateUserEvent(
+          action: UpdateUserAction.sentimentSummary,
+          userData: sentimentSummary.copyWith(
+              positive: sentimentSummary.positive > 0 ? sentimentSummary.positive - 1 : 0,
+              neutral: interpretation == 'Neutral' ? sentimentSummary.neutral + 1 : null,
+              negative: interpretation == 'Negative' ? sentimentSummary.negative + 1 : null),
+        ),
+      );
+    }
+    if (previousInterpretation == 'Negative') {
+      bloc.add(
+        UpdateUserEvent(
+          action: UpdateUserAction.sentimentSummary,
+          userData: sentimentSummary.copyWith(
+              negative: sentimentSummary.negative > 0 ? sentimentSummary.negative - 1 : 0,
+              positive: interpretation == 'Positive' ? sentimentSummary.positive + 1 : null,
+              neutral: interpretation == 'Neutral' ? sentimentSummary.neutral + 1 : null),
+        ),
+      );
+    }
+    if (previousInterpretation == 'Neutral') {
+      bloc.add(
+        UpdateUserEvent(
+          action: UpdateUserAction.sentimentSummary,
+          userData: sentimentSummary.copyWith(
+              neutral: sentimentSummary.neutral > 0 ? sentimentSummary.neutral - 1 : 0,
+              positive: interpretation == 'Positive' ? sentimentSummary.positive + 1 : null,
+              negative: interpretation == 'Negative' ? sentimentSummary.negative + 1 : null),
+        ),
+      );
+    }
+  }
+
+  void updateMoodSummary(BuildContext context, AuthBloc bloc) {
+    final user = context.currentUser!;
+    final moodSummary = user.moodSummary as MoodSummaryModel;
+    final previousSelectMood = widget.entry?.selectedMood;
+    if (widget.entry == null) {
+      bloc.add(
+        UpdateUserEvent(
+          action: UpdateUserAction.moodSummary,
+          userData: moodSummary.copyWith(
+            happy: _selectedMood == 'Happy' ? moodSummary.happy + 1 : null,
+            neutral: _selectedMood == 'Neutral' ? moodSummary.neutral + 1 : null,
+            sad: _selectedMood == 'Sad' ? moodSummary.sad + 1 : null,
+            angry: _selectedMood == 'Angry' ? moodSummary.angry + 1 : null,
+          ),
+        ),
+      );
+    }
+    if (previousSelectMood == 'Happy') {
+      bloc.add(
+        UpdateUserEvent(
+          action: UpdateUserAction.moodSummary,
+          userData: moodSummary.copyWith(
+            happy: moodSummary.happy > 0 ? moodSummary.happy - 1 : 0,
+            neutral: _selectedMood == 'Neutral' ? moodSummary.neutral + 1 : null,
+            sad: _selectedMood == 'Sad' ? moodSummary.sad + 1 : null,
+            angry: _selectedMood == 'Angry' ? moodSummary.angry + 1 : null,
+          ),
+        ),
+      );
+    }
+
+    if (previousSelectMood == 'Neutral') {
+      bloc.add(
+        UpdateUserEvent(
+          action: UpdateUserAction.moodSummary,
+          userData: moodSummary.copyWith(
+            neutral: moodSummary.neutral > 0 ? moodSummary.neutral - 1 : 0,
+            happy: _selectedMood == 'Happy' ? moodSummary.happy + 1 : null,
+            sad: _selectedMood == 'Sad' ? moodSummary.sad + 1 : null,
+            angry: _selectedMood == 'Angry' ? moodSummary.angry + 1 : null,
+          ),
+        ),
+      );
+    }
+
+    if (previousSelectMood == 'Sad') {
+      bloc.add(
+        UpdateUserEvent(
+          action: UpdateUserAction.moodSummary,
+          userData: moodSummary.copyWith(
+            sad: moodSummary.sad > 0 ? moodSummary.sad - 1 : 0,
+            happy: _selectedMood == 'Happy' ? moodSummary.happy + 1 : null,
+            neutral: _selectedMood == 'Neutral' ? moodSummary.neutral + 1 : null,
+            angry: _selectedMood == 'Angry' ? moodSummary.angry + 1 : null,
+          ),
+        ),
+      );
+    }
+
+    if (previousSelectMood == 'Angry') {
+      bloc.add(
+        UpdateUserEvent(
+          action: UpdateUserAction.sentimentSummary,
+          userData: moodSummary.copyWith(
+            angry: moodSummary.angry > 0 ? moodSummary.angry - 1 : 0,
+            happy: _selectedMood == 'Happy' ? moodSummary.happy + 1 : null,
+            sad: _selectedMood == 'Sad' ? moodSummary.sad + 1 : null,
+            neutral: _selectedMood == 'Neutral' ? moodSummary.neutral + 1 : null,
+          ),
+        ),
+      );
+    }
   }
 }

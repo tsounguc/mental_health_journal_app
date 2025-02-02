@@ -147,6 +147,19 @@ class GetEntriesFailure extends Failure {
         );
 }
 
+class GetDashboardDataFailure extends Failure {
+  GetDashboardDataFailure({
+    required super.message,
+    required super.statusCode,
+  });
+
+  GetDashboardDataFailure.fromException(GetDashboardDataException exception)
+      : this(
+          message: exception.message,
+          statusCode: exception.statusCode,
+        );
+}
+
 class SearchEntriesFailure extends Failure {
   SearchEntriesFailure({
     required super.message,

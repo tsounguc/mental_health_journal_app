@@ -15,6 +15,8 @@ class JournalFormField extends StatelessWidget {
     this.maxLines = 1,
     this.minLines,
     this.onFieldSubmitted,
+    this.fillColor,
+    this.filled = false,
     super.key,
   });
 
@@ -30,6 +32,8 @@ class JournalFormField extends StatelessWidget {
   final int? minLines;
   final void Function(String)? onFieldSubmitted;
   final TextInputAction? textInputAction;
+  final Color? fillColor;
+  final bool filled;
 
   @override
   Widget build(BuildContext context) {
@@ -50,6 +54,8 @@ class JournalFormField extends StatelessWidget {
         const SizedBox(height: 10),
         IField(
           controller: controller ?? TextEditingController(),
+          fillColor: fillColor,
+          filled: filled,
           prefix: prefix,
           prefixIcon: prefixIcon,
           hintText: hintText,

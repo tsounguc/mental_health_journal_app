@@ -23,4 +23,9 @@ abstract class JournalRepository {
     required JournalEntry? lastEntry,
     required int paginationSize,
   });
+
+  ResultStream<List<JournalEntry>> getDashboardData({
+    required String userId,
+    required DateTime today,
+  });
 }
