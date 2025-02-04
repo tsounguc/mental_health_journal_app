@@ -39,10 +39,11 @@ class DashBoardController extends ChangeNotifier {
     ChangeNotifierProvider(
       create: (_) => TabNavigator(
         TabItem(
-            child: BlocProvider(
-          create: (_) => serviceLocator<InsightsCubit>(),
-          child: const InsightsScreen(),
-        )),
+          child: BlocProvider(
+            create: (_) => serviceLocator<InsightsCubit>(),
+            child: const InsightsScreen(),
+          ),
+        ),
       ),
       child: const PersistentView(),
     ),

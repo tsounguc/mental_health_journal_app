@@ -87,8 +87,14 @@ class JournalRemoteDataSourceImpl implements JournalRemoteDataSource {
       final lowerCaseQuery = query.toLowerCase();
       return await _entries
           .where('userId', isEqualTo: _authClient.currentUser!.uid)
-          .where('title_lowercase', isGreaterThanOrEqualTo: lowerCaseQuery)
-          .where('title_lowercase', isLessThanOrEqualTo: '$lowerCaseQuery\uf8ff') // Ensures a partial match
+          .where(
+            'title_lowercase',
+            isGreaterThanOrEqualTo: lowerCaseQuery,
+          )
+          .where(
+            'title_lowercase',
+            isLessThanOrEqualTo: '$lowerCaseQuery\uf8ff',
+          ) // Ensures a partial match
           .limit(25)
           .get()
           .then(

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:mental_health_journal_app/core/extensions/context_extension.dart';
 import 'package:mental_health_journal_app/core/resources/colours.dart';
 import 'package:mental_health_journal_app/features/profile/presentation/refactors/profile_body.dart';
 import 'package:mental_health_journal_app/features/profile/presentation/refactors/profile_header.dart';

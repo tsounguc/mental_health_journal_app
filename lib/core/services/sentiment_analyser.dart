@@ -1,6 +1,4 @@
 import 'package:dart_sentiment/dart_sentiment.dart';
-import 'package:flutter/material.dart';
-import 'package:tflite_flutter/tflite_flutter.dart';
 
 class SentimentAnalyzer {
   // SentimentAnalyzer() {

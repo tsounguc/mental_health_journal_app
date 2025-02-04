@@ -1,14 +1,7 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_quill/flutter_quill.dart';
-import 'package:intl/intl.dart';
-import 'package:mental_health_journal_app/core/extensions/context_extension.dart';
-import 'package:mental_health_journal_app/core/extensions/string_extensions.dart';
 import 'package:mental_health_journal_app/core/resources/colours.dart';
 import 'package:mental_health_journal_app/core/resources/strings.dart';
-import 'package:mental_health_journal_app/core/utils/core_utils.dart';
 import 'package:mental_health_journal_app/features/journal/presentation/search_cubit/search_cubit.dart';
 import 'package:mental_health_journal_app/features/journal/presentation/views/journal_entry_detail_screen.dart';
 import 'package:mental_health_journal_app/features/journal/presentation/widgets/entry_card.dart';
@@ -102,12 +95,13 @@ class JournalSearchDelegate extends SearchDelegate<List<Widget>?> {
           );
         }
         return const Center(
-            child: Text(
-          'Start searching',
-          style: TextStyle(
-            color: Colours.softGreyColor,
+          child: Text(
+            'Start searching',
+            style: TextStyle(
+              color: Colours.softGreyColor,
+            ),
           ),
-        ));
+        );
       },
     );
   }
@@ -117,11 +111,14 @@ class JournalSearchDelegate extends SearchDelegate<List<Widget>?> {
     // Optionally show suggestions (e.g., recent searches or similar queries)
     if (query.isEmpty) {
       return const Center(
-          child: Text(Strings.searchBodyInitialText,
-              style: TextStyle(
-                color: Colours.softGreyColor,
-                fontSize: 16,
-              )));
+        child: Text(
+          Strings.searchBodyInitialText,
+          style: TextStyle(
+            color: Colours.softGreyColor,
+            fontSize: 16,
+          ),
+        ),
+      );
     } else {
       // Trigger the search action in the cubit
       searchCubit.searchEntries(query);

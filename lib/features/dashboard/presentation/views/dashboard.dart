@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:mental_health_journal_app/core/extensions/context_extension.dart';
-import 'package:mental_health_journal_app/core/resources/colours.dart';
 import 'package:mental_health_journal_app/features/auth/data/models/user_model.dart';
 import 'package:mental_health_journal_app/features/dashboard/providers/dashboard_controller.dart';
 import 'package:mental_health_journal_app/features/dashboard/utils/dashboard_utils.dart';

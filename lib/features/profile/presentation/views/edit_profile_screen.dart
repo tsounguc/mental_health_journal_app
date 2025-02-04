@@ -140,7 +140,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                     fit: BoxFit.contain,
                                   )
                                 : userImage != null
-                                    ? Image.network(userImage, fit: BoxFit.contain)
+                                    ? Image.network(
+                                        userImage,
+                                        fit: BoxFit.contain,
+                                      )
                                     : const Center(
                                         child: Icon(
                                           Icons.person,
@@ -154,7 +157,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                               height: context.height * 0.2,
                               width: double.infinity,
                               decoration: BoxDecoration(
-                                color: Colours.softGreyColor.withValues(alpha: 0.2),
+                                color: Colours.softGreyColor.withValues(
+                                  alpha: 0.2,
+                                ),
                                 borderRadius: BorderRadius.circular(20),
                               ),
                             ),
@@ -187,7 +192,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       return state is AuthLoading
                           ? const Center(child: CircularProgressIndicator())
                           : LongButton(
-                              onPressed: nothingChanged ? null : () => saveChanges(context),
+                              onPressed: nothingChanged
+                                  ? null
+                                  : () => saveChanges(
+                                        context,
+                                      ),
                               label: 'Save',
                             );
                     },

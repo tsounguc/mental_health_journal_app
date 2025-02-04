@@ -24,9 +24,9 @@ class ProfileBody extends StatelessWidget {
         final negative = user?.sentimentSummary.negative ?? 0;
         final neutral = user?.sentimentSummary.neutral ?? 0;
         final total = user?.totalEntries ?? 0;
-        final posPct = total == 0 ? 0 : (positive / total * 100).toStringAsFixed(0);
-        final negPct = total == 0 ? 0 : (negative / total * 100).toStringAsFixed(0);
-        final neutralPct = total == 0 ? 0 : (neutral / total * 100).toStringAsFixed(0);
+        final posPct = total == 0 ? 0 : (positive / total * 100);
+        final negPct = total == 0 ? 0 : (negative / total * 100);
+        final neutralPct = total == 0 ? 0 : (neutral / total * 100);
         var favTags = '';
         for (final tag in user!.tagsFrequency.getTopTags()) {
           favTags = '$favTags#$tag, ';
@@ -65,8 +65,9 @@ class ProfileBody extends StatelessWidget {
                     const Divider(),
                     _statItem(
                       'Mood Trends',
-                      'Positive: $posPct%, Neutral: $neutralPct%, '
-                          'Negative: $negPct%',
+                      'Positive: ${posPct.toStringAsFixed(0)}%, '
+                          'Neutral: ${neutralPct.toStringAsFixed(0)}%, '
+                          'Negative: ${negPct.toStringAsFixed(0)}%',
                     ),
                     const Divider(),
                     _statItem(
@@ -207,12 +208,12 @@ class ProfileBody extends StatelessWidget {
             fontSize: 16,
           ),
         ),
-        trailing: title == 'Sign Out' ? null : const Icon(Icons.keyboard_arrow_right),
+        trailing: title == 'Sign Out'
+            ? null
+            : const Icon(
+                Icons.keyboard_arrow_right,
+              ),
         onTap: () async {
-          // Handle settings item tap
-          // ScaffoldMessenger.of(context).showSnackBar(
-          //   SnackBar(content: Text('$title tapped')),
-          // );
           final navigator = Navigator.of(context);
 
           switch (title) {

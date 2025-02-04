@@ -1,12 +1,7 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_quill/flutter_quill.dart';
-import 'package:intl/intl.dart';
 import 'package:mental_health_journal_app/core/common/widgets/error_display.dart';
 import 'package:mental_health_journal_app/core/common/widgets/loading_widget.dart';
-import 'package:mental_health_journal_app/core/extensions/string_extensions.dart';
 import 'package:mental_health_journal_app/core/utils/core_utils.dart';
 import 'package:mental_health_journal_app/features/journal/presentation/journal_cubit/journal_cubit.dart';
 import 'package:mental_health_journal_app/features/journal/presentation/views/journal_entry_detail_screen.dart';

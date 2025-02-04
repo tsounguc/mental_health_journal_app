@@ -29,7 +29,9 @@ class JournalHomeHeader extends StatelessWidget {
                 children: [
                   CircleAvatar(
                     radius: 22,
-                    backgroundColor: Colours.softGreyColor.withValues(alpha: 0.2),
+                    backgroundColor: Colours.softGreyColor.withValues(
+                      alpha: 0.2,
+                    ),
                     backgroundImage: imageIsNull
                         ? null
                         : NetworkImage(

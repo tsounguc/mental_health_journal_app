@@ -335,7 +335,10 @@ void main() {
         // Arrange
         final today = DateTime.now();
         // Act
-        remoteDataSourceImpl.getDashboardData(userId: testEntry.userId, today: today);
+        remoteDataSourceImpl.getDashboardData(
+          userId: testEntry.userId,
+          today: today,
+        );
 
         // Assert
         final entriesCollectionRef = await firestoreClient

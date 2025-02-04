@@ -43,7 +43,12 @@ class ProfilePictureScreen extends StatelessWidget {
                 padding: const EdgeInsets.only(right: 8),
                 child: TextButton(
                   onPressed: () {
-                    // context.read<AuthBloc>().add(DeleteProfilePicEvent(user: user));
+                    // TODO(Delete-Profile-Picture): Implement Delete Profile
+                    // context.read<AuthBloc>().add(
+                    //       DeleteProfilePicEvent(
+                    //         user: user,
+                    //       ),
+                    //     );
                   },
                   child: const Text(
                     'Delete',
@@ -54,7 +59,7 @@ class ProfilePictureScreen extends StatelessWidget {
                     ),
                   ),
                 ),
-              )
+              ),
           ],
         ),
         body: Container(

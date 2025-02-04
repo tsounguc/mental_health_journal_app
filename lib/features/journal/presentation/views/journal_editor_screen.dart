@@ -109,7 +109,6 @@ class _JournalEditorScreenState extends State<JournalEditorScreen> {
       updateSentimentSummary(sentimentScore, context, bloc);
       updateMoodSummary(context, bloc);
       _newTagsFrequency = _newTagsFrequency?.addAllTags(_tags);
-      print(_newTagsFrequency);
       bloc.add(
         UpdateUserEvent(
           action: UpdateUserAction.tagsFrequency,
@@ -195,7 +194,10 @@ class _JournalEditorScreenState extends State<JournalEditorScreen> {
       }
     }
 
-    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.landscapeLeft]);
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.landscapeLeft,
+    ]);
     super.initState();
   }
 
@@ -249,7 +251,11 @@ class _JournalEditorScreenState extends State<JournalEditorScreen> {
                                 'Save',
                                 style: TextStyle(fontSize: 16),
                               ),
-                              onPressed: nothingChanged ? null : () => saveChanges(context),
+                              onPressed: nothingChanged
+                                  ? null
+                                  : () => saveChanges(
+                                        context,
+                                      ),
                             )
                           : TextButton.icon(
                               icon: const Icon(Icons.check),
@@ -346,15 +352,21 @@ class _JournalEditorScreenState extends State<JournalEditorScreen> {
                       decoration: InputDecoration(
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8),
-                          borderSide: const BorderSide(color: Colours.softGreyColor),
+                          borderSide: const BorderSide(
+                            color: Colours.softGreyColor,
+                          ),
                         ),
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8),
-                          borderSide: const BorderSide(color: Colours.softGreyColor),
+                          borderSide: const BorderSide(
+                            color: Colours.softGreyColor,
+                          ),
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8),
-                          borderSide: const BorderSide(color: Colours.softGreyColor),
+                          borderSide: const BorderSide(
+                            color: Colours.softGreyColor,
+                          ),
                         ),
                         // hintText: 'Select Mood',
                         hintStyle: TextStyle(
@@ -390,7 +402,11 @@ class _JournalEditorScreenState extends State<JournalEditorScreen> {
                           ? const Center(child: CircularProgressIndicator())
                           : widget.entry != null
                               ? LongButton(
-                                  onPressed: nothingChanged ? null : () => saveChanges(context),
+                                  onPressed: nothingChanged
+                                      ? null
+                                      : () => saveChanges(
+                                            context,
+                                          ),
                                   label: 'Save',
                                 )
                               : LongButton(
@@ -408,7 +424,11 @@ class _JournalEditorScreenState extends State<JournalEditorScreen> {
     );
   }
 
-  void updateSentimentSummary(double sentimentScore, BuildContext context, AuthBloc bloc) {
+  void updateSentimentSummary(
+    double sentimentScore,
+    BuildContext context,
+    AuthBloc bloc,
+  ) {
     final user = context.currentUser!;
     final sentimentSummary = user.sentimentSummary as SentimentSummaryModel;
     final previousInterpretation = widget.entry == null
@@ -419,14 +439,19 @@ class _JournalEditorScreenState extends State<JournalEditorScreen> {
     final interpretation = sentimentAnalyzer.interpretResult(
       sentimentScore,
     );
+    final isNegativeScore = interpretation == 'Negative';
+    final isPositiveScore = interpretation == 'Positive';
+    final isNeutralScore = interpretation == 'Neutral';
+
     if (widget.entry == null) {
       bloc.add(
         UpdateUserEvent(
           action: UpdateUserAction.sentimentSummary,
           userData: sentimentSummary.copyWith(
-              negative: interpretation == 'Negative' ? sentimentSummary.negative + 1 : null,
-              positive: interpretation == 'Positive' ? sentimentSummary.positive + 1 : null,
-              neutral: interpretation == 'Neutral' ? sentimentSummary.neutral + 1 : null),
+            negative: isNegativeScore ? sentimentSummary.negative + 1 : null,
+            positive: isPositiveScore ? sentimentSummary.positive + 1 : null,
+            neutral: isNeutralScore ? sentimentSummary.neutral + 1 : null,
+          ),
         ),
       );
     }
@@ -435,9 +460,10 @@ class _JournalEditorScreenState extends State<JournalEditorScreen> {
         UpdateUserEvent(
           action: UpdateUserAction.sentimentSummary,
           userData: sentimentSummary.copyWith(
-              positive: sentimentSummary.positive > 0 ? sentimentSummary.positive - 1 : 0,
-              neutral: interpretation == 'Neutral' ? sentimentSummary.neutral + 1 : null,
-              negative: interpretation == 'Negative' ? sentimentSummary.negative + 1 : null),
+            positive: sentimentSummary.positive > 0 ? sentimentSummary.positive - 1 : 0,
+            neutral: isNeutralScore ? sentimentSummary.neutral + 1 : null,
+            negative: isNegativeScore ? sentimentSummary.negative + 1 : null,
+          ),
         ),
       );
     }
@@ -446,9 +472,10 @@ class _JournalEditorScreenState extends State<JournalEditorScreen> {
         UpdateUserEvent(
           action: UpdateUserAction.sentimentSummary,
           userData: sentimentSummary.copyWith(
-              negative: sentimentSummary.negative > 0 ? sentimentSummary.negative - 1 : 0,
-              positive: interpretation == 'Positive' ? sentimentSummary.positive + 1 : null,
-              neutral: interpretation == 'Neutral' ? sentimentSummary.neutral + 1 : null),
+            negative: sentimentSummary.negative > 0 ? sentimentSummary.negative - 1 : 0,
+            positive: isPositiveScore ? sentimentSummary.positive + 1 : null,
+            neutral: isNeutralScore ? sentimentSummary.neutral + 1 : null,
+          ),
         ),
       );
     }
@@ -457,9 +484,10 @@ class _JournalEditorScreenState extends State<JournalEditorScreen> {
         UpdateUserEvent(
           action: UpdateUserAction.sentimentSummary,
           userData: sentimentSummary.copyWith(
-              neutral: sentimentSummary.neutral > 0 ? sentimentSummary.neutral - 1 : 0,
-              positive: interpretation == 'Positive' ? sentimentSummary.positive + 1 : null,
-              negative: interpretation == 'Negative' ? sentimentSummary.negative + 1 : null),
+            neutral: sentimentSummary.neutral > 0 ? sentimentSummary.neutral - 1 : 0,
+            positive: isPositiveScore ? sentimentSummary.positive + 1 : null,
+            negative: isNegativeScore ? sentimentSummary.negative + 1 : null,
+          ),
         ),
       );
     }
@@ -469,15 +497,20 @@ class _JournalEditorScreenState extends State<JournalEditorScreen> {
     final user = context.currentUser!;
     final moodSummary = user.moodSummary as MoodSummaryModel;
     final previousSelectMood = widget.entry?.selectedMood;
+    final isHappyMood = _selectedMood == 'Happy';
+    final isNeutralMood = _selectedMood == 'Neutral';
+    final isSadMood = _selectedMood == 'Sad';
+    final isAngryMood = _selectedMood == 'Angry';
+
     if (widget.entry == null) {
       bloc.add(
         UpdateUserEvent(
           action: UpdateUserAction.moodSummary,
           userData: moodSummary.copyWith(
-            happy: _selectedMood == 'Happy' ? moodSummary.happy + 1 : null,
-            neutral: _selectedMood == 'Neutral' ? moodSummary.neutral + 1 : null,
-            sad: _selectedMood == 'Sad' ? moodSummary.sad + 1 : null,
-            angry: _selectedMood == 'Angry' ? moodSummary.angry + 1 : null,
+            happy: isHappyMood ? moodSummary.happy + 1 : null,
+            neutral: isNeutralMood ? moodSummary.neutral + 1 : null,
+            sad: isSadMood ? moodSummary.sad + 1 : null,
+            angry: isAngryMood ? moodSummary.angry + 1 : null,
           ),
         ),
       );
@@ -488,9 +521,9 @@ class _JournalEditorScreenState extends State<JournalEditorScreen> {
           action: UpdateUserAction.moodSummary,
           userData: moodSummary.copyWith(
             happy: moodSummary.happy > 0 ? moodSummary.happy - 1 : 0,
-            neutral: _selectedMood == 'Neutral' ? moodSummary.neutral + 1 : null,
-            sad: _selectedMood == 'Sad' ? moodSummary.sad + 1 : null,
-            angry: _selectedMood == 'Angry' ? moodSummary.angry + 1 : null,
+            neutral: isNeutralMood ? moodSummary.neutral + 1 : null,
+            sad: isSadMood ? moodSummary.sad + 1 : null,
+            angry: isAngryMood ? moodSummary.angry + 1 : null,
           ),
         ),
       );
@@ -502,9 +535,9 @@ class _JournalEditorScreenState extends State<JournalEditorScreen> {
           action: UpdateUserAction.moodSummary,
           userData: moodSummary.copyWith(
             neutral: moodSummary.neutral > 0 ? moodSummary.neutral - 1 : 0,
-            happy: _selectedMood == 'Happy' ? moodSummary.happy + 1 : null,
-            sad: _selectedMood == 'Sad' ? moodSummary.sad + 1 : null,
-            angry: _selectedMood == 'Angry' ? moodSummary.angry + 1 : null,
+            happy: isHappyMood ? moodSummary.happy + 1 : null,
+            sad: isSadMood ? moodSummary.sad + 1 : null,
+            angry: isAngryMood ? moodSummary.angry + 1 : null,
           ),
         ),
       );
@@ -516,9 +549,9 @@ class _JournalEditorScreenState extends State<JournalEditorScreen> {
           action: UpdateUserAction.moodSummary,
           userData: moodSummary.copyWith(
             sad: moodSummary.sad > 0 ? moodSummary.sad - 1 : 0,
-            happy: _selectedMood == 'Happy' ? moodSummary.happy + 1 : null,
-            neutral: _selectedMood == 'Neutral' ? moodSummary.neutral + 1 : null,
-            angry: _selectedMood == 'Angry' ? moodSummary.angry + 1 : null,
+            happy: isHappyMood ? moodSummary.happy + 1 : null,
+            neutral: isNeutralMood ? moodSummary.neutral + 1 : null,
+            angry: isAngryMood ? moodSummary.angry + 1 : null,
           ),
         ),
       );
@@ -530,9 +563,9 @@ class _JournalEditorScreenState extends State<JournalEditorScreen> {
           action: UpdateUserAction.sentimentSummary,
           userData: moodSummary.copyWith(
             angry: moodSummary.angry > 0 ? moodSummary.angry - 1 : 0,
-            happy: _selectedMood == 'Happy' ? moodSummary.happy + 1 : null,
-            sad: _selectedMood == 'Sad' ? moodSummary.sad + 1 : null,
-            neutral: _selectedMood == 'Neutral' ? moodSummary.neutral + 1 : null,
+            happy: isHappyMood ? moodSummary.happy + 1 : null,
+            sad: isSadMood ? moodSummary.sad + 1 : null,
+            neutral: isNeutralMood ? moodSummary.neutral + 1 : null,
           ),
         ),
       );

@@ -16,11 +16,11 @@ class MoodPieChart extends StatelessWidget {
   Widget build(BuildContext context) {
     final totalEntries = moodCounts.values.fold(0, (sum, count) => sum + count);
     if (totalEntries == 0) {
-      return const Center(child: Text("No data available"));
+      return const Center(child: Text('No data available'));
     }
 
     /// Convert mood counts into pie chart sections
-    final List<PieChartSectionData> sections = _generateChartSections(moodCounts, totalEntries);
+    final sections = _generateChartSections(moodCounts, totalEntries);
 
     return Column(
       children: [
@@ -47,7 +47,10 @@ class MoodPieChart extends StatelessWidget {
   }
 
   /// 🎯 **Generate Pie Chart Sections from Mood Counts**
-  List<PieChartSectionData> _generateChartSections(Map<String, int> moodCounts, int totalEntries) {
+  List<PieChartSectionData> _generateChartSections(
+    Map<String, int> moodCounts,
+    int totalEntries,
+  ) {
     return moodCounts.entries.map((entry) {
       final mood = entry.key;
       final count = entry.value;
@@ -73,10 +76,10 @@ class MoodPieChart extends StatelessWidget {
       alignment: WrapAlignment.center,
       spacing: 12,
       children: [
-        _legendItem(Colors.green, "Happy"),
-        _legendItem(Colors.blue, "Neutral"),
-        _legendItem(Colors.orange, "Sad"),
-        _legendItem(Colors.red, "Angry"),
+        _legendItem(Colors.green, 'Happy'),
+        _legendItem(Colors.blue, 'Neutral'),
+        _legendItem(Colors.orange, 'Sad'),
+        _legendItem(Colors.red, 'Angry'),
       ],
     );
   }

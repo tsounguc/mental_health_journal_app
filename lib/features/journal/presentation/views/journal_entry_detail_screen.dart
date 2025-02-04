@@ -69,7 +69,9 @@ class JournalEntryDetailScreen extends StatelessWidget {
             ),
             IconButton(
               onPressed: () async {
-                await context.read<JournalCubit>().deleteEntry(entryId: entry.id);
+                await context.read<JournalCubit>().deleteEntry(
+                      entryId: entry.id,
+                    );
 
                 final sentimentAnalyzer = SentimentAnalyzer();
                 final bloc = context.read<AuthBloc>();
@@ -95,7 +97,9 @@ class JournalEntryDetailScreen extends StatelessWidget {
                 bloc.add(
                   UpdateUserEvent(
                     action: UpdateUserAction.totalEntries,
-                    userData: {'totalEntries': context.currentUser!.totalEntries - 1},
+                    userData: {
+                      'totalEntries': context.currentUser!.totalEntries - 1,
+                    },
                   ),
                 );
               },
@@ -155,7 +159,7 @@ class JournalEntryDetailScreen extends StatelessWidget {
                             '${entry.selectedMood} '
                             '${CoreUtils.getEmoji(entry.selectedMood)}',
                           ),
-                        )
+                        ),
                       ],
                     ),
                     Row(
@@ -170,7 +174,7 @@ class JournalEntryDetailScreen extends StatelessWidget {
                               entry.sentimentScore,
                             ),
                           ),
-                        )
+                        ),
                       ],
                     ),
                   ],
@@ -206,7 +210,9 @@ class JournalEntryDetailScreen extends StatelessWidget {
                           children: [
                             ...entry.tags.map(
                               (tag) => Chip(
-                                color: const WidgetStatePropertyAll(Colours.backgroundColor),
+                                color: const WidgetStatePropertyAll(
+                                  Colours.backgroundColor,
+                                ),
                                 label: Text(tag),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(8),
@@ -217,7 +223,7 @@ class JournalEntryDetailScreen extends StatelessWidget {
                                   ),
                                 ),
                               ),
-                            )
+                            ),
                           ],
                         ),
                       ],

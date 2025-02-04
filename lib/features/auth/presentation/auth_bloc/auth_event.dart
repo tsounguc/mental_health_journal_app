@@ -62,7 +62,7 @@ class SignInEvent extends AuthEvent {
 }
 
 class UpdateUserEvent extends AuthEvent {
-  UpdateUserEvent({
+  const UpdateUserEvent({
     required this.action,
     required this.userData,
   })

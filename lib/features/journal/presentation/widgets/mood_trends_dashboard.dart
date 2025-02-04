@@ -34,7 +34,9 @@ class MoodTrendsDashboard extends StatelessWidget {
           final sentimentMap = <String, double>{};
 
           for (final entry in entries) {
-            final entryDay = DateFormat.E().format(entry.dateCreated); // 'Mon', 'Tue'
+            final entryDay = DateFormat.E().format(
+              entry.dateCreated,
+            ); // 'Mon', 'Tue'
             final moodValue = _mapMoodToValue(entry.selectedMood);
             final sentimentValue = entry.sentimentScore;
 
@@ -49,10 +51,16 @@ class MoodTrendsDashboard extends StatelessWidget {
             final day = dayLabels[i];
 
             moodData.add(
-              FlSpot(i.toDouble(), moodMap[day]?.toDouble() ?? 4), // Default to Neutral if missing
+              FlSpot(
+                i.toDouble(),
+                moodMap[day]?.toDouble() ?? 4,
+              ), // Default to Neutral if missing
             );
             sentimentData.add(
-              FlSpot(i.toDouble(), sentimentMap[day] ?? 0), // Default to Neutral if missing
+              FlSpot(
+                i.toDouble(),
+                sentimentMap[day] ?? 0,
+              ), // Default to Neutral if missing
             );
           }
           return Container(
@@ -130,7 +138,8 @@ class MoodTrendsDashboard extends StatelessWidget {
     }
   }
 
-  /// Generates a list of weekdays starting from today (e.g., If today is Wed, list starts at 'Wed')
+  /// Generates a list of weekdays starting from
+  /// today (e.g., If today is Wed, list starts at 'Wed')
   List<String> _generateRotatedWeekLabels() {
     final weekdays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
     final todayIndex = DateTime.now().weekday; // Convert to zero-based index

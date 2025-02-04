@@ -72,7 +72,10 @@ class _InsightsScreenState extends State<InsightsScreen> {
               final sentimentMap = <String, double>{};
 
               for (final entry in entries) {
-                final entryDay = DateFormat.E().format(entry.dateCreated); // 'Mon', 'Tue'
+                final entryDay = DateFormat.E().format(
+                  // 'Mon', 'Tue'
+                  entry.dateCreated,
+                );
                 final moodValue = _mapMoodToValue(entry.selectedMood);
                 final sentimentValue = entry.sentimentScore;
 
@@ -88,24 +91,38 @@ class _InsightsScreenState extends State<InsightsScreen> {
                 final day = dayLabels[i];
 
                 moodData.add(
-                  FlSpot(i.toDouble(), moodMap[day]?.toDouble() ?? 4), // Default to Neutral if missing
+                  FlSpot(
+                    i.toDouble(),
+                    moodMap[day]?.toDouble() ?? 4,
+                  ), // Default to Neutral if missing
                 );
                 sentimentData.add(
-                  FlSpot(i.toDouble(), sentimentMap[day] ?? 0), // Default to Neutral if missing
+                  FlSpot(
+                    i.toDouble(),
+                    sentimentMap[day] ?? 0,
+                  ), // Default to Neutral if missing
                 );
               }
               return Container(
-                padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 40).copyWith(bottom: 25),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 25,
+                  vertical: 40,
+                ).copyWith(bottom: 25),
                 decoration: const BoxDecoration(
-                  borderRadius:
-                      BorderRadius.only(bottomLeft: Radius.circular(20), bottomRight: Radius.circular(20)),
+                  borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(20),
+                    bottomRight: Radius.circular(20),
+                  ),
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text(
                       'Mood & Sentiment Trends',
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                     const SizedBox(height: 16),
 
@@ -119,12 +136,18 @@ class _InsightsScreenState extends State<InsightsScreen> {
                     const SizedBox(height: 50),
                     const Text(
                       'Mood pie chart',
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                     const SizedBox(height: 16),
 
                     /// **Mood Breakdown Pie Chart**
-                    MoodPieChart(moodCounts: moodCounts, totalEntries: totalEntries),
+                    MoodPieChart(
+                      moodCounts: moodCounts,
+                      totalEntries: totalEntries,
+                    ),
 
                     const SizedBox(height: 50),
 
@@ -177,7 +200,6 @@ class _InsightsScreenState extends State<InsightsScreen> {
   /// **Emoji-Based Mood Summary**
   Widget _buildEmojiMoodSummary(Map<String, int> moodCounts, int totalEntries) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         const Text(
           'Mood Summary This Week:',
@@ -234,7 +256,8 @@ class _InsightsScreenState extends State<InsightsScreen> {
     );
   }
 
-  /// Generates a list of weekdays starting from today (e.g., If today is Wed, list starts at 'Wed')
+  /// Generates a list of weekdays starting from
+  /// today (e.g., If today is Wed, list starts at 'Wed')
   List<String> _generateRotatedWeekLabels() {
     final weekdays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
     final todayIndex = DateTime.now().weekday; // Convert to zero-based index

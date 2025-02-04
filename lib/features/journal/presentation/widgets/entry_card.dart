@@ -95,7 +95,7 @@ class EntryCard extends StatelessWidget {
                           '${entry.selectedMood} '
                           '${CoreUtils.getEmoji(entry.selectedMood)}',
                         ),
-                      )
+                      ),
                     ],
                   ),
                   Row(
@@ -110,11 +110,11 @@ class EntryCard extends StatelessWidget {
                             entry.sentimentScore,
                           ),
                         ),
-                      )
+                      ),
                     ],
                   ),
                 ],
-              )
+              ),
             ],
           ),
         ),

@@ -32,9 +32,6 @@ class MoodTrendsChart extends StatelessWidget {
                   spots: userMoodSpots,
                   isCurved: true,
                   color: Colors.blue,
-                  // barWidth: 3,
-                  // belowBarData: BarAreaData(show: true),
-                  dotData: const FlDotData(show: true),
                 ),
 
                 /// 🔴 **Sentiment Line (AI Generated)**
@@ -42,9 +39,6 @@ class MoodTrendsChart extends StatelessWidget {
                   spots: sentimentScoreSpots,
                   isCurved: true,
                   color: Colors.red,
-                  // barWidth: 3,
-                  // belowBarData: BarAreaData(show: true),
-                  dotData: const FlDotData(show: true),
                 ),
               ],
 
@@ -70,14 +64,14 @@ class MoodTrendsChart extends StatelessWidget {
                     reservedSize: 35,
                     showTitles: true,
                     getTitlesWidget: (value, _) {
-                      int index = value.toInt();
+                      final index = value.toInt();
                       if (index >= 0 && index < dayLabels.length) {
                         return Column(
                           children: [
                             Text(
                               index == dayLabels.length - 1
                                   ? '\t\t\t${dayLabels[index]}\n(today)\t'
-                                  : '${dayLabels[index]}', // Label with day name
+                                  : dayLabels[index], // Label with day name
                               style: const TextStyle(fontSize: 10),
                             ),
                           ],
@@ -183,7 +177,12 @@ class MoodTrendsChart extends StatelessWidget {
           decoration: BoxDecoration(color: color, shape: BoxShape.circle),
         ),
         const SizedBox(width: 6),
-        Text(label, style: const TextStyle(fontSize: 12)),
+        Text(
+          label,
+          style: const TextStyle(
+            fontSize: 12,
+          ),
+        ),
       ],
     );
   }

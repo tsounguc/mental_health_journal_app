@@ -1,5 +1,5 @@
-import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mental_health_journal_app/features/journal/domain/entities/journal_entry.dart';
 import 'package:mental_health_journal_app/features/journal/domain/use_cases/search_journal_entries.dart';
 
@@ -25,8 +25,8 @@ class SearchCubit extends Cubit<SearchState> {
     final result = await _searchJournalEntries(query);
 
     result.fold(
-          (failure) => emit(SearchError(message: failure.message)),
-          (restaurants) => emit(EntriesSearched(entries: restaurants)),
+      (failure) => emit(SearchError(message: failure.message)),
+      (restaurants) => emit(EntriesSearched(entries: restaurants)),
     );
   }
 }
