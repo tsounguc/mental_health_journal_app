@@ -1,14 +1,18 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:intl/intl.dart';
+import 'package:mental_health_journal_app/core/enums/update_user_action.dart';
 import 'package:mental_health_journal_app/core/extensions/context_extension.dart';
 import 'package:mental_health_journal_app/core/extensions/string_extensions.dart';
 import 'package:mental_health_journal_app/core/resources/colours.dart';
 import 'package:mental_health_journal_app/core/services/sentiment_analyser.dart';
 import 'package:mental_health_journal_app/core/utils/core_utils.dart';
+import 'package:mental_health_journal_app/features/auth/data/models/user_model.dart';
+import 'package:mental_health_journal_app/features/auth/presentation/auth_bloc/auth_bloc.dart';
 import 'package:mental_health_journal_app/features/journal/domain/entities/journal_entry.dart';
 import 'package:mental_health_journal_app/features/journal/presentation/journal_cubit/journal_cubit.dart';
 import 'package:mental_health_journal_app/features/journal/presentation/views/journal_editor_screen.dart';
@@ -25,6 +29,9 @@ class JournalEntryDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+    ]);
     final contentController = QuillController.basic();
     try {
       // Attempt to parse the content as Delta JSON
@@ -61,8 +68,36 @@ class JournalEntryDetailScreen extends StatelessWidget {
               icon: const Icon(Icons.edit),
             ),
             IconButton(
-              onPressed: () {
-                context.read<JournalCubit>().deleteEntry(entryId: entry.id);
+              onPressed: () async {
+                await context.read<JournalCubit>().deleteEntry(entryId: entry.id);
+
+                final sentimentAnalyzer = SentimentAnalyzer();
+                final bloc = context.read<AuthBloc>();
+                final user = context.currentUser!;
+                final interpretation = sentimentAnalyzer.interpretResult(
+                  entry.sentimentScore,
+                );
+                final sentimentSummary = user.sentimentSummary as SentimentSummaryModel;
+                final newSentimentSummary = sentimentSummary.copyWith(
+                  negative: interpretation == 'Negative' ? sentimentSummary.negative - 1 : null,
+                  positive: interpretation == 'Positive' ? sentimentSummary.positive - 1 : null,
+                  neutral: interpretation == 'Neutral' ? sentimentSummary.neutral - 1 : null,
+                );
+
+                final moodSummary = user.moodSummary as MoodSummaryModel;
+                final newMoodSummary = moodSummary.copyWith(
+                  happy: entry.selectedMood == 'Happy' ? moodSummary.happy - 1 : null,
+                  neutral: entry.selectedMood == 'Neutral' ? moodSummary.neutral - 1 : null,
+                  sad: entry.selectedMood == 'Sad' ? moodSummary.sad - 1 : null,
+                  angry: entry.selectedMood == 'Angry' ? moodSummary.angry - 1 : null,
+                );
+
+                bloc.add(
+                  UpdateUserEvent(
+                    action: UpdateUserAction.totalEntries,
+                    userData: {'totalEntries': context.currentUser!.totalEntries - 1},
+                  ),
+                );
               },
               icon: const Icon(Icons.delete),
             ),

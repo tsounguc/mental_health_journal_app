@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:mental_health_journal_app/core/common/views/long_button.dart';
@@ -12,6 +13,7 @@ import 'package:mental_health_journal_app/core/resources/colours.dart';
 import 'package:mental_health_journal_app/core/services/sentiment_analyser.dart';
 import 'package:mental_health_journal_app/core/utils/core_utils.dart';
 import 'package:mental_health_journal_app/features/auth/data/models/user_model.dart';
+import 'package:mental_health_journal_app/features/auth/domain/entities/user.dart';
 import 'package:mental_health_journal_app/features/auth/presentation/auth_bloc/auth_bloc.dart';
 import 'package:mental_health_journal_app/features/journal/data/models/journal_entry_model.dart';
 import 'package:mental_health_journal_app/features/journal/domain/entities/journal_entry.dart';
@@ -34,6 +36,8 @@ class _JournalEditorScreenState extends State<JournalEditorScreen> {
   final _contentController = QuillController.basic();
   final sentimentAnalyzer = SentimentAnalyzer();
   final _tags = <String>[];
+  TagsFrequency? _newTagsFrequency;
+
   String? _selectedMood;
 
   bool get titleEntered => _titleController.text.trim().isNotEmpty;
@@ -59,6 +63,7 @@ class _JournalEditorScreenState extends State<JournalEditorScreen> {
     setState(() {
       if (tag.isNotEmpty && !_tags.contains(tag)) {
         _tags.add(tag);
+        _newTagsFrequency = _newTagsFrequency?.addTag(tag);
       }
     });
   }
@@ -66,6 +71,7 @@ class _JournalEditorScreenState extends State<JournalEditorScreen> {
   void _removeTag(String tag) {
     setState(() {
       _tags.remove(tag);
+      _newTagsFrequency = _newTagsFrequency?.removeTag(tag);
     });
   }
 
@@ -102,6 +108,14 @@ class _JournalEditorScreenState extends State<JournalEditorScreen> {
 
       updateSentimentSummary(sentimentScore, context, bloc);
       updateMoodSummary(context, bloc);
+      _newTagsFrequency = _newTagsFrequency?.addAllTags(_tags);
+      print(_newTagsFrequency);
+      bloc.add(
+        UpdateUserEvent(
+          action: UpdateUserAction.tagsFrequency,
+          userData: _newTagsFrequency,
+        ),
+      );
     }
   }
 
@@ -139,12 +153,18 @@ class _JournalEditorScreenState extends State<JournalEditorScreen> {
         action: UpdateEntryAction.tags,
         entryData: _tags,
       );
+      bloc.add(
+        UpdateUserEvent(
+          action: UpdateUserAction.tagsFrequency,
+          userData: _newTagsFrequency,
+        ),
+      );
     }
 
     if (selectedMoodChanged) {
       await cubit.updateEntry(
         entryId: widget.entry!.id,
-        action: UpdateEntryAction.sentiment,
+        action: UpdateEntryAction.selectedMood,
         entryData: _selectedMood,
       );
 
@@ -155,7 +175,9 @@ class _JournalEditorScreenState extends State<JournalEditorScreen> {
   @override
   void initState() {
     if (widget.entry != null) {
+      _newTagsFrequency = context.currentUser!.tagsFrequency;
       _titleController.text = widget.entry!.title!;
+
       try {
         // Attempt to parse the content as Delta JSON
         final deltaJson = jsonDecode(widget.entry!.content);
@@ -172,6 +194,8 @@ class _JournalEditorScreenState extends State<JournalEditorScreen> {
           );
       }
     }
+
+    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.landscapeLeft]);
     super.initState();
   }
 

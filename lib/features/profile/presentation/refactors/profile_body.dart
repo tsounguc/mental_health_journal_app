@@ -28,7 +28,7 @@ class ProfileBody extends StatelessWidget {
         final negPct = total == 0 ? 0 : (negative / total * 100).toStringAsFixed(0);
         final neutralPct = total == 0 ? 0 : (neutral / total * 100).toStringAsFixed(0);
         var favTags = '';
-        for (final tag in user!.topTags) {
+        for (final tag in user!.tagsFrequency.getTopTags()) {
           favTags = '$favTags#$tag, ';
         }
         return Column(
@@ -42,7 +42,7 @@ class ProfileBody extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             Container(
-              margin: EdgeInsets.symmetric(horizontal: 6),
+              margin: const EdgeInsets.symmetric(horizontal: 6),
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(8),

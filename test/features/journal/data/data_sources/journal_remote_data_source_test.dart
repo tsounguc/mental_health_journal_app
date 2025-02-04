@@ -48,7 +48,13 @@ void main() {
   late MockUser mockFirebaseUser;
 
   final testUser = UserModel.empty();
+
   var testEntry = JournalEntryModel.empty();
+
+  final testEntries = [
+    JournalEntryModel.empty(),
+    JournalEntryModel.empty().copyWith(id: '1'),
+  ];
 
   final testFirebaseAuthException = FirebaseAuthException(
     code: 'user-not-found',
@@ -179,7 +185,10 @@ void main() {
       'then update entry and complete successfully',
       () async {
         // Arrange
-        const testContent = 'New Content';
+        const testContent = {
+          'content': 'New content',
+          'sentimentScore': 0.0,
+        };
 
         // Act
         await remoteDataSourceImpl.updateEntry(
@@ -196,7 +205,7 @@ void main() {
             .doc(testEntry.id)
             .get();
 
-        expect(entryData.data()!['content'], testContent);
+        expect(entryData.data()!['content'], testContent['content']);
       },
     );
 
@@ -235,13 +244,13 @@ void main() {
       'then update entry and complete successfully',
       () async {
         // Arrange
-        const testSentiment = 'negative';
+        const testSentimentScore = 'Angry';
 
         // Act
         await remoteDataSourceImpl.updateEntry(
           entryId: testEntry.id,
-          action: UpdateEntryAction.sentiment,
-          entryData: testSentiment,
+          action: UpdateEntryAction.selectedMood,
+          entryData: testSentimentScore,
         );
 
         // Assert
@@ -252,7 +261,7 @@ void main() {
             .doc(testEntry.id)
             .get();
 
-        expect(entryData.data()!['sentiment'], testSentiment);
+        expect(entryData.data()!['selectedMood'], testSentimentScore);
       },
     );
   });
@@ -286,11 +295,6 @@ void main() {
       'then return [Stream<List<JournalEntry>>]',
       () async {
         // Arrange
-        final testEntries = [
-          JournalEntryModel.empty(),
-          JournalEntryModel.empty().copyWith(id: '1'),
-        ];
-
         for (final entry in testEntries) {
           await firestoreClient
               .collection(
@@ -305,6 +309,33 @@ void main() {
           lastEntry: testEntry,
           paginationSize: 10,
         );
+
+        // Assert
+        final entriesCollectionRef = await firestoreClient
+            .collection(
+              FirebaseConstants.entriesCollection,
+            )
+            .get();
+
+        expect(entriesCollectionRef.docs.length, 2);
+        expect(
+          entriesCollectionRef.docs.first.data()['id'],
+          testEntries[0].id,
+        );
+      },
+    );
+  });
+
+  group('getDashboardData - ', () {
+    test(
+      'given JournalRemoteDataSourceImpl '
+      'when [JournalRemoteDataSourceImpl.getDashboardData] is called '
+      'then return [Stream<List<JournalEntry>>]',
+      () async {
+        // Arrange
+        final today = DateTime.now();
+        // Act
+        remoteDataSourceImpl.getDashboardData(userId: testEntry.userId, today: today);
 
         // Assert
         final entriesCollectionRef = await firestoreClient

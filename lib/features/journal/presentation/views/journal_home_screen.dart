@@ -96,13 +96,8 @@ class _JournalHomeScreenState extends State<JournalHomeScreen> {
               Expanded(
                 child: Padding(
                   padding: const EdgeInsets.only(top: 8),
-                  child: ListView(
-                    shrinkWrap: true,
-                    children: [
-                      RecentJournalEntries(
-                        scrollController: _scrollController,
-                      ),
-                    ],
+                  child: RecentJournalEntries(
+                    scrollController: _scrollController,
                   ),
                 ),
               ),

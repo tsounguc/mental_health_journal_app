@@ -22,7 +22,6 @@ class JournalSearchDelegate extends SearchDelegate<List<Widget>?> {
   String? get searchFieldLabel => Strings.searchHintText;
 
   @override
-  @override
   TextStyle? get searchFieldStyle => const TextStyle(
         fontWeight: FontWeight.normal,
         fontSize: 16,
@@ -75,12 +74,13 @@ class JournalSearchDelegate extends SearchDelegate<List<Widget>?> {
 
         if (state is EntriesSearched && state.entries.isEmpty) {
           return const Center(
-              child: Text(
-            'No entries found.',
-            style: TextStyle(
-              color: Colours.softGreyColor,
+            child: Text(
+              'No entries found.',
+              style: TextStyle(
+                color: Colours.softGreyColor,
+              ),
             ),
-          ));
+          );
         } else if (state is EntriesSearched && state.entries.isNotEmpty) {
           return ListView.builder(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),

@@ -17,7 +17,7 @@ class MoodTrendsChart extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        /// 📊 **Mood & Sentiment Graph**
+        /// **Mood & Sentiment Graph**
         SizedBox(
           height: 225,
           child: LineChart(
@@ -98,7 +98,7 @@ class MoodTrendsChart extends StatelessWidget {
     );
   }
 
-  /// 🎯 **Mood & Sentiment Labels (Y-Axis)**
+  /// **Mood & Sentiment Labels (Y-Axis)**
   Widget _leftAxisLabels(int value) {
     switch (value) {
       case 6:
@@ -161,7 +161,7 @@ class MoodTrendsChart extends StatelessWidget {
     }
   }
 
-  /// 🎨 **Chart Legend**
+  /// **Chart Legend**
   Widget _buildLegend() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,

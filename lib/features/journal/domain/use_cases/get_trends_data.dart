@@ -4,25 +4,25 @@ import 'package:mental_health_journal_app/core/utils/typedefs.dart';
 import 'package:mental_health_journal_app/features/journal/domain/entities/journal_entry.dart';
 import 'package:mental_health_journal_app/features/journal/domain/repositories/journal_repository.dart';
 
-class GetTrendsDashboardData extends StreamUseCaseWithParams<List<JournalEntry>, GetTrendsDashboardDataParams> {
-  GetTrendsDashboardData(this._repository);
+class GetTrendsData extends StreamUseCaseWithParams<List<JournalEntry>, GetTrendsDataParams> {
+  GetTrendsData(this._repository);
 
   final JournalRepository _repository;
 
   @override
   ResultStream<List<JournalEntry>> call(
-    GetTrendsDashboardDataParams params,
+    GetTrendsDataParams params,
   ) =>
       _repository.getDashboardData(userId: params.userId, today: params.today);
 }
 
-class GetTrendsDashboardDataParams extends Equatable {
-  const GetTrendsDashboardDataParams({
+class GetTrendsDataParams extends Equatable {
+  const GetTrendsDataParams({
     required this.userId,
     required this.today,
   });
 
-  GetTrendsDashboardDataParams.empty()
+  GetTrendsDataParams.empty()
       : this(
           userId: '_empty.userId',
           today: DateTime.now(),

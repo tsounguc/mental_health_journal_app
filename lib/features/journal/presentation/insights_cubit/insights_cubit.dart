@@ -6,25 +6,25 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:mental_health_journal_app/core/errors/failures.dart';
 import 'package:mental_health_journal_app/features/journal/domain/entities/journal_entry.dart';
-import 'package:mental_health_journal_app/features/journal/domain/use_cases/get_trends_dashboard_data.dart';
+import 'package:mental_health_journal_app/features/journal/domain/use_cases/get_trends_data.dart';
 
 part 'insights_state.dart';
 
 class InsightsCubit extends Cubit<InsightsState> {
   InsightsCubit({
-    required GetTrendsDashboardData getTrendsDashboardData,
-  })  : _getTrendsDashboardData = getTrendsDashboardData,
+    required GetTrendsData getTrendsData,
+  })  : _getTrendsData = getTrendsData,
         super(InsightsInitial());
 
-  final GetTrendsDashboardData _getTrendsDashboardData;
+  final GetTrendsData _getTrendsData;
 
   StreamSubscription<Either<Failure, List<JournalEntry>>>? subscription;
 
   void getDashboardData({required String userId}) {
     emit(const DashboardLoading());
     subscription?.cancel();
-    subscription = _getTrendsDashboardData(
-      GetTrendsDashboardDataParams(
+    subscription = _getTrendsData(
+      GetTrendsDataParams(
         userId: userId,
         today: DateTime.now(),
       ),

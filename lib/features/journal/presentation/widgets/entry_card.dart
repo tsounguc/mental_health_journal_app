@@ -73,7 +73,7 @@ class EntryCard extends StatelessWidget {
                     width: context.width * 0.7,
                     child: Text(
                       content,
-                      maxLines: 2,
+                      maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: const TextStyle(color: Colors.grey),
                     ),

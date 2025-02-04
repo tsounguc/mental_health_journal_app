@@ -100,8 +100,15 @@ Route<dynamic> onGenerateRoute(RouteSettings settings) {
     case JournalEntryDetailScreen.id:
       final args = settings.arguments! as JournalEntry;
       return _pageBuilder(
-        (_) => BlocProvider(
-          create: (_) => serviceLocator<JournalCubit>(),
+        (_) => MultiBlocProvider(
+          providers: [
+            BlocProvider(
+              create: (_) => serviceLocator<JournalCubit>(),
+            ),
+            BlocProvider(
+              create: (context) => serviceLocator<AuthBloc>(),
+            ),
+          ],
           child: JournalEntryDetailScreen(entry: args),
         ),
         settings: settings,

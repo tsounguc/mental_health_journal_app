@@ -11,7 +11,7 @@ class UserModel extends UserEntity {
     required super.totalEntries,
     required super.sentimentSummary,
     required super.moodSummary,
-    required super.topTags,
+    required super.tagsFrequency,
     required super.isVerified,
     super.profilePictureUrl,
   });
@@ -25,7 +25,7 @@ class UserModel extends UserEntity {
           totalEntries: 0,
           sentimentSummary: const SentimentSummaryModel.empty(),
           moodSummary: const MoodSummaryModel.empty(),
-          topTags: [],
+          tagsFrequency: TagsFrequencyModel.empty(),
           profilePictureUrl: null,
           isVerified: false,
         );
@@ -45,7 +45,9 @@ class UserModel extends UserEntity {
           moodSummary: map['sentimentSummary'] == null
               ? const MoodSummaryModel.empty()
               : MoodSummaryModel.fromMap(map['moodSummary'] as DataMap),
-          topTags: map['topTags'] != null ? List<String>.from(map['topTags'] as List) : [],
+          tagsFrequency: map['tagsFrequency'] == null
+              ? TagsFrequencyModel.empty()
+              : TagsFrequencyModel.fromMap(map['tagsFrequency'] as DataMap),
           profilePictureUrl: map['profilePictureUrl'] as String?,
           isVerified: map['isVerified'] as bool? ?? false,
         );
@@ -58,7 +60,7 @@ class UserModel extends UserEntity {
         'totalEntries': totalEntries,
         'sentimentSummary': (sentimentSummary as SentimentSummaryModel).toMap(),
         'moodSummary': (moodSummary as MoodSummaryModel).toMap(),
-        'topTags': topTags,
+        'tagsFrequency': (tagsFrequency as TagsFrequencyModel).toMap(),
         'profilePictureUrl': profilePictureUrl,
         'isVerified': isVerified,
       };
@@ -71,7 +73,7 @@ class UserModel extends UserEntity {
     int? totalEntries,
     SentimentSummaryModel? sentimentSummary,
     MoodSummaryModel? moodSummary,
-    List<String>? topTags,
+    TagsFrequencyModel? tagsFrequency,
     String? profilePictureUrl,
     bool? isVerified,
   }) {
@@ -83,7 +85,7 @@ class UserModel extends UserEntity {
       totalEntries: totalEntries ?? this.totalEntries,
       sentimentSummary: sentimentSummary ?? this.sentimentSummary,
       moodSummary: moodSummary ?? this.moodSummary,
-      topTags: topTags ?? this.topTags,
+      tagsFrequency: tagsFrequency ?? this.tagsFrequency,
       profilePictureUrl: profilePictureUrl ?? this.profilePictureUrl,
       isVerified: isVerified ?? this.isVerified,
     );
@@ -174,4 +176,21 @@ class MoodSummaryModel extends MoodSummary {
       angry: angry ?? this.angry,
     );
   }
+}
+
+class TagsFrequencyModel extends TagsFrequency {
+  const TagsFrequencyModel({
+    required super.tags,
+  });
+
+  TagsFrequencyModel.empty() : this(tags: {});
+
+  TagsFrequencyModel.fromMap(DataMap map)
+      : this(
+          tags: map.map(
+            (key, value) => MapEntry(key, value as int),
+          ),
+        );
+
+  DataMap toMap() => tags;
 }

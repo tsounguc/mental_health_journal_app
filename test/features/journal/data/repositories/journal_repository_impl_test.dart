@@ -307,4 +307,45 @@ void main() {
       },
     );
   });
+
+  group('getDashboardData - ', () {
+    final today = DateTime.now();
+    test(
+      'given JournalRepositoryImpl, '
+      'when [JournalRemoteDataSource.getDashboardData] '
+      'then return a [List<JournalEntry>]',
+      () async {
+        // Arrange
+        when(
+          () => remoteDataSource.getDashboardData(
+            userId: any(named: 'userId'),
+            today: any(named: 'today'),
+          ),
+        ).thenAnswer((_) => Stream.value(testStreamResponse));
+
+        // Act
+        final result = repositoryImpl.getDashboardData(
+          userId: testEntry.userId,
+          today: today,
+        );
+
+        // Assert
+        expect(
+          result,
+          emits(
+            Right<Failure, List<JournalEntry>>(
+              testStreamResponse,
+            ),
+          ),
+        );
+        verify(
+          () => remoteDataSource.getDashboardData(
+            userId: testEntry.userId,
+            today: today,
+          ),
+        ).called(1);
+        verifyNoMoreInteractions(remoteDataSource);
+      },
+    );
+  });
 }

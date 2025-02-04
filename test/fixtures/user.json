@@ -6,6 +6,10 @@
     "_seconds": 1677483548,
     "_nanoseconds": 123456000
   },
+  "totalEntries": 0,
+  "sentimentSummary": {"positive": 0, "neutral": 0, "negative": 0},
+  "moodSummary": {"happy": 0, "neutral": 0, "sad": 0, "angry": 0},
+  "tagFrequency": {},
   "profilePictureUrl": "_empty.profilePictureUrl",
   "isVerified": false
 }

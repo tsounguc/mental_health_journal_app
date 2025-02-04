@@ -9,7 +9,7 @@ class UserEntity extends Equatable {
     required this.totalEntries,
     required this.sentimentSummary,
     required this.moodSummary,
-    required this.topTags,
+    required this.tagsFrequency,
     required this.isVerified,
     this.profilePictureUrl,
   });
@@ -23,7 +23,8 @@ class UserEntity extends Equatable {
           totalEntries: 0,
           sentimentSummary: const SentimentSummary.empty(),
           moodSummary: const MoodSummary.empty(),
-          topTags: [],
+          tagsFrequency: TagsFrequency.empty(),
+          // topTags: [],
           profilePictureUrl: '',
           isVerified: false,
         );
@@ -37,7 +38,7 @@ class UserEntity extends Equatable {
   final int totalEntries;
   final SentimentSummary sentimentSummary;
   final MoodSummary moodSummary;
-  final List<String> topTags;
+  final TagsFrequency tagsFrequency;
 
   @override
   List<Object?> get props => [
@@ -50,7 +51,7 @@ class UserEntity extends Equatable {
         totalEntries,
         sentimentSummary,
         moodSummary,
-        topTags,
+        tagsFrequency,
       ];
 
   @override
@@ -65,7 +66,7 @@ class UserEntity extends Equatable {
           totalEntries: $totalEntries,
           sentimentSummary: $sentimentSummary,
           moodSummary: $moodSummary,
-          topTags: $topTags,
+          tagFrequency: $tagsFrequency,
         }
       ''';
 }
@@ -143,4 +144,54 @@ class MoodSummary extends Equatable {
           angry: $angry,
         }
       ''';
+}
+
+class TagsFrequency extends Equatable {
+  const TagsFrequency({
+    required this.tags,
+  });
+
+  TagsFrequency.empty() : this(tags: {});
+  final Map<String, int> tags;
+  @override
+  List<Object?> get props => [tags];
+
+  List<String> getTopTags({int n = 3}) {
+    final sortedTags = tags.entries.toList()
+      ..sort(
+        (a, b) => b.value.compareTo(a.value),
+      );
+    return sortedTags.take(n).map((e) => e.key).toList();
+  }
+
+  /// Add or increment a tag's frequency
+  TagsFrequency addTag(String tag) {
+    final newTags = Map<String, int>.from(tags);
+    newTags[tag] = (newTags[tag] ?? 0) + 1;
+    return TagsFrequency(tags: newTags);
+  }
+
+  /// Add or increment a tag's frequency
+  TagsFrequency addAllTags(List<String> tags) {
+    final newTags = Map<String, int>.from(this.tags);
+    for (final tag in tags) {
+      newTags[tag] = (newTags[tag] ?? 0) + 1;
+    }
+    return TagsFrequency(tags: newTags);
+  }
+
+  /// Remove or decrement a tag's frequency
+  TagsFrequency removeTag(String tag) {
+    if (!tags.containsKey(tag)) return this;
+    final newTags = Map<String, int>.from(tags);
+    if (newTags[tag] == 1) {
+      newTags.remove(tag);
+    } else {
+      newTags[tag] = newTags[tag]! - 1;
+    }
+    return TagsFrequency(tags: newTags);
+  }
+
+  @override
+  String toString() => tags.toString();
 }

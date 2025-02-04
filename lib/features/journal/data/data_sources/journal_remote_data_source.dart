@@ -163,7 +163,7 @@ class JournalRemoteDataSourceImpl implements JournalRemoteDataSource {
     required DateTime today,
   }) {
     try {
-      var entriesQuery = _entries
+      final entriesQuery = _entries
           .where('userId', isEqualTo: userId)
           .where(
             'dateCreated',
@@ -179,11 +179,11 @@ class JournalRemoteDataSourceImpl implements JournalRemoteDataSource {
           .limit(50);
 
       final entriesStream = entriesQuery.snapshots().map(
-            (snapshot) => snapshot.docs.map((doc) {
-              final entry = JournalEntryModel.fromMap(doc.data());
-              print(entry);
-              return entry;
-            }).toList(),
+            (snapshot) => snapshot.docs
+                .map(
+                  (doc) => JournalEntryModel.fromMap(doc.data()),
+                )
+                .toList(),
           );
 
       return entriesStream.handleError(_handleStreamError);
@@ -246,7 +246,7 @@ class JournalRemoteDataSourceImpl implements JournalRemoteDataSource {
             'tags': entryData,
           },
         );
-      case UpdateEntryAction.sentiment:
+      case UpdateEntryAction.selectedMood:
         await _updateEntryData(
           id: entryId,
           data: {

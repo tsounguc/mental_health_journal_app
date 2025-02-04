@@ -7,6 +7,8 @@
     "_nanoseconds": 123456000
   },
   "tags":[],
-  "sentiment": "neutral",
-  "title": "_empty.title"
+  "selectedMood": "Angry",
+  "sentimentScore": -1.5,
+  "title": "_empty.title",
+  "title_lowercase": "_empty.title_lowercase"
 }

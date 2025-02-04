@@ -4,8 +4,7 @@ enum UpdateUserAction {
   totalEntries,
   sentimentSummary,
   moodSummary,
-  topTags,
+  tagsFrequency,
   password,
   profilePictureUrl,
-
 }

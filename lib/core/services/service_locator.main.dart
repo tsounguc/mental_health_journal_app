@@ -24,11 +24,11 @@ Future<void> _initJournal() async {
     )
     ..registerFactory(
       () => InsightsCubit(
-        getTrendsDashboardData: serviceLocator(),
+        getTrendsData: serviceLocator(),
       ),
     )
     // Use cases
-    ..registerLazySingleton(() => GetTrendsDashboardData(serviceLocator()))
+    ..registerLazySingleton(() => GetTrendsData(serviceLocator()))
     ..registerLazySingleton(() => CreateJournalEntry(serviceLocator()))
     ..registerLazySingleton(() => DeleteJournalEntry(serviceLocator()))
     ..registerLazySingleton(() => UpdateJournalEntry(serviceLocator()))

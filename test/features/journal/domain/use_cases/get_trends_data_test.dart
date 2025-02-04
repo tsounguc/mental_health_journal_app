@@ -3,42 +3,42 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mental_health_journal_app/core/errors/failures.dart';
 import 'package:mental_health_journal_app/features/journal/domain/entities/journal_entry.dart';
 import 'package:mental_health_journal_app/features/journal/domain/repositories/journal_repository.dart';
-import 'package:mental_health_journal_app/features/journal/domain/use_cases/get_journal_entries.dart';
+import 'package:mental_health_journal_app/features/journal/domain/use_cases/get_trends_data.dart';
 import 'package:mocktail/mocktail.dart';
 
 import 'journal_repository.mock.dart';
 
 void main() {
   late JournalRepository repository;
-  late GetJournalEntries useCase;
+  late GetTrendsData useCase;
 
   final testResponse = [JournalEntry.empty()];
-  const testParams = GetJournalEntriesParams.empty();
-  final testGetEntriesFailure = GetEntriesFailure(
+  final testParams = GetTrendsDataParams.empty();
+
+  final testGetDashboardFailure = GetDashboardDataFailure(
     message: 'message',
     statusCode: 'statusCode',
   );
+
   setUp(() {
     repository = MockJournalRepository();
-    useCase = GetJournalEntries(repository);
+    useCase = GetTrendsData(repository);
     registerFallbackValue(testResponse);
   });
 
   test(
-    'given GetJournalEntries '
+    'given GetTrendsDashboardData '
     'when instantiated '
-    'then call [JournalRepository.getEntries] '
+    'then call [JournalRepository.getDashboardData] '
     'and return [List<JournalEntry>]',
     () async {
       // Arrange
       when(
-        () => repository.getEntries(
+        () => repository.getDashboardData(
           userId: any(named: 'userId'),
-          lastEntry: any(named: 'lastEntry'),
-          paginationSize: any(named: 'paginationSize'),
+          today: any(named: 'today'),
         ),
       ).thenAnswer((_) => Stream.value(Right(testResponse)));
-
       // Act
       final result = useCase(testParams);
 
@@ -48,10 +48,9 @@ void main() {
         emits(Right<Failure, List<JournalEntry>>(testResponse)),
       );
       verify(
-        () => repository.getEntries(
+        () => repository.getDashboardData(
           userId: testParams.userId,
-          lastEntry: testParams.lastEntry,
-          paginationSize: testParams.paginationSize,
+          today: testParams.today,
         ),
       ).called(1);
       verifyNoMoreInteractions(repository);
@@ -59,19 +58,22 @@ void main() {
   );
 
   test(
-    'given GetJournalEntries '
+    'given GetTrendsData '
     'when instantiated '
-    'and call [JournalRepository.getEntries] is unsuccessful '
-    'then return [GetEntriesFailure]',
+    'and call [JournalRepository.getDashboardData] is unsuccessful '
+    'then return [GetDashboardDataFailure]',
     () async {
       // Arrange
       when(
-        () => repository.getEntries(
+        () => repository.getDashboardData(
           userId: any(named: 'userId'),
-          lastEntry: any(named: 'lastEntry'),
-          paginationSize: any(named: 'paginationSize'),
+          today: any(named: 'today'),
         ),
-      ).thenAnswer((_) => Stream.value(Left(testGetEntriesFailure)));
+      ).thenAnswer(
+        (_) => Stream.value(
+          Left(testGetDashboardFailure),
+        ),
+      );
 
       // Act
       final result = useCase(testParams);
@@ -80,14 +82,13 @@ void main() {
       expect(
         result,
         emits(
-          Left<Failure, List<JournalEntry>>(testGetEntriesFailure),
+          Left<Failure, List<JournalEntry>>(testGetDashboardFailure),
         ),
       );
       verify(
-        () => repository.getEntries(
+        () => repository.getDashboardData(
           userId: testParams.userId,
-          lastEntry: testParams.lastEntry,
-          paginationSize: testParams.paginationSize,
+          today: testParams.today,
         ),
       ).called(1);
       verifyNoMoreInteractions(repository);
