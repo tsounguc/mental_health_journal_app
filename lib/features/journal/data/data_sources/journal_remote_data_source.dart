@@ -30,7 +30,7 @@ abstract class JournalRemoteDataSource {
 
   Stream<List<JournalEntryModel>> getDashboardData({
     required String userId,
-    required DateTime today,
+    required DateTime range,
   });
 }
 
@@ -166,7 +166,7 @@ class JournalRemoteDataSourceImpl implements JournalRemoteDataSource {
   @override
   Stream<List<JournalEntryModel>> getDashboardData({
     required String userId,
-    required DateTime today,
+    required DateTime range,
   }) {
     try {
       final entriesQuery = _entries
@@ -174,7 +174,7 @@ class JournalRemoteDataSourceImpl implements JournalRemoteDataSource {
           .where(
             'dateCreated',
             isGreaterThan: Timestamp.fromDate(
-              today.copyWith(day: today.day - 7),
+              range,
             ),
           )
           // .where('dateCreated', isLessThanOrEqualTo: today)

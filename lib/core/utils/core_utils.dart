@@ -173,17 +173,16 @@ class CoreUtils {
     } else {
       return Colours.neutralMoodColor;
     }
-    //   switch (sentimentScore) {
-    //     case sentimentScore > 0.6:
-    //       return Colours.positiveMoodColor;
-    //     case 'Neutral':
-    //       return Colours.neutralMoodColor;
-    //     case 'Angry':
-    //       return Colours.negativeMoodColor;
-    //     case 'Sad':
-    //       return Colours.secondaryColor;
-    //     default:
-    //       return Colours.softGreyColor;
-    //   }
+  }
+
+  /// Generates a list of weekdays starting from
+  /// today (e.g., If today is Wed, list starts at 'Wed')
+  static List<String> generateRotatedWeekLabels() {
+    final weekdays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+    final todayIndex = DateTime.now().weekday; // Convert to zero-based index
+    return [
+      ...weekdays.sublist(todayIndex),
+      ...weekdays.sublist(0, todayIndex),
+    ];
   }
 }

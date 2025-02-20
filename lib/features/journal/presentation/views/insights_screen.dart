@@ -130,7 +130,7 @@ class _InsightsScreenState extends State<InsightsScreen> {
                     MoodTrendsChart(
                       userMoodSpots: moodData,
                       sentimentScoreSpots: sentimentData,
-                      dayLabels: dayLabels,
+                      filter: 'Week',
                     ),
 
                     const SizedBox(height: 50),

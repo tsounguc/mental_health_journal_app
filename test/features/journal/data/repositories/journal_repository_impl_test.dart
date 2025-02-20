@@ -319,14 +319,14 @@ void main() {
         when(
           () => remoteDataSource.getDashboardData(
             userId: any(named: 'userId'),
-            today: any(named: 'today'),
+            range: any(named: 'today'),
           ),
         ).thenAnswer((_) => Stream.value(testStreamResponse));
 
         // Act
         final result = repositoryImpl.getDashboardData(
           userId: testEntry.userId,
-          today: today,
+          range: today,
         );
 
         // Assert
@@ -341,7 +341,7 @@ void main() {
         verify(
           () => remoteDataSource.getDashboardData(
             userId: testEntry.userId,
-            today: today,
+            range: today,
           ),
         ).called(1);
         verifyNoMoreInteractions(remoteDataSource);

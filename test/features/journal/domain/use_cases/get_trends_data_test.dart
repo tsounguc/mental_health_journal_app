@@ -36,7 +36,7 @@ void main() {
       when(
         () => repository.getDashboardData(
           userId: any(named: 'userId'),
-          today: any(named: 'today'),
+          range: any(named: 'today'),
         ),
       ).thenAnswer((_) => Stream.value(Right(testResponse)));
       // Act
@@ -50,7 +50,7 @@ void main() {
       verify(
         () => repository.getDashboardData(
           userId: testParams.userId,
-          today: testParams.today,
+          range: testParams.range,
         ),
       ).called(1);
       verifyNoMoreInteractions(repository);
@@ -67,7 +67,7 @@ void main() {
       when(
         () => repository.getDashboardData(
           userId: any(named: 'userId'),
-          today: any(named: 'today'),
+          range: any(named: 'today'),
         ),
       ).thenAnswer(
         (_) => Stream.value(
@@ -88,7 +88,7 @@ void main() {
       verify(
         () => repository.getDashboardData(
           userId: testParams.userId,
-          today: testParams.today,
+          range: testParams.range,
         ),
       ).called(1);
       verifyNoMoreInteractions(repository);

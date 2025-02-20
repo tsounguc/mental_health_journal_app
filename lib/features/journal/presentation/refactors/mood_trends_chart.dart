@@ -1,17 +1,18 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:mental_health_journal_app/core/utils/core_utils.dart';
 
 class MoodTrendsChart extends StatelessWidget {
   const MoodTrendsChart({
     required this.userMoodSpots,
     required this.sentimentScoreSpots,
-    required this.dayLabels,
+    required this.filter,
     super.key,
   });
 
   final List<FlSpot> userMoodSpots;
   final List<FlSpot> sentimentScoreSpots;
-  final List<String> dayLabels; // Labels like ['Mon', 'Tue', 'Wed']
+  final String filter;
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +26,11 @@ class MoodTrendsChart extends StatelessWidget {
               minY: -1,
               maxY: 5,
               minX: 0,
-              maxX: 6,
+              maxX: filter == 'Week'
+                  ? 6
+                  : filter == 'Month'
+                      ? 30
+                      : 12,
               lineBarsData: [
                 /// 🔵 **Mood Line (User Selected)**
                 LineChartBarData(
@@ -64,20 +69,7 @@ class MoodTrendsChart extends StatelessWidget {
                     reservedSize: 35,
                     showTitles: true,
                     getTitlesWidget: (value, _) {
-                      final index = value.toInt();
-                      if (index >= 0 && index < dayLabels.length) {
-                        return Column(
-                          children: [
-                            Text(
-                              index == dayLabels.length - 1
-                                  ? '\t\t\t${dayLabels[index]}\n(today)\t'
-                                  : dayLabels[index], // Label with day name
-                              style: const TextStyle(fontSize: 10),
-                            ),
-                          ],
-                        );
-                      }
-                      return const Text('');
+                      return _monthBottomAxisLabels(value);
                     },
                   ),
                 ),
@@ -89,6 +81,43 @@ class MoodTrendsChart extends StatelessWidget {
         ///  **Legend for Colors**
         _buildLegend(),
       ],
+    );
+  }
+
+  Widget _weekBottomAxisLabels(double value) {
+    final index = value.toInt();
+    final labels = CoreUtils.generateRotatedWeekLabels();
+    if (index >= 0 && index < labels.length) {
+      return Column(
+        children: [
+          Text(
+            index == labels.length - 1
+                ? '\t\t\t${labels[index]}\n(today)\t'
+                : labels[index], // Label with day name
+            style: const TextStyle(fontSize: 10),
+          ),
+        ],
+      );
+    }
+    return const Text('');
+  }
+
+  Widget _monthBottomAxisLabels(double value) {
+    final dayAgo = 30 - value.round(); // Reverse the order
+    if (dayAgo == 0) {
+      return const Text(
+        'Today',
+        style: TextStyle(fontSize: 10),
+      );
+    } else if (dayAgo == 30) {
+      return const Text(
+        '\t\t\t\t30\nDays Ago',
+        style: TextStyle(fontSize: 10),
+      );
+    }
+    return Text(
+      '$dayAgo',
+      style: const TextStyle(fontSize: 10),
     );
   }
 

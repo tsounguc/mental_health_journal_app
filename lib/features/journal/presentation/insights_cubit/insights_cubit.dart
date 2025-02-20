@@ -20,13 +20,18 @@ class InsightsCubit extends Cubit<InsightsState> {
 
   StreamSubscription<Either<Failure, List<JournalEntry>>>? subscription;
 
-  void getDashboardData({required String userId}) {
+  void getDashboardData({required String userId, String range = 'Week'}) {
     emit(const DashboardLoading());
     subscription?.cancel();
+    final today = DateTime.now();
     subscription = _getTrendsData(
       GetTrendsDataParams(
         userId: userId,
-        today: DateTime.now(),
+        range: today.copyWith(
+          day: range == 'Week' ? today.day - 7 : null,
+          month: range == 'Month' ? today.month - 1 : null,
+          year: range == 'Year' ? today.year - 1 : null,
+        ),
       ),
     ).listen(
       (result) {

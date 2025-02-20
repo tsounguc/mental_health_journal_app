@@ -26,6 +26,6 @@ abstract class JournalRepository {
 
   ResultStream<List<JournalEntry>> getDashboardData({
     required String userId,
-    required DateTime today,
+    required DateTime range,
   });
 }

@@ -337,7 +337,7 @@ void main() {
         // Act
         remoteDataSourceImpl.getDashboardData(
           userId: testEntry.userId,
-          today: today,
+          range: today,
         );
 
         // Assert

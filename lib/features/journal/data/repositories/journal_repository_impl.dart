@@ -115,9 +115,9 @@ class JournalRepositoryImpl implements JournalRepository {
   @override
   ResultStream<List<JournalEntry>> getDashboardData({
     required String userId,
-    required DateTime today,
+    required DateTime range,
   }) {
-    return _remoteDataSource.getDashboardData(userId: userId, today: today).transform(
+    return _remoteDataSource.getDashboardData(userId: userId, range: range).transform(
           StreamTransformer<List<JournalEntryModel>, Either<Failure, List<JournalEntry>>>.fromHandlers(
             handleData: (entries, sink) {
               sink.add(Right(entries));

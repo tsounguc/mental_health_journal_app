@@ -13,23 +13,23 @@ class GetTrendsData extends StreamUseCaseWithParams<List<JournalEntry>, GetTrend
   ResultStream<List<JournalEntry>> call(
     GetTrendsDataParams params,
   ) =>
-      _repository.getDashboardData(userId: params.userId, today: params.today);
+      _repository.getDashboardData(userId: params.userId, range: params.range);
 }
 
 class GetTrendsDataParams extends Equatable {
   const GetTrendsDataParams({
     required this.userId,
-    required this.today,
+    required this.range,
   });
 
   GetTrendsDataParams.empty()
       : this(
           userId: '_empty.userId',
-          today: DateTime.now(),
+          range: DateTime.now(),
         );
   final String userId;
-  final DateTime today;
+  final DateTime range;
 
   @override
-  List<Object?> get props => [userId, today];
+  List<Object?> get props => [userId, range];
 }
