@@ -28,6 +28,7 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
+  carousel_slider: ^5.0.0
   cloud_firestore: ^5.6.0 # For Firebase Core, enabling connecting to multiple Firebase apps
   cupertino_icons: ^1.0.6
   dart_sentiment: ^0.0.9

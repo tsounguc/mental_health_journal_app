@@ -4,14 +4,18 @@ import 'package:mental_health_journal_app/core/utils/core_utils.dart';
 
 class MoodTrendsChart extends StatelessWidget {
   const MoodTrendsChart({
-    required this.userMoodSpots,
-    required this.sentimentScoreSpots,
+    required this.moodActualLine,
+    required this.sentimentActualLine,
+    required this.moodFullLine,
+    required this.sentimentFullLine,
     required this.filter,
     super.key,
   });
 
-  final List<FlSpot> userMoodSpots;
-  final List<FlSpot> sentimentScoreSpots;
+  final List<FlSpot> moodActualLine;
+  final List<FlSpot> sentimentActualLine;
+  final List<FlSpot> moodFullLine;
+  final List<FlSpot> sentimentFullLine;
   final String filter;
 
   @override
@@ -20,7 +24,7 @@ class MoodTrendsChart extends StatelessWidget {
       children: [
         /// **Mood & Sentiment Graph**
         SizedBox(
-          height: 225,
+          height: 200,
           child: LineChart(
             LineChartData(
               minY: -1,
@@ -30,22 +34,67 @@ class MoodTrendsChart extends StatelessWidget {
                   ? 6
                   : filter == 'Month'
                       ? 30
-                      : 12,
+                      : 365,
               lineBarsData: [
                 /// 🔵 **Mood Line (User Selected)**
                 LineChartBarData(
-                  spots: userMoodSpots,
+                  spots: moodFullLine,
                   isCurved: true,
                   color: Colors.blue,
+                  dotData: const FlDotData(show: false),
+                ),
+                LineChartBarData(
+                  spots: moodActualLine,
+                  isCurved: true,
+                  color: Colors.blue,
+                  barWidth: 0,
                 ),
 
                 /// 🔴 **Sentiment Line (AI Generated)**
                 LineChartBarData(
-                  spots: sentimentScoreSpots,
+                  spots: sentimentFullLine,
                   isCurved: true,
                   color: Colors.red,
+                  dotData: const FlDotData(show: false),
+                ),
+                LineChartBarData(
+                  spots: sentimentActualLine,
+                  isCurved: true,
+                  color: Colors.red,
+                  barWidth: 0,
                 ),
               ],
+              lineTouchData: LineTouchData(
+                touchTooltipData: LineTouchTooltipData(
+                  getTooltipItems: (touchedSpots) {
+                    return touchedSpots.map((touchedSpot) {
+                      if (touchedSpot.barIndex == 0 || touchedSpot.barIndex == 2) {
+                        return null;
+                      } else if (touchedSpot.barIndex == 1) {
+                        final yVal = touchedSpot.y.toStringAsFixed(1);
+                        final mood = yVal == '5.0'
+                            ? 'Happy'
+                            : yVal == '4.0'
+                                ? 'Neutral'
+                                : yVal == '3.0'
+                                    ? 'Sad'
+                                    : 'Angry';
+                        return LineTooltipItem(
+                          mood,
+                          const TextStyle(color: Colors.white),
+                        );
+                      } else {
+                        final yVal = touchedSpot.y.toStringAsFixed(1);
+
+                        return LineTooltipItem(
+                          yVal,
+                          const TextStyle(color: Colors.white),
+                        );
+                      }
+                    }).toList();
+                  },
+                ),
+              ),
 
               /// 🏷 **Axis Titles**
               titlesData: FlTitlesData(
@@ -69,7 +118,11 @@ class MoodTrendsChart extends StatelessWidget {
                     reservedSize: 35,
                     showTitles: true,
                     getTitlesWidget: (value, _) {
-                      return _monthBottomAxisLabels(value);
+                      return filter == 'Week'
+                          ? _weekBottomAxisLabels(value)
+                          : filter == 'Month'
+                              ? _monthBottomAxisLabels(value)
+                              : _yearBottomAxisLabels(value);
                     },
                   ),
                 ),
@@ -119,6 +172,18 @@ class MoodTrendsChart extends StatelessWidget {
       '$dayAgo',
       style: const TextStyle(fontSize: 10),
     );
+  }
+
+  Widget _yearBottomAxisLabels(double value) {
+    final index = value.toInt();
+    final labels = CoreUtils.generateRotatedYearLabels();
+    if (index >= 0 && (index / 30).toInt() < labels.length) {
+      return Text(
+        labels[(index / 30).toInt()],
+        style: const TextStyle(fontSize: 10),
+      );
+    }
+    return const Text('');
   }
 
   /// **Mood & Sentiment Labels (Y-Axis)**
@@ -186,13 +251,16 @@ class MoodTrendsChart extends StatelessWidget {
 
   /// **Chart Legend**
   Widget _buildLegend() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        _legendItem(Colors.blue, 'Mood'),
-        const SizedBox(width: 16),
-        _legendItem(Colors.red, 'Sentiment (AI)'),
-      ],
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          _legendItem(Colors.blue, 'Mood'),
+          const SizedBox(width: 16),
+          _legendItem(Colors.red, 'Sentiment (AI)'),
+        ],
+      ),
     );
   }
 

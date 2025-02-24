@@ -24,7 +24,11 @@ class _EnterPasswordDialogState extends State<EnterPasswordDialog> {
       listener: (_, state) {
         if (state is AccountDeleted) {
           Navigator.of(context).pop();
-          CoreUtils.showSnackBar(context, 'Account deleted', durationInMilliSecond: 1500);
+          CoreUtils.showSnackBar(
+            context,
+            'Account deleted',
+            durationInMilliSecond: 1500,
+          );
           Navigator.of(context).pushNamedAndRemoveUntil(
             '/',
             (route) => false,
@@ -33,7 +37,11 @@ class _EnterPasswordDialogState extends State<EnterPasswordDialog> {
         if (state is AuthError) {
           Navigator.of(context).pop();
           debugPrint(state.message);
-          CoreUtils.showSnackBar(context, state.message, durationInMilliSecond: 2000);
+          CoreUtils.showSnackBar(
+            context,
+            state.message,
+            durationInMilliSecond: 2000,
+          );
         }
         if (state is AuthLoading) {
           CoreUtils.showLoadingDialog(context);

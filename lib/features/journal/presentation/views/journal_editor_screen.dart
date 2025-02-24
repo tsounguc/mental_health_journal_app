@@ -36,7 +36,7 @@ class _JournalEditorScreenState extends State<JournalEditorScreen> {
   final _contentController = QuillController.basic();
   final sentimentAnalyzer = SentimentAnalyzer();
   final _tags = <String>[];
-  TagsFrequency? _newTagsFrequency;
+  var _newTagsFrequency = TagsFrequency.empty();
 
   String? _selectedMood;
 
@@ -63,28 +63,31 @@ class _JournalEditorScreenState extends State<JournalEditorScreen> {
     setState(() {
       if (tag.isNotEmpty && !_tags.contains(tag)) {
         _tags.add(tag);
-        _newTagsFrequency = _newTagsFrequency?.addTag(tag);
+        _newTagsFrequency = _newTagsFrequency.addTag(tag);
       }
+      print('TagsFrequency $_newTagsFrequency');
     });
   }
 
   void _removeTag(String tag) {
     setState(() {
       _tags.remove(tag);
-      _newTagsFrequency = _newTagsFrequency?.removeTag(tag);
+      _newTagsFrequency = _newTagsFrequency.removeTag(tag);
+      print('TagsFrequency $_newTagsFrequency');
     });
   }
 
-  void _submitEntry() async {
+  Future<void> submitEntry() async {
     final cubit = context.read<JournalCubit>();
     final bloc = context.read<AuthBloc>();
+    final currentUser = context.currentUser;
 
     final journalText = _contentController.document.toPlainText();
 
     final sentimentScore = await sentimentAnalyzer.analyzeText(journalText);
 
     final entry = JournalEntryModel.empty().copyWith(
-      userId: context.currentUser!.uid,
+      userId: currentUser?.uid,
       title: _titleController.text.trim(),
       titleLowercase: _titleController.text.trim().toLowerCase(),
       content: jsonEncode(_contentController.document.toDelta().toJson()),
@@ -92,29 +95,29 @@ class _JournalEditorScreenState extends State<JournalEditorScreen> {
       sentimentScore: sentimentScore,
       tags: _tags,
     );
-    if (context.currentUser == null) {
-      CoreUtils.showSnackBar(context, 'User not logged in');
+    if (currentUser == null) {
+      if (mounted) CoreUtils.showSnackBar(context, 'User not logged in');
     } else {
       await cubit.createEntry(
         entry: entry,
       );
+      // _newTagsFrequency = _newTagsFrequency.addAllTags(_tags);
+      bloc
+        ..add(
+          UpdateUserEvent(
+            action: UpdateUserAction.totalEntries,
+            userData: currentUser.totalEntries + 1,
+          ),
+        )
+        ..add(
+          UpdateUserEvent(
+            action: UpdateUserAction.tagsFrequency,
+            userData: _newTagsFrequency.tags,
+          ),
+        );
 
-      bloc.add(
-        UpdateUserEvent(
-          action: UpdateUserAction.totalEntries,
-          userData: context.currentUser!.totalEntries + 1,
-        ),
-      );
-
-      updateSentimentSummary(sentimentScore, context, bloc);
-      updateMoodSummary(context, bloc);
-      _newTagsFrequency = _newTagsFrequency?.addAllTags(_tags);
-      bloc.add(
-        UpdateUserEvent(
-          action: UpdateUserAction.tagsFrequency,
-          userData: _newTagsFrequency,
-        ),
-      );
+      updateSentimentSummary(currentUser, sentimentScore, bloc);
+      updateMoodSummary(currentUser, bloc);
     }
   }
 
@@ -123,6 +126,7 @@ class _JournalEditorScreenState extends State<JournalEditorScreen> {
 
     final cubit = context.read<JournalCubit>();
     final bloc = context.read<AuthBloc>();
+    final currentUser = context.currentUser;
     if (titleChanged) {
       await cubit.updateEntry(
         entryId: widget.entry!.id,
@@ -143,7 +147,12 @@ class _JournalEditorScreenState extends State<JournalEditorScreen> {
           'sentimentScore': sentimentScore,
         },
       );
-      updateSentimentSummary(sentimentScore, context, bloc);
+
+      updateSentimentSummary(
+        currentUser!,
+        sentimentScore,
+        bloc,
+      );
     }
 
     if (tagsChanged) {
@@ -155,7 +164,7 @@ class _JournalEditorScreenState extends State<JournalEditorScreen> {
       bloc.add(
         UpdateUserEvent(
           action: UpdateUserAction.tagsFrequency,
-          userData: _newTagsFrequency,
+          userData: _newTagsFrequency.tags,
         ),
       );
     }
@@ -167,16 +176,16 @@ class _JournalEditorScreenState extends State<JournalEditorScreen> {
         entryData: _selectedMood,
       );
 
-      updateMoodSummary(context, bloc);
+      updateMoodSummary(currentUser!, bloc);
     }
   }
 
   @override
   void initState() {
-    if (widget.entry != null) {
-      _newTagsFrequency = context.currentUser!.tagsFrequency;
-      _titleController.text = widget.entry!.title!;
+    _newTagsFrequency = context.currentUser!.tagsFrequency;
 
+    if (widget.entry != null) {
+      _titleController.text = widget.entry!.title!;
       try {
         // Attempt to parse the content as Delta JSON
         final deltaJson = jsonDecode(widget.entry!.content);
@@ -264,7 +273,7 @@ class _JournalEditorScreenState extends State<JournalEditorScreen> {
                                 style: TextStyle(fontSize: 16),
                               ),
                               // color: context.theme.primaryColor,
-                              onPressed: !canSubmit ? null : _submitEntry,
+                              onPressed: !canSubmit ? null : submitEntry,
                             );
                 },
               ),
@@ -410,7 +419,7 @@ class _JournalEditorScreenState extends State<JournalEditorScreen> {
                                   label: 'Save',
                                 )
                               : LongButton(
-                                  onPressed: !canSubmit ? null : _submitEntry,
+                                  onPressed: !canSubmit ? null : submitEntry,
                                   label: 'Save',
                                 );
                     },
@@ -425,11 +434,10 @@ class _JournalEditorScreenState extends State<JournalEditorScreen> {
   }
 
   void updateSentimentSummary(
+    UserEntity user,
     double sentimentScore,
-    BuildContext context,
     AuthBloc bloc,
   ) {
-    final user = context.currentUser!;
     final sentimentSummary = user.sentimentSummary as SentimentSummaryModel;
     final previousInterpretation = widget.entry == null
         ? ''
@@ -493,8 +501,7 @@ class _JournalEditorScreenState extends State<JournalEditorScreen> {
     }
   }
 
-  void updateMoodSummary(BuildContext context, AuthBloc bloc) {
-    final user = context.currentUser!;
+  void updateMoodSummary(UserEntity user, AuthBloc bloc) {
     final moodSummary = user.moodSummary as MoodSummaryModel;
     final previousSelectMood = widget.entry?.selectedMood;
     final isHappyMood = _selectedMood == 'Happy';

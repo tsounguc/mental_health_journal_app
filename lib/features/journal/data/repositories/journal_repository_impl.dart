@@ -117,7 +117,12 @@ class JournalRepositoryImpl implements JournalRepository {
     required String userId,
     required DateTime range,
   }) {
-    return _remoteDataSource.getDashboardData(userId: userId, range: range).transform(
+    return _remoteDataSource
+        .getDashboardData(
+          userId: userId,
+          range: range,
+        )
+        .transform(
           StreamTransformer<List<JournalEntryModel>, Either<Failure, List<JournalEntry>>>.fromHandlers(
             handleData: (entries, sink) {
               sink.add(Right(entries));

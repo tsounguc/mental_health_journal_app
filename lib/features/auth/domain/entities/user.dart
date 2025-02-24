@@ -24,7 +24,6 @@ class UserEntity extends Equatable {
           sentimentSummary: const SentimentSummary.empty(),
           moodSummary: const MoodSummary.empty(),
           tagsFrequency: TagsFrequency.empty(),
-          // topTags: [],
           profilePictureUrl: '',
           isVerified: false,
         );
@@ -153,8 +152,6 @@ class TagsFrequency extends Equatable {
 
   TagsFrequency.empty() : this(tags: {});
   final Map<String, int> tags;
-  @override
-  List<Object?> get props => [tags];
 
   List<String> getTopTags({int n = 3}) {
     final sortedTags = tags.entries.toList()
@@ -191,6 +188,9 @@ class TagsFrequency extends Equatable {
     }
     return TagsFrequency(tags: newTags);
   }
+
+  @override
+  List<Object?> get props => [tags];
 
   @override
   String toString() => tags.toString();

@@ -86,6 +86,7 @@ class _JournalHomeScreenState extends State<JournalHomeScreen> {
                 onSeeAll: () {},
               ),
               const MoodTrendsDashboard(),
+              // const SizedBox(height: 6),
               SectionHeader(
                 sectionTitle: 'Entries',
                 fontSize: 16,

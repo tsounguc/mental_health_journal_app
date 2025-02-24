@@ -192,5 +192,5 @@ class TagsFrequencyModel extends TagsFrequency {
           ),
         );
 
-  DataMap toMap() => tags;
+  Map<String, int> toMap() => tags;
 }

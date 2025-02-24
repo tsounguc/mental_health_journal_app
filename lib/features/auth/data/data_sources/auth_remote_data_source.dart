@@ -289,8 +289,9 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
             'moodSummary': (userData as MoodSummaryModel).toMap(),
           });
         case UpdateUserAction.tagsFrequency:
+          print('UpdateUserAction.tagsFrequency: $userData');
           await _updateUserData({
-            'tagsFrequency': (userData as TagsFrequencyModel).toMap(),
+            'tagsFrequency': userData as Map<String, int>,
           });
       }
     } on FirebaseException catch (e) {
