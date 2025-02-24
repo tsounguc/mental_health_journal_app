@@ -30,6 +30,10 @@ class _SignUpFormState extends State<SignUpForm> {
 
   @override
   Widget build(BuildContext context) {
+    const visible = Icons.visibility_outlined;
+    const invisible = Icons.visibility_off_outlined;
+    final icon = obscurePassword ? visible : invisible;
+    final confirmIcon = obscureConfirmPassword ? visible : invisible;
     return Form(
       key: widget.formKey,
       child: Column(
@@ -53,7 +57,7 @@ class _SignUpFormState extends State<SignUpForm> {
             keyboardType: TextInputType.visiblePassword,
             suffixIcon: IconButton(
               icon: Icon(
-                obscurePassword ? Icons.visibility_outlined : Icons.visibility_off_outlined,
+                icon,
                 color: Colors.grey,
               ),
               onPressed: () => setState(() {
@@ -74,7 +78,7 @@ class _SignUpFormState extends State<SignUpForm> {
                 obscureConfirmPassword = !obscureConfirmPassword;
               }),
               icon: Icon(
-                obscureConfirmPassword ? Icons.visibility_outlined : Icons.visibility_off_outlined,
+                confirmIcon,
                 color: Colors.grey,
               ),
             ),

@@ -25,6 +25,9 @@ class _SignInFormState extends State<SignInForm> {
   bool obscurePassword = true;
   @override
   Widget build(BuildContext context) {
+    const visible = Icons.visibility_outlined;
+    const invisible = Icons.visibility_off_outlined;
+    final icon = obscurePassword ? visible : invisible;
     return Form(
       key: widget.formKey,
       child: Column(
@@ -47,7 +50,7 @@ class _SignInFormState extends State<SignInForm> {
                 obscurePassword = !obscurePassword;
               }),
               icon: Icon(
-                obscurePassword ? Icons.visibility_outlined : Icons.visibility_off_outlined,
+                icon,
                 color: Colours.softGreyColor,
               ),
             ),

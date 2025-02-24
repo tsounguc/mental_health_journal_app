@@ -65,7 +65,6 @@ class _JournalEditorScreenState extends State<JournalEditorScreen> {
         _tags.add(tag);
         _newTagsFrequency = _newTagsFrequency.addTag(tag);
       }
-      print('TagsFrequency $_newTagsFrequency');
     });
   }
 
@@ -73,7 +72,6 @@ class _JournalEditorScreenState extends State<JournalEditorScreen> {
     setState(() {
       _tags.remove(tag);
       _newTagsFrequency = _newTagsFrequency.removeTag(tag);
-      print('TagsFrequency $_newTagsFrequency');
     });
   }
 

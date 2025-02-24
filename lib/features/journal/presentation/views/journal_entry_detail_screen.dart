@@ -64,7 +64,6 @@ class JournalEntryDetailScreen extends StatelessWidget {
     for (final tag in entry.tags) {
       tagsFrequency = tagsFrequency.removeTag(tag);
     }
-    print('deleted tags. tagsFrequency: $tagsFrequency');
     bloc
       ..add(
         UpdateUserEvent(

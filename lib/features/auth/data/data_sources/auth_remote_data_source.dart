@@ -289,7 +289,6 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
             'moodSummary': (userData as MoodSummaryModel).toMap(),
           });
         case UpdateUserAction.tagsFrequency:
-          print('UpdateUserAction.tagsFrequency: $userData');
           await _updateUserData({
             'tagsFrequency': userData as Map<String, int>,
           });
