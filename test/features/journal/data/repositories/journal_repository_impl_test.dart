@@ -319,7 +319,7 @@ void main() {
         when(
           () => remoteDataSource.getDashboardData(
             userId: any(named: 'userId'),
-            range: any(named: 'today'),
+            range: any(named: 'range'),
           ),
         ).thenAnswer((_) => Stream.value(testStreamResponse));
 

@@ -38,7 +38,7 @@ void main() {
       expect(result, const Right<Failure, void>(null));
       verify(
         () => repository.createEntry(entry: testEntry),
-      );
+      ).called(1);
       verifyNoMoreInteractions(repository);
     },
   );

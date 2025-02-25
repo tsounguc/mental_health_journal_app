@@ -172,3 +172,42 @@ class SearchEntriesFailure extends Failure {
           statusCode: exception.statusCode,
         );
 }
+
+class ScheduleNotificationFailure extends Failure {
+  ScheduleNotificationFailure({
+    required super.message,
+    required super.statusCode,
+  });
+
+  ScheduleNotificationFailure.fromException(ScheduleNotificationException exception)
+      : this(
+          message: exception.message,
+          statusCode: exception.statusCode,
+        );
+}
+
+class CancelNotificationFailure extends Failure {
+  CancelNotificationFailure({
+    required super.message,
+    required super.statusCode,
+  });
+
+  CancelNotificationFailure.fromException(CancelNotificationException exception)
+      : this(
+          message: exception.message,
+          statusCode: exception.statusCode,
+        );
+}
+
+class GetScheduledNotificationFailure extends Failure {
+  GetScheduledNotificationFailure({
+    required super.message,
+    required super.statusCode,
+  });
+
+  GetScheduledNotificationFailure.fromException(GetScheduledNotificationException exception)
+      : this(
+          message: exception.message,
+          statusCode: exception.statusCode,
+        );
+}

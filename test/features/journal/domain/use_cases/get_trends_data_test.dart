@@ -36,7 +36,7 @@ void main() {
       when(
         () => repository.getDashboardData(
           userId: any(named: 'userId'),
-          range: any(named: 'today'),
+          range: any(named: 'range'),
         ),
       ).thenAnswer((_) => Stream.value(Right(testResponse)));
       // Act
@@ -67,7 +67,7 @@ void main() {
       when(
         () => repository.getDashboardData(
           userId: any(named: 'userId'),
-          range: any(named: 'today'),
+          range: any(named: 'range'),
         ),
       ).thenAnswer(
         (_) => Stream.value(

@@ -65,7 +65,7 @@ class UserEntity extends Equatable {
           totalEntries: $totalEntries,
           sentimentSummary: $sentimentSummary,
           moodSummary: $moodSummary,
-          tagFrequency: $tagsFrequency,
+          tagsFrequency: $tagsFrequency,
         }
       ''';
 }

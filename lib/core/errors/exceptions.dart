@@ -143,3 +143,40 @@ class SearchEntriesException extends Equatable implements Exception {
   @override
   List<Object> get props => [message, statusCode];
 }
+
+class ScheduleNotificationException extends Equatable implements Exception {
+  const ScheduleNotificationException({
+    required this.message,
+    required this.statusCode,
+  });
+  final String message;
+  final String statusCode;
+
+  @override
+  List<Object> get props => [message, statusCode];
+}
+
+class CancelNotificationException extends Equatable implements Exception {
+  const CancelNotificationException({
+    required this.message,
+    required this.statusCode,
+  });
+  final String message;
+  final String statusCode;
+
+  @override
+  List<Object> get props => [message, statusCode];
+}
+
+class GetScheduledNotificationException extends Equatable implements Exception {
+  const GetScheduledNotificationException({
+    required this.message,
+    required this.statusCode,
+  });
+  final String message;
+  final String statusCode;
+
+  @override
+  List<Object> get props => [message, statusCode];
+}
+
