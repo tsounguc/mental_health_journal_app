@@ -29,7 +29,7 @@ void main() {
   test(
     'given [JournalEntryModel], '
     'when instantiated '
-    'then instance should a subclass of [JournalEntry] ',
+    'then instance should be a subclass of [JournalEntry] ',
     () async {
       // Arrange
       // Act
@@ -76,7 +76,7 @@ void main() {
     test(
       'given [JournalEntryModel], '
       'when fromMap is called, '
-      'then return [UserModel] with correct data ',
+      'then return [JournalEntryModel] with correct data ',
       () {
         // Arrange
         // Act

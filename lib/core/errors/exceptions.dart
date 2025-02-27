@@ -168,8 +168,8 @@ class CancelNotificationException extends Equatable implements Exception {
   List<Object> get props => [message, statusCode];
 }
 
-class GetScheduledNotificationException extends Equatable implements Exception {
-  const GetScheduledNotificationException({
+class GetScheduledNotificationsException extends Equatable implements Exception {
+  const GetScheduledNotificationsException({
     required this.message,
     required this.statusCode,
   });
@@ -179,4 +179,3 @@ class GetScheduledNotificationException extends Equatable implements Exception {
   @override
   List<Object> get props => [message, statusCode];
 }
-

@@ -13,7 +13,7 @@ void main() {
   late GetScheduledNotifications useCase;
 
   final testResponse = [NotificationEntity.empty()];
-  final testFailure = GetScheduledNotificationFailure(
+  final testFailure = GetScheduledNotificationsFailure(
     message: 'message',
     statusCode: 500,
   );

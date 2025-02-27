@@ -199,13 +199,13 @@ class CancelNotificationFailure extends Failure {
         );
 }
 
-class GetScheduledNotificationFailure extends Failure {
-  GetScheduledNotificationFailure({
+class GetScheduledNotificationsFailure extends Failure {
+  GetScheduledNotificationsFailure({
     required super.message,
     required super.statusCode,
   });
 
-  GetScheduledNotificationFailure.fromException(GetScheduledNotificationException exception)
+  GetScheduledNotificationsFailure.fromException(GetScheduledNotificationsException exception)
       : this(
           message: exception.message,
           statusCode: exception.statusCode,

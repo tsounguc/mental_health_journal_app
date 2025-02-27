@@ -69,7 +69,7 @@ void main() {
 
     test(
       'given JournalRepositoryImpl, '
-      'when [JournalRemoteDataSource.createEntry] called is unsuccessful '
+      'when [JournalRemoteDataSource.createEntry] call is unsuccessful '
       'then return [CreateEntryFailure]',
       () async {
         // Arrange

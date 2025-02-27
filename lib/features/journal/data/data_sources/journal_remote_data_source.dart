@@ -20,7 +20,7 @@ abstract class JournalRemoteDataSource {
 
   Future<void> deleteEntry({required String entryId});
 
-  Future<List<JournalEntry>> searchEntries(String query);
+  Future<List<JournalEntryModel>> searchEntries(String query);
 
   Stream<List<JournalEntryModel>> getEntries({
     required String userId,
@@ -82,7 +82,7 @@ class JournalRemoteDataSourceImpl implements JournalRemoteDataSource {
   }
 
   @override
-  Future<List<JournalEntry>> searchEntries(String query) async {
+  Future<List<JournalEntryModel>> searchEntries(String query) async {
     try {
       final lowerCaseQuery = query.toLowerCase();
       return await _entries
