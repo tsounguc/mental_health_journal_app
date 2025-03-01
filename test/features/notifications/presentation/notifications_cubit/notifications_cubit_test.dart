@@ -1,5 +1,6 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:dartz/dartz.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mental_health_journal_app/core/errors/failures.dart';
 import 'package:mental_health_journal_app/features/notifications/domain/entities/notification_entity.dart';
@@ -15,10 +16,14 @@ class MockCancelNotification extends Mock implements CancelNotification {}
 
 class MockGetScheduledNotifications extends Mock implements GetScheduledNotifications {}
 
+// class MockSharedPreferences extends Mock implements SharedPreferences {}
+
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   late ScheduleNotification scheduleNotification;
   late CancelNotification cancelNotification;
   late GetScheduledNotifications getNotifications;
+  // late SharedPreferences prefs;
 
   late NotificationsCubit cubit;
 
@@ -29,11 +34,13 @@ void main() {
     scheduleNotification = MockScheduleNotification();
     cancelNotification = MockCancelNotification();
     getNotifications = MockGetScheduledNotifications();
+    // prefs = MockSharedPreferences();
 
     cubit = NotificationsCubit(
       scheduleNotification: scheduleNotification,
       cancelNotification: cancelNotification,
       getNotifications: getNotifications,
+      // prefs: prefs,
     );
   });
 
@@ -72,7 +79,7 @@ void main() {
         ).thenAnswer((_) async => const Right(null));
         return cubit;
       },
-      act: (cubit) => cubit.scheduleNotification(notification: testNotification),
+      act: (cubit) async => cubit.scheduleNotification(notification: testNotification),
       expect: () => [
         const NotificationScheduling(),
         const NotificationScheduled(),
@@ -184,7 +191,7 @@ void main() {
       act: (cubit) => cubit.getScheduledNotifications(),
       expect: () => [
         const FetchingNotifications(),
-        NotificationsFetched(notifications: testResponse),
+        NotificationSettingsLoaded(isEnabled: true, scheduledTime: testNotification.scheduledTime),
       ],
       verify: (cubit) {
         verify(

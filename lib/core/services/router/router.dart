@@ -14,6 +14,8 @@ import 'package:mental_health_journal_app/features/journal/domain/entities/journ
 import 'package:mental_health_journal_app/features/journal/presentation/journal_cubit/journal_cubit.dart';
 import 'package:mental_health_journal_app/features/journal/presentation/views/journal_editor_screen.dart';
 import 'package:mental_health_journal_app/features/journal/presentation/views/journal_entry_detail_screen.dart';
+import 'package:mental_health_journal_app/features/notifications/presentation/notifications_cubit/notifications_cubit.dart';
+import 'package:mental_health_journal_app/features/notifications/presentation/views/notification_settings_screen.dart';
 import 'package:mental_health_journal_app/features/profile/presentation/views/change_password_screen.dart';
 import 'package:mental_health_journal_app/features/profile/presentation/views/edit_profile_screen.dart';
 import 'package:mental_health_journal_app/features/profile/presentation/views/profile_picture_screen.dart';

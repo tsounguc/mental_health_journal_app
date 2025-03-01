@@ -9,8 +9,10 @@ import 'package:mental_health_journal_app/core/resources/colours.dart';
 import 'package:mental_health_journal_app/core/services/service_locator.dart';
 import 'package:mental_health_journal_app/core/utils/core_utils.dart';
 import 'package:mental_health_journal_app/features/auth/presentation/auth_bloc/auth_bloc.dart';
+import 'package:mental_health_journal_app/features/notifications/presentation/views/notification_settings_screen.dart';
 import 'package:mental_health_journal_app/features/profile/presentation/views/change_password_screen.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfileBody extends StatelessWidget {
   const ProfileBody({super.key});
@@ -93,7 +95,7 @@ class ProfileBody extends StatelessWidget {
             ),
             _settingsItem(
               context,
-              'Notification Preferences',
+              'Notifications',
               Icons.notifications,
             ),
             _settingsItem(
@@ -195,6 +197,12 @@ class ProfileBody extends StatelessWidget {
   }
 
   Widget _settingsItem(BuildContext context, String title, IconData icon) {
+    final prefs = serviceLocator<SharedPreferences>();
+    final isNotificationEnabled = prefs.getBool(
+          'notifications_enabled',
+        ) ??
+        false;
+
     return Card(
       color: Colors.white,
       child: ListTile(
@@ -210,9 +218,26 @@ class ProfileBody extends StatelessWidget {
         ),
         trailing: title == 'Sign Out'
             ? null
-            : const Icon(
-                Icons.keyboard_arrow_right,
-              ),
+            : title == 'Notifications'
+                ? SizedBox(
+                    width: context.width * 0.35,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Text(
+                          isNotificationEnabled ? 'Enabled' : 'Disabled',
+                          style: const TextStyle(
+                            fontSize: 16,
+                            color: Colors.grey,
+                          ),
+                        ),
+                        const Icon(Icons.keyboard_arrow_right),
+                      ],
+                    ),
+                  )
+                : const Icon(
+                    Icons.keyboard_arrow_right,
+                  ),
         onTap: () async {
           final navigator = Navigator.of(context);
 
@@ -222,15 +247,13 @@ class ProfileBody extends StatelessWidget {
                 ChangePasswordScreen.id,
                 arguments: serviceLocator<AuthBloc>(),
               );
-            case 'Notification Preferences':
-              break;
+            case 'Notifications':
+              await navigator.pushNamed(
+                NotificationSettingsScreen.id,
+              );
             case 'Privacy Policy':
               break;
             case 'Sign Out':
-              // context.read<AuthBloc>().add(
-              //       const SignOutEvent(),
-              //     );
-
               await serviceLocator<FirebaseAuth>().signOut();
               unawaited(
                 navigator.pushNamedAndRemoveUntil(

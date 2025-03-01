@@ -25,7 +25,7 @@ class ProfileHeader extends StatelessWidget {
               child: Hero(
                 tag: 'profilePic',
                 child: CircleAvatar(
-                  radius: 100,
+                  radius: 60,
                   backgroundColor: Colours.softGreyColor.withValues(alpha: 0.3),
                   backgroundImage: imageIsNull
                       ? null
@@ -36,14 +36,14 @@ class ProfileHeader extends StatelessWidget {
                       ? const Icon(
                           Icons.person,
                           color: Colours.softGreyColor,
-                          size: 125,
+                          size: 85,
                         )
                       : null,
                 ),
               ),
             ),
             const SizedBox(
-              height: 16,
+              height: 6,
             ),
             Text(
               user?.name ?? '',
@@ -52,7 +52,6 @@ class ProfileHeader extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            const SizedBox(height: 8),
             Text(
               user?.email ?? '',
               style: const TextStyle(
@@ -60,7 +59,7 @@ class ProfileHeader extends StatelessWidget {
                 color: Colours.softGreyColor,
               ),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 12),
             ElevatedButton(
               onPressed: () {
                 Navigator.pushNamed(context, EditProfileScreen.id);

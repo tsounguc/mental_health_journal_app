@@ -5,6 +5,7 @@ final serviceLocator = GetIt.instance;
 Future<void> setUpServices() async {
   await _initAuth();
   await _initJournal();
+  await _intiNotifications();
 }
 
 Future<void> _initJournal() async {
@@ -50,6 +51,8 @@ Future<void> _initJournal() async {
 }
 
 Future<void> _initAuth() async {
+  final prefs = await SharedPreferences.getInstance();
+
   serviceLocator
     // App Logic
     ..registerFactory(
@@ -85,5 +88,35 @@ Future<void> _initAuth() async {
     // External dependencies
     ..registerLazySingleton(() => FirebaseAuth.instance)
     ..registerLazySingleton(() => FirebaseFirestore.instance)
-    ..registerLazySingleton(() => FirebaseStorage.instance);
+    ..registerLazySingleton(() => FirebaseStorage.instance)
+    ..registerLazySingleton(() => prefs);
+}
+
+Future<void> _intiNotifications() async {
+  serviceLocator
+    // App Logic
+    ..registerFactory(
+      () => NotificationsCubit(
+        scheduleNotification: serviceLocator(),
+        cancelNotification: serviceLocator(),
+        getNotifications: serviceLocator(),
+        // prefs: serviceLocator(),
+      ),
+    )
+    // Use cases
+    ..registerLazySingleton(() => ScheduleNotification(serviceLocator()))
+    ..registerLazySingleton(() => CancelNotification(serviceLocator()))
+    ..registerLazySingleton(() => GetScheduledNotifications(serviceLocator()))
+    // Repositories
+    ..registerLazySingleton<NotificationRepository>(
+      () => NotificationRepositoryImpl(serviceLocator()),
+    )
+    // Data Sources
+    ..registerLazySingleton<NotificationLocalDataSource>(
+      () => NotificationLocalDataSourceImpl(
+        notificationPlugin: serviceLocator(),
+      ),
+    )
+    // External dependencies
+    ..registerLazySingleton(() => NotificationsService());
 }

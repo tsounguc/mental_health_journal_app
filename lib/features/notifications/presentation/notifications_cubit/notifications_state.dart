@@ -29,6 +29,22 @@ final class FetchingNotifications extends NotificationsState {
   const FetchingNotifications();
 }
 
+final class NotificationSettingsLoaded extends NotificationsState {
+  const NotificationSettingsLoaded({
+    required this.isEnabled,
+    required this.scheduledTime,
+  });
+
+  final bool isEnabled;
+  final DateTime scheduledTime;
+
+  @override
+  List<Object> get props => [
+        isEnabled,
+        scheduledTime,
+      ];
+}
+
 final class NotificationsFetched extends NotificationsState {
   const NotificationsFetched({required this.notifications});
 

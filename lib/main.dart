@@ -5,15 +5,43 @@ import 'package:mental_health_journal_app/core/resources/colours.dart';
 import 'package:mental_health_journal_app/core/services/router/router.dart';
 import 'package:mental_health_journal_app/core/services/service_locator.dart';
 import 'package:mental_health_journal_app/features/dashboard/providers/dashboard_controller.dart';
+import 'package:mental_health_journal_app/features/notifications/utils/notification_utils.dart';
 import 'package:provider/provider.dart';
+import 'package:workmanager/workmanager.dart';
+
+// void callbackDispatcher()
+// {
+//   Workmanager().executeTask((task, inputData) async{
+//
+//     return Future.value(true);
+//   });
+// }
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await setUpServices();
-  await Firebase.initializeApp(
-      // options: DefaultFirebaseOptions.currentPlatform,
-      );
-  // await FirebaseAppCheck.instance.setTokenAutoRefreshEnabled(false);
+  await Firebase.initializeApp();
+
+  debugPrint('✅ Initializing WorkManager...');
+  await Workmanager().initialize(
+    callbackDispatcher,
+    isInDebugMode: false,
+  );
+  debugPrint('✅ WorkManager Initialized Successfully!');
+
+  // Ensure WorkManager task is scheduled after initialization
+  // debugPrint('✅ Registering Test Task...');
+  // await Workmanager().registerOneOffTask(
+  //   'journal_test_task',
+  //   'journal_reminder',
+  //   inputData: {
+  //     'id': 1,
+  //     'title': 'Test Reminder',
+  //     'body': 'This is a test notification',
+  //   },
+  // );
+  // debugPrint('✅ Test Task Registered!');
+
   runApp(const MyApp());
 }
 

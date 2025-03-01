@@ -6,6 +6,7 @@ class NotificationEntity extends Equatable {
     required this.title,
     required this.body,
     required this.scheduledTime,
+    this.seen = false,
   });
 
   NotificationEntity.empty()
@@ -14,13 +15,21 @@ class NotificationEntity extends Equatable {
           title: '',
           body: '',
           scheduledTime: DateTime.now(),
+          seen: false,
         );
 
   final int id;
   final String title;
   final String body;
   final DateTime scheduledTime;
+  final bool seen;
 
   @override
-  List<Object?> get props => [id, title, body, scheduledTime];
+  List<Object?> get props => [
+        id,
+        title,
+        body,
+        scheduledTime,
+        seen,
+      ];
 }

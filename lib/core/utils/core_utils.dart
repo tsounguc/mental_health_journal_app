@@ -209,10 +209,7 @@ class CoreUtils {
     ];
   }
 
-  static List<String> generateMoodInsights(
-    List<JournalEntry> entries,
-    String selectedFilter,
-  ) {
+  static List<String> generateMoodInsights(List<JournalEntry> entries, String selectedFilter) {
     final insights = <String>[];
     final moods = ['happy', 'sad', 'angry'];
     final moodCounts = {

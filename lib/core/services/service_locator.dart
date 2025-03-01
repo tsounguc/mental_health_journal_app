@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:get_it/get_it.dart';
+import 'package:mental_health_journal_app/core/services/notifications_service/notifications_service.dart';
 import 'package:mental_health_journal_app/features/auth/data/data_sources/auth_remote_data_source.dart';
 import 'package:mental_health_journal_app/features/auth/data/repositories/auth_repository_impl.dart';
 import 'package:mental_health_journal_app/features/auth/domain/repositories/auth_repository.dart';
@@ -24,5 +25,13 @@ import 'package:mental_health_journal_app/features/journal/domain/use_cases/upda
 import 'package:mental_health_journal_app/features/journal/presentation/insights_cubit/insights_cubit.dart';
 import 'package:mental_health_journal_app/features/journal/presentation/journal_cubit/journal_cubit.dart';
 import 'package:mental_health_journal_app/features/journal/presentation/search_cubit/search_cubit.dart';
+import 'package:mental_health_journal_app/features/notifications/data/data_sources/notification_local_data_source.dart';
+import 'package:mental_health_journal_app/features/notifications/data/repositories/notification_repository_impl.dart';
+import 'package:mental_health_journal_app/features/notifications/domain/repositories/notification_repository.dart';
+import 'package:mental_health_journal_app/features/notifications/domain/use_cases/cancel_notification.dart';
+import 'package:mental_health_journal_app/features/notifications/domain/use_cases/get_scheduled_notifications.dart';
+import 'package:mental_health_journal_app/features/notifications/domain/use_cases/schedule_notification.dart';
+import 'package:mental_health_journal_app/features/notifications/presentation/notifications_cubit/notifications_cubit.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 part 'service_locator.main.dart';

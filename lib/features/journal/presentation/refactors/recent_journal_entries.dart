@@ -23,7 +23,6 @@ class RecentJournalEntries extends StatelessWidget {
       ).copyWith(top: 8, left: 4),
       child: BlocConsumer<JournalCubit, JournalState>(
         listener: (context, state) {
-          // print(state);
           if (state is JournalError) {
             CoreUtils.showSnackBar(context, state.message);
           }

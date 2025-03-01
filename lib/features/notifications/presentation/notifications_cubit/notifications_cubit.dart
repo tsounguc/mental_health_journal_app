@@ -1,9 +1,11 @@
-import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mental_health_journal_app/core/services/service_locator.dart';
 import 'package:mental_health_journal_app/features/notifications/domain/entities/notification_entity.dart';
 import 'package:mental_health_journal_app/features/notifications/domain/use_cases/cancel_notification.dart';
 import 'package:mental_health_journal_app/features/notifications/domain/use_cases/get_scheduled_notifications.dart';
 import 'package:mental_health_journal_app/features/notifications/domain/use_cases/schedule_notification.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 part 'notifications_state.dart';
 
@@ -12,9 +14,11 @@ class NotificationsCubit extends Cubit<NotificationsState> {
     required ScheduleNotification scheduleNotification,
     required CancelNotification cancelNotification,
     required GetScheduledNotifications getNotifications,
+    // required SharedPreferences prefs,
   })  : _scheduleNotification = scheduleNotification,
         _cancelNotification = cancelNotification,
         _getNotifications = getNotifications,
+        // _prefs = prefs,
         super(NotificationsInitial());
 
   final ScheduleNotification _scheduleNotification;
@@ -30,7 +34,10 @@ class NotificationsCubit extends Cubit<NotificationsState> {
 
     result.fold(
       (failure) => emit(NotificationsError(message: failure.message)),
-      (success) => emit(const NotificationScheduled()),
+      (success) async {
+        emit(const NotificationScheduled());
+        await _saveNotificationSettings(notification);
+      },
     );
   }
 
@@ -43,7 +50,10 @@ class NotificationsCubit extends Cubit<NotificationsState> {
 
     result.fold(
       (failure) => emit(NotificationsError(message: failure.message)),
-      (success) => emit(const NotificationCanceled()),
+      (success) async {
+        emit(const NotificationCanceled());
+        await _clearNotificationSettings();
+      },
     );
   }
 
@@ -54,11 +64,46 @@ class NotificationsCubit extends Cubit<NotificationsState> {
 
     result.fold(
       (failure) => emit(NotificationsError(message: failure.message)),
-      (notifications) => emit(
-        NotificationsFetched(
-          notifications: notifications,
-        ),
-      ),
+      (notifications) async {
+        final (isEnabled, hour, minute) = await _loadNotificationSettings();
+        emit(
+          NotificationSettingsLoaded(
+            isEnabled: isEnabled,
+            scheduledTime: DateTime(0, 1, 1, hour, minute),
+          ),
+        );
+      },
     );
+  }
+
+  /// **Save Notification Settings (Time & Enabled Status)**
+  Future<void> _saveNotificationSettings(NotificationEntity notification) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('notifications_enabled', true);
+    await prefs.setInt('notification_hour', notification.scheduledTime.hour);
+    await prefs.setInt('notification_minute', notification.scheduledTime.minute);
+  }
+
+  /// **Load Notification Settings**
+  Future<(bool, int, int)> _loadNotificationSettings() async {
+    final prefs = await SharedPreferences.getInstance();
+    final isEnabled = prefs.getBool('notifications_enabled') ?? false;
+    final hour = prefs.getInt('notification_hour') ?? 8;
+    final minute = prefs.getInt('notification_minute') ?? 0;
+    return (isEnabled, hour, minute);
+    // emit(
+    //   NotificationSettingsLoaded(
+    //     isEnabled: isEnabled,
+    //     scheduledTime: DateTime(0, 1, 1, hour, minute),
+    //   ),
+    // );
+  }
+
+  /// **Clear Notification Settings**
+  Future<void> _clearNotificationSettings() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove('notifications_enabled');
+    await prefs.remove('notification_hour');
+    await prefs.remove('notification_minute');
   }
 }

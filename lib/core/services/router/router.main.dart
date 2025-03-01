@@ -114,6 +114,15 @@ Route<dynamic> onGenerateRoute(RouteSettings settings) {
         settings: settings,
       );
 
+    case NotificationSettingsScreen.id:
+      return _pageBuilder(
+        (_) => BlocProvider(
+          create: (_) => serviceLocator<NotificationsCubit>(),
+          child: const NotificationSettingsScreen(),
+        ),
+        settings: settings,
+      );
+
     default:
       return _pageBuilder(
         (_) => const PageUnderConstruction(),
