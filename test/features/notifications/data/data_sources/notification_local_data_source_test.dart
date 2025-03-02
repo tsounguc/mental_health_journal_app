@@ -14,7 +14,6 @@ void main() {
   late NotificationLocalDataSourceImpl localDataSourceImpl;
 
   final testNotification = NotificationModel.empty();
-  final testResponse = [NotificationModel.empty()];
 
   setUp(() async {
     notificationsPlugin = MockNotificationsPlugin();

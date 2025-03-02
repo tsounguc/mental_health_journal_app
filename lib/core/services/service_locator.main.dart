@@ -118,5 +118,5 @@ Future<void> _intiNotifications() async {
       ),
     )
     // External dependencies
-    ..registerLazySingleton(() => NotificationsService());
+    ..registerLazySingleton(NotificationsService.new);
 }

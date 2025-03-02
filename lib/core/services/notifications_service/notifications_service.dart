@@ -11,7 +11,6 @@ class NotificationsService {
     _initNotification();
     Workmanager().initialize(
       callbackDispatcher,
-      isInDebugMode: false,
     );
   }
 
@@ -31,7 +30,7 @@ class NotificationsService {
       tz.setLocalLocation(detectedLocation);
 
       debugPrint('Detected device time zone: $timeZoneName');
-    } catch (e) {
+    } on Exception catch (e) {
       debugPrint('Error detecting time zone: $e');
       tz.setLocalLocation(tz.getLocation('UTC'));
     }
@@ -73,7 +72,6 @@ class NotificationsService {
       now.day,
       time.hour,
       time.minute,
-      0,
     );
 
     if (scheduledDate.isBefore(now)) {

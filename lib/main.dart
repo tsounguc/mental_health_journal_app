@@ -25,22 +25,8 @@ void main() async {
   debugPrint('✅ Initializing WorkManager...');
   await Workmanager().initialize(
     callbackDispatcher,
-    isInDebugMode: false,
   );
   debugPrint('✅ WorkManager Initialized Successfully!');
-
-  // Ensure WorkManager task is scheduled after initialization
-  // debugPrint('✅ Registering Test Task...');
-  // await Workmanager().registerOneOffTask(
-  //   'journal_test_task',
-  //   'journal_reminder',
-  //   inputData: {
-  //     'id': 1,
-  //     'title': 'Test Reminder',
-  //     'body': 'This is a test notification',
-  //   },
-  // );
-  // debugPrint('✅ Test Task Registered!');
 
   runApp(const MyApp());
 }

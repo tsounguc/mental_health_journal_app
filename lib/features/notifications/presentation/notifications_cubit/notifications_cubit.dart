@@ -1,6 +1,5 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:mental_health_journal_app/core/services/service_locator.dart';
 import 'package:mental_health_journal_app/features/notifications/domain/entities/notification_entity.dart';
 import 'package:mental_health_journal_app/features/notifications/domain/use_cases/cancel_notification.dart';
 import 'package:mental_health_journal_app/features/notifications/domain/use_cases/get_scheduled_notifications.dart';

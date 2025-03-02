@@ -1,25 +1,18 @@
 import 'package:flutter/cupertino.dart';
 import 'package:mental_health_journal_app/core/services/notifications_service/notifications_service.dart';
-import 'package:mental_health_journal_app/core/services/service_locator.dart';
 import 'package:workmanager/workmanager.dart';
 
 void callbackDispatcher() {
-  debugPrint('✅ callbackDispatcher TRIGGERED!');
   Workmanager().executeTask((task, inputData) async {
-    debugPrint('WorkManager Task Triggered: $task');
-    debugPrint('Input Data: $inputData');
-
     WidgetsFlutterBinding.ensureInitialized();
 
     final notificationService = NotificationsService();
 
-    debugPrint('✅ Calling showInstantNotification...');
     await notificationService.showInstantNotification(
       id: inputData?['id'] as int,
       title: inputData?['title'] as String,
       body: inputData?['body'] as String,
     );
-    debugPrint('✅ Notification Triggered Successfully!');
 
     return Future.value(true);
   });
