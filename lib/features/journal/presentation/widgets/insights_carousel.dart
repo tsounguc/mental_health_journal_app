@@ -26,7 +26,7 @@ class InsightsCarousel extends StatelessWidget {
           child: Text(
             insights[0],
             style: const TextStyle(
-              fontSize: 12,
+              fontSize: 14,
               fontWeight: FontWeight.w500,
             ),
             textAlign: TextAlign.center,
@@ -60,7 +60,7 @@ class InsightsCarousel extends StatelessWidget {
         );
       }).toList(),
       options: CarouselOptions(
-        height: 80,
+        height: 90,
         autoPlay: true,
         autoPlayInterval: const Duration(seconds: 7),
         // autoPlayAnimationDuration: const Duration(milliseconds: 800),

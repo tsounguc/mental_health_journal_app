@@ -28,7 +28,7 @@ class InsightsCubit extends Cubit<InsightsState> {
       GetTrendsDataParams(
         userId: userId,
         range: today.copyWith(
-          day: range == 'Week' ? today.day - 7 : null,
+          day: range == 'Week' ? today.day - 6 : null,
           month: range == 'Month' ? today.month - 1 : null,
           year: range == 'Year' ? today.year - 1 : null,
         ),

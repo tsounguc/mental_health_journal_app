@@ -9,6 +9,8 @@ import 'package:mental_health_journal_app/features/journal/presentation/journal_
 import 'package:mental_health_journal_app/features/journal/presentation/refactors/journal_home_header.dart';
 import 'package:mental_health_journal_app/features/journal/presentation/refactors/recent_journal_entries.dart';
 import 'package:mental_health_journal_app/features/journal/presentation/views/journal_editor_screen.dart';
+import 'package:mental_health_journal_app/features/journal/presentation/views/safe_mode_screen.dart';
+import 'package:mental_health_journal_app/features/journal/presentation/widgets/animated_fab.dart';
 import 'package:mental_health_journal_app/features/journal/presentation/widgets/mood_trends_dashboard.dart';
 
 class JournalHomeScreen extends StatefulWidget {
@@ -67,6 +69,7 @@ class _JournalHomeScreenState extends State<JournalHomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final navigator = Navigator.of(context);
     return Scaffold(
       backgroundColor: Colours.backgroundColor,
       body: SafeArea(
@@ -105,13 +108,42 @@ class _JournalHomeScreenState extends State<JournalHomeScreen> {
           ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // Navigate to Add Journal Entry Screen
-          Navigator.pushNamed(context, JournalEditorScreen.id);
-        },
-        child: const Icon(Icons.add),
-      ),
+      floatingActionButton: const AnimatedFAB(),
+      // floatingActionButton: GestureDetector(
+      //   onDoubleTap: () async {
+      //     final confirmSafeMode = await showDialog<bool>(
+      //       context: context,
+      //       builder: (context) => AlertDialog(
+      //         title: const Text('Enter Safe Mode'),
+      //         content: const Text(
+      //           'Safe Mode provides a calming experience. Do you want to proceed?',
+      //         ),
+      //         actions: [
+      //           TextButton(
+      //             onPressed: () => Navigator.pop(context, false), // Cancel
+      //             child: const Text('Cancel'),
+      //           ),
+      //           ElevatedButton(
+      //             onPressed: () => Navigator.pop(context, true), // Confirm
+      //             child: const Text('Enter Safe Mode'),
+      //           ),
+      //         ],
+      //       ),
+      //     );
+      //
+      //     if (true == confirmSafeMode) {
+      //       await navigator.pushNamed(SafeModeScreen.id);
+      //     }
+      //   },
+      //   child: FloatingActionButton(
+      //     onPressed: () {
+      //       // Navigate to Journal Editor
+      //       navigator.pushNamed(JournalEditorScreen.id);
+      //     },
+      //     tooltip: 'Tap to write a journal, Double for Safe Mode',
+      //     child: const Icon(Icons.edit_note),
+      //   ),
+      // ),
     );
   }
 }

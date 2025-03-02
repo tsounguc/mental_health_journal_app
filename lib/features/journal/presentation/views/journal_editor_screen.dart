@@ -18,6 +18,8 @@ import 'package:mental_health_journal_app/features/auth/presentation/auth_bloc/a
 import 'package:mental_health_journal_app/features/journal/data/models/journal_entry_model.dart';
 import 'package:mental_health_journal_app/features/journal/domain/entities/journal_entry.dart';
 import 'package:mental_health_journal_app/features/journal/presentation/journal_cubit/journal_cubit.dart';
+import 'package:mental_health_journal_app/features/journal/presentation/views/journal_entry_detail_screen.dart';
+import 'package:mental_health_journal_app/features/journal/presentation/views/safe_mode_screen.dart';
 import 'package:mental_health_journal_app/features/journal/presentation/widgets/journal_form_field.dart';
 
 class JournalEditorScreen extends StatefulWidget {
@@ -36,6 +38,8 @@ class _JournalEditorScreenState extends State<JournalEditorScreen> {
   final _contentController = QuillController.basic();
   final sentimentAnalyzer = SentimentAnalyzer();
   final _tags = <String>[];
+  bool isSafeMode = false;
+
   var _newTagsFrequency = TagsFrequency.empty();
 
   String? _selectedMood;
@@ -83,6 +87,11 @@ class _JournalEditorScreenState extends State<JournalEditorScreen> {
     final journalText = _contentController.document.toPlainText();
 
     final sentimentScore = await sentimentAnalyzer.analyzeText(journalText);
+
+    isSafeMode = sentimentAnalyzer.interpretResult(
+          sentimentScore,
+        ) ==
+        'Negative';
 
     final entry = JournalEntryModel.empty().copyWith(
       userId: currentUser?.uid,
@@ -136,6 +145,11 @@ class _JournalEditorScreenState extends State<JournalEditorScreen> {
     if (contentChanged) {
       final journalText = _contentController.document.toPlainText();
       final sentimentScore = await sentimentAnalyzer.analyzeText(journalText);
+
+      isSafeMode = sentimentAnalyzer.interpretResult(
+            sentimentScore,
+          ) ==
+          'Negative';
 
       await cubit.updateEntry(
         entryId: widget.entry!.id,
@@ -219,18 +233,18 @@ class _JournalEditorScreenState extends State<JournalEditorScreen> {
   Widget build(BuildContext context) {
     return BlocConsumer<JournalCubit, JournalState>(
       listener: (context, state) {
-        if (state is EntryCreated) {
-          CoreUtils.showSnackBar(context, 'Journal entry saved');
+        if (state is EntryCreated || state is EntryUpdated) {
           Navigator.popUntil(
             context,
             ModalRoute.withName('/'),
           );
-        } else if (state is EntryUpdated) {
+          if (isSafeMode == true) {
+            Navigator.pushNamed(
+              context,
+              SafeModeScreen.id,
+            );
+          }
           CoreUtils.showSnackBar(context, 'Journal entry saved');
-          Navigator.popUntil(
-            context,
-            ModalRoute.withName('/'),
-          );
         } else if (state is JournalError) {
           CoreUtils.showSnackBar(context, state.message);
         }

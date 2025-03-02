@@ -262,9 +262,21 @@ class CoreUtils {
     }
 
     if (averageSentiment > 0.1) {
-      insights.add('Overall, your sentiment has been quite positive lately!');
-    } else if (averageSentiment < -0.1) {
-      insights.add("It looks like you've been feeling more negative recently.");
+      insights.add('Overall, your sentiment has been quite positive lately! 😊');
+    } else if (averageSentiment < -0.05) {
+      final suggestions = <String>[
+        // 'Write something positive about your day ✍🏻✍🏽✍🏾',
+        'Take a short mindfulness break 🏝️',
+        'Reflect on a happy moment 💭',
+        'Listen to your favorite song 🎶',
+        'Go for a short walk outside🚶🏻🚶🚶🏽',
+      ];
+
+      final suggestion = (suggestions..shuffle()).first;
+      insights.add(
+        'It looks like your sentiment has been more negative recently. '
+        '\n$suggestion',
+      );
     } else {
       insights.add('Your overall sentiment has been relatively neutral.');
     }

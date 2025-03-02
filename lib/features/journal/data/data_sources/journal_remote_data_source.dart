@@ -173,8 +173,15 @@ class JournalRemoteDataSourceImpl implements JournalRemoteDataSource {
           .where('userId', isEqualTo: userId)
           .where(
             'dateCreated',
-            isGreaterThan: Timestamp.fromDate(
-              range,
+            isGreaterThanOrEqualTo: Timestamp.fromDate(
+              range.copyWith(
+                hour: 0,
+                minute: 0,
+                second: 0,
+                millisecond: 0,
+                microsecond: 0,
+                isUtc: false,
+              ),
             ),
           )
           // .where('dateCreated', isLessThanOrEqualTo: today)

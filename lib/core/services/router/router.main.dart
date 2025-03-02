@@ -35,6 +35,12 @@ Route<dynamic> onGenerateRoute(RouteSettings settings) {
         ),
         settings: settings,
       );
+
+    case SafeModeScreen.id:
+      return _pageBuilder(
+        (_) => const SafeModeScreen(),
+        settings: settings,
+      );
     case SignUpScreen.id:
       return _pageBuilder(
         (_) => BlocProvider(
