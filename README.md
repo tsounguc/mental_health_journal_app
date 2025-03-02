@@ -82,6 +82,5 @@ This project is licensed under the MIT License.
 ## 🙌 Acknowledgments
 Special thanks to:
 - Flutter & Firebase communities
-- OpenAI for NLP sentiment analysis
 - Mental health awareness initiatives 💙
 
