@@ -31,7 +31,7 @@ To run this project locally:
 
 1. **Clone the repository**
    ```sh
-   git clone https://github.com/your-username/mental-health-journal-app.git
+   git clone https://github.com/tsounguc/mental-health-journal-app.git
    cd mental-health-journal-app
    ```
 
@@ -50,19 +50,6 @@ To run this project locally:
    flutter run
    ```
 
-## 🎬 Screenshots
-![img_2.png](img_2.png)
-![img_6.png](img_6.png)
-![img_7.png](img_7.png)
-![img_10.png](img_10.png)
-![img_9.png](img_9.png)
-![img_4.png](img_4.png)
-![img_3.png](img_3.png)
-![img_5.png](img_5.png)
-![img_8.png](img_8.png)
-![img.png](img.png) 
-![img_1.png](img_1.png)
-
 ## 🚀 Usage
 - **Start Journaling**: Tap the ✚ Floating Action Button to create a new entry.
 - **Check Your Mood**: View your sentiment analysis results and track mood trends.
@@ -71,7 +58,7 @@ To run this project locally:
 - **Set Reminders**: Schedule daily journaling reminders through settings.
 
 ## 📜 Roadmap
-- ✅ MVP Completed (Journal entries, sentiment analysis, safe mode, push notifications)
+- ✅ MVP Completed (Journal entries, sentiment analysis, insights, safe mode, push notifications)
 - 📅 Future Enhancements:
     - Multi-device sync with Firebase
     - AI-generated journal prompts
@@ -94,3 +81,15 @@ Special thanks to:
 - Flutter & Firebase communities
 - Mental health awareness initiatives 💙
 
+## 🎬 Screenshots
+![img_2.png](img_2.png)
+![img_6.png](img_6.png)
+![img_7.png](img_7.png)
+![img_10.png](img_10.png)
+![img_9.png](img_9.png)
+![img_4.png](img_4.png)
+![img_3.png](img_3.png)
+![img_5.png](img_5.png)
+![img_8.png](img_8.png)
+![img.png](img.png)
+![img_1.png](img_1.png)
