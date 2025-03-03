@@ -109,41 +109,6 @@ class _JournalHomeScreenState extends State<JournalHomeScreen> {
         ),
       ),
       floatingActionButton: const AnimatedFAB(),
-      // floatingActionButton: GestureDetector(
-      //   onDoubleTap: () async {
-      //     final confirmSafeMode = await showDialog<bool>(
-      //       context: context,
-      //       builder: (context) => AlertDialog(
-      //         title: const Text('Enter Safe Mode'),
-      //         content: const Text(
-      //           'Safe Mode provides a calming experience. Do you want to proceed?',
-      //         ),
-      //         actions: [
-      //           TextButton(
-      //             onPressed: () => Navigator.pop(context, false), // Cancel
-      //             child: const Text('Cancel'),
-      //           ),
-      //           ElevatedButton(
-      //             onPressed: () => Navigator.pop(context, true), // Confirm
-      //             child: const Text('Enter Safe Mode'),
-      //           ),
-      //         ],
-      //       ),
-      //     );
-      //
-      //     if (true == confirmSafeMode) {
-      //       await navigator.pushNamed(SafeModeScreen.id);
-      //     }
-      //   },
-      //   child: FloatingActionButton(
-      //     onPressed: () {
-      //       // Navigate to Journal Editor
-      //       navigator.pushNamed(JournalEditorScreen.id);
-      //     },
-      //     tooltip: 'Tap to write a journal, Double for Safe Mode',
-      //     child: const Icon(Icons.edit_note),
-      //   ),
-      // ),
     );
   }
 }
