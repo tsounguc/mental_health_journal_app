@@ -50,6 +50,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   final FirebaseAuth _authClient;
   final FirebaseFirestore _firestoreClient;
   final FirebaseStorage _storageClient;
+
   @override
   Future<UserModel> createUserAccount({
     required String name,
@@ -326,6 +327,10 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         );
   }
 
+  Future<DocumentSnapshot<DataMap>> _getUserData(String uid) async {
+    return _users.doc(uid).get();
+  }
+
   Future<void> _updateUserData(DataMap data) async {
     await _users
         .doc(
@@ -337,8 +342,4 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   CollectionReference<DataMap> get _users => _firestoreClient.collection(
         FirebaseConstants.usersCollection,
       );
-
-  Future<DocumentSnapshot<DataMap>> _getUserData(String uid) async {
-    return _users.doc(uid).get();
-  }
 }

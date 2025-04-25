@@ -3,7 +3,7 @@
 [![style: very good analysis](https://img.shields.io/badge/style-very_good_analysis-B22C89.svg)](https://pub.dev/packages/very_good_analysis)
 
 ## Getting Started
-
+![img_2.png](img_2.png)
 
 
 The **Melo** is a Flutter-based mental health journal mobile application designed to help users track their thoughts, emotions, and mental well-being. It provides sentiment analysis, mood tracking, and calming features like **Safe Mode** and **personalized suggestions** to encourage mindful journaling.
